@@ -31,7 +31,7 @@ saveButton.addEventListener("click",async function(event) {
                 // Handle 401 Unauthorized - user is not authenticated
                 console.log('Unauthorized! Redirecting to login...');
                 // Redirect to login page (or handle error accordingly)
-                window.location.href = "https://mperumal-usd.github.io/ita/Login"; // Redirect to login page
+                window.location.href = "https://ita-hscp.github.io/ita/Login"; // Redirect to login page
                 return; // Stop further execution if 401 is encountered
             }
             // If the status is OK or other success code, handle it

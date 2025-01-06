@@ -40,7 +40,7 @@ function validateAndSubmit() {
             sessionStorage.setItem("allowedRoles",  data.roles || []);
             alert('Password changed successfully!');
             closeModal();
-            window.location.href = "https://mperumal-usd.github.io/ita/"; 
+            window.location.href = "https://ita-hscp.github.io/ita/"; 
         })
         .catch(error => {
             console.error('Error:', error); // Handle any errors (failed login, network issues)
@@ -97,7 +97,7 @@ form.addEventListener('submit', function(event) {
                     showModal();
                 }else {
                     sessionStorage.setItem("allowedRoles",  data.roles || []);
-                    window.location.href = "https://mperumal-usd.github.io/ita/"; 
+                    window.location.href = "https://ita-hscp.github.io/ita/"; 
                 }
             })
             .catch(error => {

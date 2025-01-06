@@ -2,7 +2,7 @@
 # Site
 
 title: "உலகத் தமிழ்க்கல்விக் கழகம்"
-url: "https://mperumal-usd.github.io/ita"
+url: "https://ita-hscp.github.io/ita"
 baseurl:
 google_analytics_key:
 show_full_navigation: true
@@ -17,7 +17,7 @@ author:
 social:
   name: "உலகத் தமிழ்க்கல்விக் கழகம்"
   links:
-    - https://github.com/mperumal-usd/ita
+    - https://github.com/ita-hscp/ita
 
 # -----
 # Build

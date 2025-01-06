@@ -49,7 +49,7 @@ async function getQuestions(){
       }});
      if (response.status === 401) {
         // Redirect to login page if not authenticated
-        window.location.href = "https://mperumal-usd.github.io/ita/Login"; // Replace '/login' with your actual login URL
+        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
       }
      if (!response.ok){
       return {}
