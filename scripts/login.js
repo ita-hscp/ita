@@ -38,6 +38,8 @@ function validateAndSubmit() {
             console.log('Response:', data); // Handle the server response (success)
             sessionStorage.setItem('sessionToken', data.sessionToken);
             sessionStorage.setItem("allowedRoles",  data.roles || []);
+            sessionStorage.setItem("weeks",  data.week || [17]);
+            sessionStorage.setItem("className",  data.className || "1E");
             alert('Password changed successfully!');
             closeModal();
             window.location.href = "https://ita-hscp.github.io/ita/"; 

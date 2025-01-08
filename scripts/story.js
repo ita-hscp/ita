@@ -11,6 +11,23 @@ const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 
+
+function addOptions() {
+    const dropdown = document.getElementById("weeks");
+
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [17];
+    // Array of options to add
+    // Loop through the array and add options
+    let index = 1;
+    items.forEach(optionData => {
+        const option = document.createElement('option');
+        option.value = index; // Set the value
+        index++;
+        option.textContent = optionData; // Set the text content
+        dropdown.appendChild(option); // Append to the dropdown
+    });
+}
+
 async function getExerciseData(week, className) {
     let query = ""
     if (week)
@@ -58,11 +75,11 @@ async function fetchImage(filename, type) {
         const img = document.createElement('img');
         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
         img.alt = 'Image';
-        if (type === 'full'){
+        if (type === 'full') {
             img.classList.add('full-img');
             img.style.width = '40%';
             img.style.height = '40%';
-        }else {
+        } else {
             img.classList.add('segment-img');
             img.style.width = '20%';
             img.style.height = '20%';
@@ -128,7 +145,7 @@ saveButton.addEventListener("click", async (event) => {
     const formData = new FormData();
     audioBlob = new Blob(audioBlobList, { type: 'audio/wav' });
     const filename = `audio.wav`;
-    formData.append(`audioFiles[]`,audioBlob, filename);
+    formData.append(`audioFiles[]`, audioBlob, filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "storyTelling");
