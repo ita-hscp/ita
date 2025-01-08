@@ -76,12 +76,12 @@ async function fetchImage(filename, type) {
         img.alt = 'Image';
         if (type === 'full') {
             img.classList.add('full-img');
-            img.style.width = '40%';
-            img.style.height = '40%';
+            img.style.width = '90%';
+            img.style.height = '90%';
         } else {
             img.classList.add('segment-img');
-            img.style.width = '20%';
-            img.style.height = '20%';
+            img.style.width = '90%';
+            img.style.height = '90%';
         }
         imageGrid.appendChild(img);
     } catch (error) {
