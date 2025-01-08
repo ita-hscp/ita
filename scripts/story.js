@@ -14,7 +14,6 @@ const exerciseStartButton = document.getElementById('exercise-start-btn');
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-
     const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [17];
     // Array of options to add
     // Loop through the array and add options
