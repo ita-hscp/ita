@@ -9,6 +9,7 @@ const clearButton = document.getElementById("story-clear-btn");
 const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
+const exerciseStartButton = document.getElementById('story-start-btn');
 
 async function getExerciseData(week, className) {
     let query = ""
@@ -34,6 +35,7 @@ async function getExerciseData(week, className) {
     }
     return response.json()
 }
+
 
 async function fetchImage(filename, type) {
     try {
@@ -79,6 +81,7 @@ async function getStoryExercise() {
     startBtn.disabled = false;
     workSheet['week'] = selectedText;
     await fetchImage(workSheet.full, 'full');
+    exerciseStartButton.disabled = false;
     // sendMessage();
 }
 
@@ -104,6 +107,11 @@ async function sendMessage() {
     }
 }
 
+exerciseStartButton.addEventListener('click', async () => {
+    sendMessage();
+    exerciseStartButton.disabled = true;
+    this.style.display = 'none';
+});
 
 saveButton.addEventListener("click", async (event) => {
     const chatBox = document.getElementById("chatBox");
