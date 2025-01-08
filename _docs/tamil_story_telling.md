@@ -10,9 +10,6 @@ title: கதை சொல்லுதல் பயிற்சி
     <select id="weeks">
     </select>
 <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
-<div>
-    <p type="text" id="topicSelected"></p>
-</div>
 <div class="story-container">
     <div class="chat-container">  
         <button id="exercise-start-btn" disabled>start exercise</button>
@@ -26,7 +23,11 @@ title: கதை சொல்லுதல் பயிற்சி
             <audio id="audioPlayer" controls></audio>
         </div>
     </div>
-    <div class="story-image" id="storyImage"></div>
+    <div class="story-image" id="storyImage">
+        <div>
+            <p type="text" id="topicSelected"></p>
+        </div>
+    </div>
 </div>
 <button id="story-saveButton" disabled>Finish Conversation</button>
  <div class="story-spinner" id="story-spinner"></div>
