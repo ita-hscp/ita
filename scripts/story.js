@@ -77,7 +77,7 @@ async function getStoryExercise() {
     startBtn.disabled = false;
     workSheet['week'] = selectedText;
     await fetchImage(workSheet.full)
-    sendMessage();
+    // sendMessage();
 }
 
 async function sendMessage() {
