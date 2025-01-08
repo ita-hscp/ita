@@ -26,6 +26,7 @@ function addOptions() {
         dropdown.appendChild(option); // Append to the dropdown
     });
 }
+addOptions();
 
 async function getExerciseData(week, className) {
     let query = ""
