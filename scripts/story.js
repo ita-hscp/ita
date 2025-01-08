@@ -9,8 +9,6 @@ const clearButton = document.getElementById("story-clear-btn");
 const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
-// const progressBar = document.getElementById('progressBar');
-// const progressText = document.getElementById('progressText');
 
 async function getExerciseData(week, className) {
     let query = ""

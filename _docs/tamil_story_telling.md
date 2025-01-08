@@ -20,14 +20,14 @@ title: Story Telling
     </div>
     <div><p type="text" id="userInput"></p> </div>
     <div class="input-area">
-        <button id="'story-start-btn" disabled>record</button>
-        <button id="'story-clear-btn" >clear</button>
-        <button id="'story-send-btn" onclick="sendMessage()" disabled>send</button>
+        <button id="story-start-btn" disabled>record</button>
+        <button id="story-clear-btn" >clear</button>
+        <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>
         <audio id="audioPlayer" controls></audio>
     </div>
   </div>
-<button id="'story-saveButton" disabled>Finish Conversation</button>
- <div class="'story-spinner" id="'story-spinner"></div>
+<button id="story-saveButton" disabled>Finish Conversation</button>
+ <div class="story-spinner" id="'story-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
