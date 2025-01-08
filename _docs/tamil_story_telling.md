@@ -10,7 +10,7 @@ title: Story Telling
     <select id="weeks">
          <option value="1">17</option>
     </select>
-<button id="exercise-btn" onclick="ge()">start exercise</button>
+<button id="exercise-btn" onclick="getStoryExercise()">start exercise</button>
 <div>
     <p type="text" id="topicSelected"></p>
 </div>

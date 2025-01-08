@@ -62,12 +62,11 @@ async function fetchImage(filename) {
     }
 }
 
-
-async function getExercise() {
+async function getStoryExercise() {
     const dropdown = document.getElementById("weeks");
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
-    workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
+    workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
     const startBtn = document.getElementById('story-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
@@ -93,45 +92,13 @@ async function sendMessage() {
         startBtn.disabled = false;
         let botResponse = workSheet.segments[counter];
         counter++;
-        fetchImage(botResponse);
-        await speakApi(botResponse)
+        await fetchImage(botResponse);
     }
     if (workSheet && workSheet.segments && workSheet.segments.length <= counter) {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
     }
-}
-
-
-
-
-
-// Create a ReadableStream to track progress
-function getUploadStream(audioBlob) {
-    const stream = audioBlob.stream().getReader();
-    const totalSize = audioBlob.size;
-    let uploadedSize = 0;
-    const uploadStream = new ReadableStream({
-        start(controller) {
-            function push() {
-                stream.read().then(({ done, value }) => {
-                    if (done) {
-                        controller.close();
-                        return;
-                    }
-                    uploadedSize += value.length;
-                    const percentComplete = Math.round((uploadedSize / totalSize) * 100);
-                    // progressBar.value = percentComplete;
-                    // progressText.textContent = `${percentComplete}%`;
-                    controller.enqueue(value);
-                    push();
-                });
-            }
-            push();
-        }
-    });
-    return uploadStream;
 }
 
 
@@ -145,7 +112,7 @@ saveButton.addEventListener("click", async (event) => {
     const formData = new FormData();
     audioBlob = new Blob(audioBlobList, { type: 'audio/wav' });
     const filename = `audio.wav`;
-    formData.append(`audioFiles[]`, new Blob([await new Response(getUploadStream(audioBlob)).blob()], { type: audioBlob.type }), filename);
+    formData.append(`audioFiles[]`,audioBlob, filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "storyTelling");
