@@ -103,12 +103,16 @@ async function getStoryExercise() {
     workSheet['week'] = selectedText;
     await fetchImage(workSheet.full, 'full');
     exerciseStartButton.disabled = false;
-    // sendMessage();
 }
 
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
+    if (workSheet && workSheet.segments && counter >= workSheet.segments.length){
+        startBtn.disabled = true;
+        clearButton.disabled = true;
+        saveButton.disabled = false;
+    }
     if ((message || counter == 0) && workSheet && workSheet.segments && workSheet.segments.length > counter) {
         // Display the sent message
         if (message) {
@@ -120,11 +124,6 @@ async function sendMessage() {
         let botResponse = workSheet.segments[counter];
         counter++;
         await fetchImage(botResponse);
-    }
-    if (workSheet && workSheet.segments && workSheet.segments.length < counter) {
-        startBtn.disabled = true;
-        clearButton.disabled = true;
-        saveButton.disabled = false;
     }
 }
 
