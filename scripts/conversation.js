@@ -26,6 +26,7 @@ async function getExercise() {
     await speakApi(workSheet.intro[1])
     base64AudioList=[];
     startBtn.disabled = false;
+    clearButton.disabled = true;
     sendMessage();
 }
 
