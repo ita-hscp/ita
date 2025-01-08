@@ -27,7 +27,7 @@ title: கதை சொல்லுதல் பயிற்சி
     </div>
   </div>
 <button id="story-saveButton" disabled>Finish Conversation</button>
- <div class="story-spinner" id="'story-spinner"></div>
+ <div class="story-spinner" id="story-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
