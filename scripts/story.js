@@ -35,7 +35,7 @@ async function getExerciseData(week, className) {
     return response.json()
 }
 
-async function fetchImage(filename) {
+async function fetchImage(filename, type) {
     try {
         const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise/' + filename, {
             headers: {
@@ -53,7 +53,7 @@ async function fetchImage(filename) {
         }
         const data = await response.json();
         const image = data.fileData;
-        const img = document.createElement('img');
+        const img = document.createElement( type ? type+"-img":'img');
         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
         img.alt = 'Image';
         imageGrid.appendChild(img);
@@ -76,7 +76,7 @@ async function getStoryExercise() {
     base64AudioList = [];
     startBtn.disabled = false;
     workSheet['week'] = selectedText;
-    await fetchImage(workSheet.full)
+    await fetchImage(workSheet.full, 'full');
     // sendMessage();
 }
 

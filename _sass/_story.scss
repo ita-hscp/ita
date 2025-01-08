@@ -8,6 +8,15 @@
     opacity: 0.6;
     /* Slightly transparent */
 }
+.story-image img {
+    width: 100%;
+    height: auto;
+}
+
+.story-image full-img {
+    width: 70%;
+    height: auto;
+}
 
 .story-spinner {
     display: none;

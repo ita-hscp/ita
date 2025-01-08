@@ -14,7 +14,7 @@ title: கதை சொல்லுதல் பயிற்சி
 <div>
     <p type="text" id="topicSelected"></p>
 </div>
-<div class="storyImage" id="storyImage"></div>
+<div class="story-image" id="storyImage"></div>
   <div class="chat-container">
     <div class="chat-box" id="chatBox">
     </div>
