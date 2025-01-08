@@ -150,7 +150,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append(`audioFiles[]`, new Blob([await new Response(getUploadStream(audioBlob)).blob()], { type: audioBlob.type }), filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
-    formData.append("work", "conversation");
+    formData.append("work", "storyTelling");
     const spinner = document.getElementById('story-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
