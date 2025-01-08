@@ -17,7 +17,7 @@ async function getExerciseData(week, className) {
     if (className)
         query += "className=" + topic + "&";
 
-    const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/exrecise' + (query.length > 0 ? "?" + query : "");
+    const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise' + (query.length > 0 ? "?" + query : "");
     // Fetch the json
     const response = await fetch(apiUrl, {
         headers: {
@@ -37,7 +37,7 @@ async function getExerciseData(week, className) {
 
 async function fetchImage(filename) {
     try {
-        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exrecise/' + filename, {
+        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise/' + filename, {
             headers: {
                 Authorization: sessionStorage.getItem('sessionToken')
             }
