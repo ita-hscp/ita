@@ -8,7 +8,6 @@ title: கதை சொல்லுதல் பயிற்சி
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
-         <option value="1">17</option>
     </select>
 <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
 <div>
