@@ -16,7 +16,7 @@ title: கதை சொல்லுதல் பயிற்சி
 </div>
 <div class="story-image" id="storyImage"></div>
 <div class="chat-container">  
-    <button id="story-start-btn" disabled>start exercise</button>
+    <button id="exercise-start-btn" disabled>start exercise</button>
     <div class="chat-box" id="chatBox">
     </div>
     <div><p type="text" id="userInput"></p> </div>

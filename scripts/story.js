@@ -9,7 +9,7 @@ const clearButton = document.getElementById("story-clear-btn");
 const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
-const exerciseStartButton = document.getElementById('story-start-btn');
+const exerciseStartButton = document.getElementById('exercise-start-btn');
 
 async function getExerciseData(week, className) {
     let query = ""
@@ -60,6 +60,8 @@ async function fetchImage(filename, type) {
         img.alt = 'Image';
         if (type === 'full'){
             img.classList.add('full-img');
+        }else {
+            img.classList.add('segment-img');
         }
         imageGrid.appendChild(img);
     } catch (error) {
