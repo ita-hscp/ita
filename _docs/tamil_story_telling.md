@@ -1,7 +1,7 @@
 ---
 category: HSCP 3
 order: 2
-title: Story Telling
+title: கதை சொல்லுதல் பயிற்சி 
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
