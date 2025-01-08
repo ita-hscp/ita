@@ -53,11 +53,13 @@ async function fetchImage(filename, type) {
         }
         const data = await response.json();
         const image = data.fileData;
-        const img = document.createElement( type ? type+"-img":'img');
+        const img = document.createElement('img');
         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
         img.alt = 'Image';
+        if (type === 'full'){
+            img.classList.add('full-img');
+        }
         imageGrid.appendChild(img);
-
     } catch (error) {
         console.error('Error fetching images:', error);
     }
