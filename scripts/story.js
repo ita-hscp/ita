@@ -84,7 +84,6 @@ async function getStoryExercise() {
     await speakApi(workSheet.intro[0])
     await speakApi(workSheet.intro[1])
     base64AudioList = [];
-    startBtn.disabled = false;
     workSheet['week'] = selectedText;
     await fetchImage(workSheet.full, 'full');
     exerciseStartButton.disabled = false;
@@ -106,7 +105,7 @@ async function sendMessage() {
         counter++;
         await fetchImage(botResponse);
     }
-    if (workSheet && workSheet.segments && workSheet.segments.length <= counter) {
+    if (workSheet && workSheet.segments && workSheet.segments.length < counter) {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
