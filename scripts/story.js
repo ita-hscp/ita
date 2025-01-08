@@ -51,7 +51,8 @@ async function fetchImage(filename) {
         while (imageGrid.firstChild) {
             imageGrid.removeChild(imageGrid.firstChild);
         }
-        const image = response.fileData;
+        const data = await response.json();
+        const image = data.fileData;
         const img = document.createElement('img');
         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
         img.alt = 'Image';
