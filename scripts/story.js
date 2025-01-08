@@ -95,7 +95,6 @@ async function getStoryExercise() {
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
     workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
-    const startBtn = document.getElementById('story-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
     await speakApi(workSheet.intro[0])
