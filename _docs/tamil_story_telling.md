@@ -14,19 +14,21 @@ title: கதை சொல்லுதல் பயிற்சி
 <div>
     <p type="text" id="topicSelected"></p>
 </div>
-<div class="story-image" id="storyImage"></div>
-<div class="chat-container">  
-    <button id="exercise-start-btn" disabled>start exercise</button>
-    <div class="chat-box" id="chatBox">
+<div class="story-container">
+    <div class="story-image" id="storyImage"></div>
+    <div class="chat-container">  
+        <button id="exercise-start-btn" disabled>start exercise</button>
+        <div class="chat-box" id="chatBox">
+        </div>
+        <div><p type="text" id="userInput"></p> </div>
+        <div class="input-area">
+            <button id="story-start-btn" disabled>record</button>
+            <button id="story-clear-btn" disabled>clear</button>
+            <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>
+            <audio id="audioPlayer" controls></audio>
+        </div>
     </div>
-    <div><p type="text" id="userInput"></p> </div>
-    <div class="input-area">
-        <button id="story-start-btn" disabled>record</button>
-        <button id="story-clear-btn" disabled>clear</button>
-        <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>
-        <audio id="audioPlayer" controls></audio>
-    </div>
-  </div>
+</div>
 <button id="story-saveButton" disabled>Finish Conversation</button>
  <div class="story-spinner" id="story-spinner"></div>
 <script src="{{ site.baseurl }}/scripts/story.js"></script>

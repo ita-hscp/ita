@@ -9,6 +9,20 @@
     /* Slightly transparent */
 }
 
+.story-container {
+    display: flex;
+}
+
+.story-image,
+.chat-container {
+    flex: 1;
+    padding: 10px;
+}
+
+.story-image {
+    border-right: 1px solid #ccc;
+}
+
 #exercise-start-btn:disabled {
     background-color: #cccccc;
     /* Grey background */
