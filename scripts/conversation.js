@@ -93,9 +93,9 @@ saveButton.addEventListener("click",async (event) => {
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
     const formData = new FormData();
-    audioBlob = new Blob(audioBlobList, { type: 'audio/wav' });
-    const filename = `audio.wav`;
-    formData.append(`audioFiles[]`,new Blob([await new Response(getUploadStream(audioBlob)).blob()], { type: audioBlob.type }), filename);
+    audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
+    const filename = `audio.webm`;
+    formData.append(`audioFiles[]`,audioBlob, filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content",JSON.stringify(messageArray));
     formData.append("work","conversation");
