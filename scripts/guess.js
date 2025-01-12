@@ -103,3 +103,105 @@ function clearWords() {
 
 // Initialize the game
 displayJumbledWord();
+
+
+const clearButton = document.getElementById("conversation-clear-btn");
+const startBtn = document.getElementById('conversation-start-btn');
+const sendBtn = document.getElementById('conversation-send-btn');
+const transcription = document.getElementById('userInput');
+
+window.onload = function () {
+    document.getElementById('conversation-start-btn').focus();
+};
+// Check if the browser supports the Web Speech API
+if (!('webkitSpeechRecognition' in window)) {
+    alert('Sorry, your browser does not support speech recognition.');
+} else {
+    window.SpeechRecognition = window.SpeechRecognition
+        || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioBlob;
+    recognition.lang = 'ta';
+    recognition.continuous = true; // Keep recognizing speech continuously
+    recognition.interimResults = true; // Show interim results
+    startBtn.disabled = false;
+    clearButton.addEventListener('click',async ()=>{
+        const userInput = document.getElementById('userInput');
+        userInput.innerHTML="";
+        transcription.innerHTML=""
+        audioChunks=[]
+        if(mediaRecorder){
+            await mediaRecorder.stop();
+            await mediaRecorder.start();
+        }
+        if(recognition){
+            await recognition.stop();
+            await recognition.start(); 
+        }
+        console.log('Audio recording started');
+       // Start the speech recognition
+        startBtn.disabled = true;
+        sendBtn.disabled = false;
+        startBtn.textContent='listening';
+    });
+    
+
+    startBtn.addEventListener('click', async () => {
+        recognition.start(); // Start the speech recognition
+        startBtn.disabled = true;
+        sendBtn.disabled = false;
+        startBtn.textContent='listening';
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            mediaRecorder.onstop = async () => {
+                audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioURL = URL.createObjectURL(audioBlob);
+                console.log('Audio URL:', audioURL);
+                audioBlobList.push(...audioChunks)
+                // Clear chunks for the next recording
+                audioChunks = [];
+            };
+            mediaRecorder.start();
+            console.log('Audio recording started');
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+        }
+    });
+    sendBtn.addEventListener('click', () => {
+        recognition.stop(); // Stop the speech recognition
+        startBtn.disabled = false;
+        sendBtn.disabled = true;
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            console.log('Audio recording stopped');
+        }
+        startBtn.textContent='record';
+    });
+    recognition.onresult = (event) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript;
+            } else {
+                interimTranscript += transcript;
+            }
+            transcription.innerHTML = `${transcript}`;
+        }
+        transcription.innerHTML = `${finalTranscript}`;
+        event.results=[]
+    };
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error detected: ' + event.error);
+    };
+    recognition.onend = () => {
+        console.log("Recognition on end")
+    };
+}
