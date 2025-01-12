@@ -44,7 +44,7 @@ async function getExerciseData(week, className) {
     });
     if (response.status === 401) {
         // Redirect to login page if not authenticated
-        window.location.href = "https://mperumal-usd.github.io/ita/Login";
+        window.location.href = "https://ita-hscp.github.io/ita/Login";
         return;
     }
     if (!response.ok) {
