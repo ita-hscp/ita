@@ -46,15 +46,13 @@ async function getSuffledWord() {
 async function displayJumbledWord() {
     const scrollingContainer = document.getElementById("scrollingContainer");
     scrollingContainer.innerHTML = "";
-    for (let i = 0; i < 10; i++) {
-        const jumbledWord = await getSuffledWord();
-        for (const letter of jumbledWord) {
+    const jumbledWord = await getSuffledWord();
+    for (const letter of jumbledWord) {
             const letterBox = document.createElement("div");
             letterBox.className = "jumbled-box";
             letterBox.textContent = letter;
             scrollingContainer.appendChild(letterBox);
-        }
-    }
+     }
 }
 
 function checkGuess() {
