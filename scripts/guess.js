@@ -60,7 +60,7 @@ async function displayJumbledWord() {
 }
 
 function checkGuess() {
-    const userInput = document.getElementById("userInput").value.toUpperCase();
+    const userInput = document.getElementById('userInput').textContent;
     const message = document.getElementById("message");
 
     if (userInput === currentWord) {
@@ -79,7 +79,7 @@ function checkGuess() {
 }
 
 function addNewWord() {
-    const newWordInput = document.getElementById("newWord").value.toUpperCase();
+    const newWordInput = document.getElementById("newWord").value;
     const message = document.getElementById("message");
 
     if (newWordInput && !words.includes(newWordInput)) {

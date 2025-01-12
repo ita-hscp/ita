@@ -18,7 +18,7 @@ title: தமிழ் வார்த்தையை கண்டுபிட�
                 <button id="conversation-start-btn" disabled>record</button>
                 <button id="conversation-clear-btn" disabled>clear</button>
                 <button id="conversation-send-btn" onclick="sendMessage()" disabled>submit</button>
-                <button id="conversation-add-btn" onclick="addword()" disabled>add</button>
+                <button id="conversation-add-btn" >add</button>
                 <audio id="audioPlayer" controls></audio>
             </div>
         </div>
