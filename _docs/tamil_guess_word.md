@@ -13,7 +13,6 @@ title: தமிழ் வார்த்தையை கண்டுபிட�
             <div class="scrolling-container" id="scrollingContainer"></div>
         </div>
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="Enter your guess">
             <div><p type="text" id="userInput"></p> </div>
             <div class="input-area">
                 <button id="conversation-start-btn" disabled>record</button>
