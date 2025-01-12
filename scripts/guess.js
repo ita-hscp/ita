@@ -1,4 +1,3 @@
-const { ElectraForQuestionAnswering } = require("@huggingface/transformers");
 
 const words = [];
 let currentWordIndex = Math.floor(Math.random() * words.length);
