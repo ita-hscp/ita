@@ -20,10 +20,11 @@
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    overflow: hidden;
+    justify-content: flex-end;           /* Align child elements horizontally */
+    flex-wrap: nowrap;        /* Prevent wrapping of the boxes */
+    gap: 10px;                /* Add spacing between the boxes */
+    overflow-x: auto;
 }
 
 .jumbled-box {
