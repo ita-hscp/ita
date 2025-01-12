@@ -31,7 +31,7 @@ function getRandomNumber(min, max) {
 async function getSuffledWord() {
     let letters = [];
     const segmenter = new Intl.Segmenter("ta", { granularity: "grapheme" });
-    if (words.length !== 0) {    
+    if (words.length === 0) {    
     let dictionary = await getQuestions()
     const tamilWords = Object.keys(dictionary);
     const randomTamilWord = tamilWords[Math.floor(Math.random() * tamilWords.length)];
