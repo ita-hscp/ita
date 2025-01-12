@@ -8,7 +8,7 @@ title: தமிழ் வார்த்தையை கண்டுபிட�
 </script>
 
   <div class="game-container">
-        <h1>Guess the Word!</h1>
+        <h1>வார்த்தையை கண்டுபிடி !!!</h1>
         <div class="word-box">
             <div class="scrolling-container" id="scrollingContainer"></div>
         </div>
