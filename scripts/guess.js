@@ -43,11 +43,11 @@ async function getSuffledWord() {
     letters = letters.sort(() => Math.random() - 0.5);
     return letters;
 }
-function displayJumbledWord() {
+async function displayJumbledWord() {
     const scrollingContainer = document.getElementById("scrollingContainer");
     scrollingContainer.innerHTML = "";
     for (let i = 0; i < 10; i++) {
-        const jumbledWord = getSuffledWord();
+        const jumbledWord = await getSuffledWord();
         for (const letter of jumbledWord) {
             const letterBox = document.createElement("div");
             letterBox.className = "jumbled-box";
