@@ -1,7 +1,7 @@
 ---
-category: HSCP 3
+category: விளையாட்டு
 order: 2
-title: தமிழ் guess
+title: தமிழ் வார்த்தையை கண்டுபிடி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js">
     tracker();
