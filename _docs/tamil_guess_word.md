@@ -14,12 +14,12 @@ title: தமிழ் guess
         </div>
         <div class="input-container">
             <input type="text" id="userInput" placeholder="Enter your guess">
-            <button onclick="checkGuess()">Submit</button>
             <div><p type="text" id="userInput"></p> </div>
             <div class="input-area">
                 <button id="conversation-start-btn" disabled>record</button>
                 <button id="conversation-clear-btn" disabled>clear</button>
-                <button id="conversation-send-btn" onclick="sendMessage()" disabled>send</button>
+                <button id="conversation-send-btn" onclick="sendMessage()" disabled>submit</button>
+                <button id="conversation-add-btn" onclick="addword()" disabled>add</button>
                 <audio id="audioPlayer" controls></audio>
             </div>
         </div>

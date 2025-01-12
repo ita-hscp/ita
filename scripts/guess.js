@@ -1,4 +1,8 @@
 
+let mediaRecorder;
+let audioChunks = [];
+let audioBlob;
+let audioBlobList = [];
 const words = [];
 let currentWordIndex = Math.floor(Math.random() * words.length);
 let currentWord = words[currentWordIndex];
@@ -31,13 +35,13 @@ function getRandomNumber(min, max) {
 async function getSuffledWord() {
     let letters = [];
     const segmenter = new Intl.Segmenter("ta", { granularity: "grapheme" });
-    if (words.length === 0) {    
-    let dictionary = await getQuestions()
-    const tamilWords = Object.keys(dictionary);
-    const randomTamilWord = tamilWords[Math.floor(Math.random() * tamilWords.length)];
-    currentWord=randomTamilWord;
-     letters = [...segmenter.segment(randomTamilWord)].map(seg => seg.segment);
-    }else{
+    if (words.length === 0) {
+        let dictionary = await getQuestions()
+        const tamilWords = Object.keys(dictionary);
+        const randomTamilWord = tamilWords[Math.floor(Math.random() * tamilWords.length)];
+        currentWord = randomTamilWord;
+        letters = [...segmenter.segment(randomTamilWord)].map(seg => seg.segment);
+    } else {
         letters = [...segmenter.segment(currentWord)].map(seg => seg.segment);
     }
     letters = letters.sort(() => Math.random() - 0.5);
@@ -48,11 +52,11 @@ async function displayJumbledWord() {
     scrollingContainer.innerHTML = "";
     const jumbledWord = await getSuffledWord();
     for (const letter of jumbledWord) {
-            const letterBox = document.createElement("div");
-            letterBox.className = "jumbled-box";
-            letterBox.textContent = letter;
-            scrollingContainer.appendChild(letterBox);
-     }
+        const letterBox = document.createElement("div");
+        letterBox.className = "jumbled-box";
+        letterBox.textContent = letter;
+        scrollingContainer.appendChild(letterBox);
+    }
 }
 
 function checkGuess() {
@@ -108,7 +112,9 @@ displayJumbledWord();
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
+const addBySpeechBtn = document.getElementById('conversation-add-btn');
 const transcription = document.getElementById('userInput');
+
 
 window.onload = function () {
     document.getElementById('conversation-start-btn').focus();
@@ -127,32 +133,37 @@ if (!('webkitSpeechRecognition' in window)) {
     recognition.continuous = true; // Keep recognizing speech continuously
     recognition.interimResults = true; // Show interim results
     startBtn.disabled = false;
-    clearButton.addEventListener('click',async ()=>{
+    clearButton.addEventListener('click', async () => {
         const userInput = document.getElementById('userInput');
-        userInput.innerHTML="";
-        transcription.innerHTML=""
-        audioChunks=[]
-        if(mediaRecorder){
+        userInput.innerHTML = "";
+        transcription.innerHTML = ""
+        audioChunks = []
+        if (mediaRecorder) {
             await mediaRecorder.stop();
             await mediaRecorder.start();
         }
-        if(recognition){
+        if (recognition) {
             await recognition.stop();
-            await recognition.start(); 
+            await recognition.start();
         }
         console.log('Audio recording started');
-       // Start the speech recognition
+        // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
-        startBtn.textContent='listening';
+        startBtn.textContent = 'listening';
     });
-    
+
+
+    addBySpeechBtn.addEventListener('click', async () => {
+        const addedWord = document.getElementById('userInput').textContent;
+        words.push(addedWord);
+    });
 
     startBtn.addEventListener('click', async () => {
         recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
-        startBtn.textContent='listening';
+        startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
@@ -181,7 +192,8 @@ if (!('webkitSpeechRecognition' in window)) {
             mediaRecorder.stop();
             console.log('Audio recording stopped');
         }
-        startBtn.textContent='record';
+        startBtn.textContent = 'record';
+        checkGuess();
     });
     recognition.onresult = (event) => {
         let interimTranscript = '';
@@ -196,7 +208,8 @@ if (!('webkitSpeechRecognition' in window)) {
             transcription.innerHTML = `${transcript}`;
         }
         transcription.innerHTML = `${finalTranscript}`;
-        event.results=[]
+        console.log('Transcript:', finalTranscript);
+        event.results = []
     };
     recognition.onerror = (event) => {
         console.error('Speech recognition error detected: ' + event.error);
