@@ -1,5 +1,5 @@
 ---
-category: விளையாட்டு
+category: Teacher
 order: 1
 title: தமிழ் தொலைபேசி விளையாட்டு
 

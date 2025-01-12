@@ -1,5 +1,5 @@
 ---
-category: விளையாட்டு
+category: Teacher
 order: 2
 title: தமிழ் வார்த்தையை கண்டுபிடி
 ---
