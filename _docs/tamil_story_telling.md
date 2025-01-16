@@ -4,7 +4,12 @@ order: 2
 title: கதை சொல்லுதல் பயிற்சி 
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
-<script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/speech.js">
+  function setStoryImage(name){
+   const image=  document.getElementById('imageplaceholder');
+  image.innerHTML="<img src=\"{{ site.baseurl }}/images/"+name+"\" width=\"120\" height=\"120\">"
+ }
+</script>
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
@@ -36,9 +41,5 @@ title: கதை சொல்லுதல் பயிற்சி
 <script src="{{ site.baseurl }}/scripts/story.js"></script>
 <script>
 tracker();
- function setStoryImage(name){
-   const image=  document.getElementById('imageplaceholder');
-  image.innerHTML="<img src=\"{{ site.baseurl }}/images/"+name+"\" width=\"120\" height=\"120\">"
- }
 </script>
 <div id="tracker"></div>
