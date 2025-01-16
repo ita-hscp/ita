@@ -58,41 +58,41 @@ async function getExerciseData(week, className) {
 }
 
 
-async function fetchImage(filename, type) {
-    try {
-        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise/' + filename, {
-            headers: {
-                Authorization: sessionStorage.getItem('sessionToken')
-            }
-        });
-        if (response.status === 401) {
-            // Redirect to login page if not authenticated
-            window.location.href = "https://mperumal-usd.github.io/ita/Login";
-            return;
-        }
-        const imageGrid = document.getElementById('storyImage');
-        while (imageGrid.firstChild) {
-            imageGrid.removeChild(imageGrid.firstChild);
-        }
-        const data = await response.json();
-        const image = data.fileData;
-        const img = document.createElement('img');
-        img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
-        img.alt = 'Image';
-        if (type === 'full') {
-            img.classList.add('full-img');
-            img.style.width = '90%';
-            img.style.height = '90%';
-        } else {
-            img.classList.add('segment-img');
-            img.style.width = '90%';
-            img.style.height = '90%';
-        }
-        imageGrid.appendChild(img);
-    } catch (error) {
-        console.error('Error fetching images:', error);
-    }
-}
+// async function fetchImage(filename, type) {
+//     try {
+//         const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise/' + filename, {
+//             headers: {
+//                 Authorization: sessionStorage.getItem('sessionToken')
+//             }
+//         });
+//         if (response.status === 401) {
+//             // Redirect to login page if not authenticated
+//             window.location.href = "https://mperumal-usd.github.io/ita/Login";
+//             return;
+//         }
+//         const imageGrid = document.getElementById('storyImage');
+//         while (imageGrid.firstChild) {
+//             imageGrid.removeChild(imageGrid.firstChild);
+//         }
+//         const data = await response.json();
+//         const image = data.fileData;
+//         const img = document.createElement('img');
+//         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
+//         img.alt = 'Image';
+//         if (type === 'full') {
+//             img.classList.add('full-img');
+//             img.style.width = '90%';
+//             img.style.height = '90%';
+//         } else {
+//             img.classList.add('segment-img');
+//             img.style.width = '90%';
+//             img.style.height = '90%';
+//         }
+//         imageGrid.appendChild(img);
+//     } catch (error) {
+//         console.error('Error fetching images:', error);
+//     }
+// }
 
 async function fetchImage1(filename, type) {
      setStoryImage1(filename)
