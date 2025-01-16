@@ -27,6 +27,10 @@ title: கதை சொல்லுதல் பயிற்சி
         <div>
             <p type="text" id="topicSelected"></p>
         </div>
+         <div>
+          <img src="{{ site.baseurl }}/images/story_18_1.png" width="120" height="120"
+                                          >
+         </div> 
     </div>
 </div>
 <button id="story-saveButton" disabled>Finish Conversation</button>
