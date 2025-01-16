@@ -57,43 +57,6 @@ async function getExerciseData(week, className) {
     return response.json()
 }
 
-
-// async function fetchImage(filename, type) {
-//     try {
-//         const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise/' + filename, {
-//             headers: {
-//                 Authorization: sessionStorage.getItem('sessionToken')
-//             }
-//         });
-//         if (response.status === 401) {
-//             // Redirect to login page if not authenticated
-//             window.location.href = "https://mperumal-usd.github.io/ita/Login";
-//             return;
-//         }
-//         const imageGrid = document.getElementById('storyImage');
-//         while (imageGrid.firstChild) {
-//             imageGrid.removeChild(imageGrid.firstChild);
-//         }
-//         const data = await response.json();
-//         const image = data.fileData;
-//         const img = document.createElement('img');
-//         img.src = `data:image/jpeg;base64,${image}`; // Assuming the images are base64 encoded
-//         img.alt = 'Image';
-//         if (type === 'full') {
-//             img.classList.add('full-img');
-//             img.style.width = '90%';
-//             img.style.height = '90%';
-//         } else {
-//             img.classList.add('segment-img');
-//             img.style.width = '90%';
-//             img.style.height = '90%';
-//         }
-//         imageGrid.appendChild(img);
-//     } catch (error) {
-//         console.error('Error fetching images:', error);
-//     }
-// }
-
 async function fetchImage1(filename, type) {
      setStoryImage1(filename)
      const img= document.getElementById('storyImagePh');
@@ -112,11 +75,13 @@ async function getStoryExercise() {
     const dropdown = document.getElementById("weeks");
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
-    workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
+    // workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
     workSheet={
   "intro": [
-    "வணக்கம்.",
-    "கீழ் வரும் படங்களை பார்த்து கதை சொல்லவும்."
+    "வணக்கம். முதல் படத்தில் முழு கதையையும் புரிந்து கொள்ளுங்கள்",
+    "கீழ் வரும் படங்களை பார்த்து கதை சொல்லவும்.",
+    "ஒவ்வொரு படத்திற்கும் குறைந்தது ஒரு வாக்கியமாவது பேசுங்கள்.", 
+
   ],
   "full": "story_full_18.png",
   "segments": [
@@ -165,6 +130,8 @@ async function sendMessage() {
 }
 
 exerciseStartButton.addEventListener('click', async () => {
+    await speakApi(workSheet.intro[2])
+    topicSelected.textContent = workSheet.intro[2]
     sendMessage();
     exerciseStartButton.disabled = true;
     this.style.display = 'none';
