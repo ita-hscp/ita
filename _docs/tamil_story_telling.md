@@ -37,6 +37,6 @@ title: கதை சொல்லுதல் பயிற்சி
 <script>
 tracker();
  const image=  document.getElementById('imageplaceholder');
- image.innerHTML="<img src=\"{{ site.baseurl }}/images/story_18_10.png\" width=\"12\0" height=\"120\">"
+ image.innerHTML="<img src=\"{{ site.baseurl }}/images/story_18_10.png\" width=\"120\" height=\"120\">"
 </script>
 <div id="tracker"></div>
