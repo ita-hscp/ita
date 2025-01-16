@@ -27,9 +27,7 @@ title: கதை சொல்லுதல் பயிற்சி
         <div>
             <p type="text" id="topicSelected"></p>
         </div>
-         <div>
-          <img src="{{ site.baseurl }}/images/story_18_1.png" width="120" height="120"
-                                          >
+         <div id="imageplaceholder">
          </div> 
     </div>
 </div>
@@ -38,5 +36,7 @@ title: கதை சொல்லுதல் பயிற்சி
 <script src="{{ site.baseurl }}/scripts/story.js"></script>
 <script>
 tracker();
+ const image=  document.getElementById('imageplaceholder');
+ image.innerHTML="<img src=\"{{ site.baseurl }}/images/story_18_10.png\" width=\"12\0" height=\"120\">"
 </script>
 <div id="tracker"></div>
