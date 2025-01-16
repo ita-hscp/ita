@@ -19,6 +19,7 @@ async function getExercise() {
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     const header = await getWorkSheet(null, "header")
     workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
+    workSheet['week']=selectedText;
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
@@ -147,6 +148,7 @@ saveButton.addEventListener("click", async (event) => {
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
+    formData.append("week", workSheet.week?workSheet.week:"18");
     const spinner = document.getElementById('conversation-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);

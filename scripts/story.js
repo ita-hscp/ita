@@ -95,7 +95,8 @@ async function getStoryExercise() {
     "story_18_8.png",
     "story_18_9.png",
     "story_18_10.png"
-  ]
+  ],
+    "week": "18"
 }
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
@@ -151,6 +152,7 @@ saveButton.addEventListener("click", async (event) => {
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "storyTelling");
+    formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
