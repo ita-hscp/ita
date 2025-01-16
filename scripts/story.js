@@ -11,6 +11,10 @@ const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 
+function setStoryImage1(name){
+   const image=  document.getElementById('imageplaceholder');
+  image.innerHTML="<img id="storyImagePh" src=\"/ita/images/"+name+"\" width=\"120\" height=\"120\">"
+ }
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
@@ -91,7 +95,7 @@ async function fetchImage(filename, type) {
 }
 
 async function fetchImage1(filename, type) {
-     setStoryImage(filename)
+     setStoryImage1(filename)
      const img= document.getElementById('storyImagePh');
      if (type === 'full') {
             img.classList.add('full-img');
