@@ -90,18 +90,51 @@ async function fetchImage(filename, type) {
     }
 }
 
+async function fetchImage1(filename, type) {
+     setStoryImage(filename)
+     const img= document.getElementById('storyImagePh');
+     if (type === 'full') {
+            img.classList.add('full-img');
+            img.style.width = '90%';
+            img.style.height = '90%';
+        } else {
+            img.classList.add('segment-img');
+            img.style.width = '90%';
+            img.style.height = '90%';
+        }
+}
+
 async function getStoryExercise() {
     const dropdown = document.getElementById("weeks");
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
     workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
+    workSheet={
+  "intro": [
+    "வணக்கம்.",
+    "கீழ் வரும் படங்களை பார்த்து கதை சொல்லவும்."
+  ],
+  "full": "story_full_18.png",
+  "segments": [
+    "story_18_1.png",
+    "story_18_2.png",
+    "story_18_3.png",
+    "story_18_4.png",
+    "story_18_5.png",
+    "story_18_6.png",
+    "story_18_7.png",
+    "story_18_8.png",
+    "story_18_9.png",
+    "story_18_10.png"
+  ]
+}
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
     await speakApi(workSheet.intro[0])
     await speakApi(workSheet.intro[1])
     base64AudioList = [];
     workSheet['week'] = selectedText;
-    await fetchImage(workSheet.full, 'full');
+    await fetchImage1(workSheet.full, 'full');
     exerciseStartButton.disabled = false;
 }
 
@@ -123,7 +156,7 @@ async function sendMessage() {
         startBtn.disabled = false;
         let botResponse = workSheet.segments[counter];
         counter++;
-        await fetchImage(botResponse);
+        await fetchImage1(botResponse);
     }
 }
 
