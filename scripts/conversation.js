@@ -91,8 +91,6 @@ async function sendMessage() {
         counter++;
         displayMessage(botResponse, 'received');
         const audioBlob = await getAudio(botResponse)
-        audioBlobList.push(audioBlob)
-        // questionsBlobList.push(audioBlob)
         await speak(audioBlob)
         // await speakApi(botResponse)
     }
@@ -180,7 +178,6 @@ if (!('webkitSpeechRecognition' in window)) {
     const recognition = new SpeechRecognition();
     let mediaRecorder;
     let audioChunks = [];
-    // let audioBlob;
     recognition.lang = 'ta';
     recognition.continuous = true; // Keep recognizing speech continuously
     recognition.interimResults = true; // Show interim results
@@ -213,13 +210,15 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream,{ mimeType: 'audio/mpeg' });
+            mediaRecorder = new MediaRecorder(stream,{ type: 'audio/wav' });
             mediaRecorder.ondataavailable = (event) => {
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                audioBlobList.push(audioBlob);
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioURL = URL.createObjectURL(audioBlob);
+                console.log('Audio URL:', audioURL);
+                audioBlobList.push(...audioChunks)
                 // Clear chunks for the next recording
                 audioChunks = [];
             };
