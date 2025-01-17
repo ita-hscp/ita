@@ -92,7 +92,7 @@ async function sendMessage() {
         displayMessage(botResponse, 'received');
         const audioBlob = await getAudio(botResponse)
         audioBlobList.push(audioBlob)
-        questionsBlobList.push(audioBlob)
+        // questionsBlobList.push(audioBlob)
         await speak(audioBlob)
         // await speakApi(botResponse)
     }
