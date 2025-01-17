@@ -92,6 +92,7 @@ async function sendMessage() {
         displayMessage(botResponse, 'received');
         const audioBlob = await getAudio(botResponse)
         audioBlobList.push(audioBlob)
+        questionsBlobList.push(audioBlob)
         await speak(audioBlob)
         // await speakApi(botResponse)
     }
@@ -103,37 +104,6 @@ async function sendMessage() {
 }
 
 
-
-
-
-// Create a ReadableStream to track progress
-function getUploadStream(audioBlob) {
-    const stream = audioBlob.stream().getReader();
-    const totalSize = audioBlob.size;
-    let uploadedSize = 0;
-    const uploadStream = new ReadableStream({
-        start(controller) {
-            function push() {
-                stream.read().then(({ done, value }) => {
-                    if (done) {
-                        controller.close();
-                        return;
-                    }
-                    uploadedSize += value.length;
-                    const percentComplete = Math.round((uploadedSize / totalSize) * 100);
-                    // progressBar.value = percentComplete;
-                    // progressText.textContent = `${percentComplete}%`;
-                    controller.enqueue(value);
-                    push();
-                });
-            }
-            push();
-        }
-    });
-    return uploadStream;
-}
-
-
 saveButton.addEventListener("click", async (event) => {
     const chatBox = document.getElementById("chatBox");
     saveButton.textContent = 'Uploading...';
@@ -142,7 +112,7 @@ saveButton.addEventListener("click", async (event) => {
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
     const formData = new FormData();
-    audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
+    const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
@@ -210,7 +180,7 @@ if (!('webkitSpeechRecognition' in window)) {
     const recognition = new SpeechRecognition();
     let mediaRecorder;
     let audioChunks = [];
-    let audioBlob;
+    // let audioBlob;
     recognition.lang = 'ta';
     recognition.continuous = true; // Keep recognizing speech continuously
     recognition.interimResults = true; // Show interim results
@@ -248,10 +218,8 @@ if (!('webkitSpeechRecognition' in window)) {
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = async () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioURL = URL.createObjectURL(audioBlob);
-                console.log('Audio URL:', audioURL);
-                audioBlobList.push(...audioChunks)
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                audioBlobList.push(audioBlob);
                 // Clear chunks for the next recording
                 audioChunks = [];
             };

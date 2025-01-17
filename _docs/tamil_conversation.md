@@ -1,5 +1,5 @@
 ---
-category: HSCP 1
+category: HSCP 3
 order: 1
 title: உரையாடல் பயிற்சி
 ---
