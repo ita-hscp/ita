@@ -1,5 +1,5 @@
 ---
-category: HSCP 3
+category: HSCP 1
 order: 2
 title: கதை சொல்லுதல் பயிற்சி 
 ---
@@ -32,7 +32,7 @@ title: கதை சொல்லுதல் பயிற்சி
         <div>
             <p type="text" id="topicSelected"></p>
         </div>
-         <div id="imageplaceholder">
+         <div id="imageplaceholder" class="story-image">
          </div> 
     </div>
 </div>

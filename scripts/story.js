@@ -13,7 +13,7 @@ const exerciseStartButton = document.getElementById('exercise-start-btn');
 
 function setStoryImage1(name){
    const image=  document.getElementById('imageplaceholder');
-  image.innerHTML="<img id=\"storyImagePh\" src=\"/ita/images/"+name+"\" width=\"120\" height=\"120\">"
+  image.innerHTML="<img id=\"storyImagePh\" src=\"/ita/images/"+name+"\" >"
  }
 
 function addOptions() {
