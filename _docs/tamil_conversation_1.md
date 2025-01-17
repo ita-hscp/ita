@@ -1,15 +1,15 @@
 ---
-category: HSCP 1
+category: HSCP 3
 order: 1
 title: உரையாடல் பயிற்சி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lamejs/lame.min.js"></script>
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
-         <option value="1">17</option>
-         <option value="2">18</option>
+         <option value="1">16</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
@@ -32,7 +32,7 @@ title: உரையாடல் பயிற்சி
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
 </div> -->
-<script src="{{ site.baseurl }}/scripts/conversation.js"></script>
+<script src="{{ site.baseurl }}/scripts/conversation_test.js"></script>
 <script>
 tracker();
 </script>
