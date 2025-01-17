@@ -66,8 +66,8 @@ async function fetchImage1(filename, type) {
             img.style.height = '90%';
         } else {
             img.classList.add('segment-img');
-            img.style.width = '90%';
-            img.style.height = '90%';
+            img.style.width = '50%';
+            img.style.height = '50%';
         }
 }
 
