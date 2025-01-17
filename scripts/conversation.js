@@ -213,12 +213,12 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder = new MediaRecorder(stream,{ mimeType: 'audio/mpeg' });
             mediaRecorder.ondataavailable = (event) => {
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
                 audioBlobList.push(audioBlob);
                 // Clear chunks for the next recording
                 audioChunks = [];
