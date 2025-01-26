@@ -231,7 +231,7 @@ function loadExercise(exercise) {
   // Get the words and meanings for the selected exercise
   const exerciseJson = exercises[exercise];
         // Clear existing content
-        wordsList.innerHTML = `<h3>${exerciseJson.titleA}</h3>`;
+wordsList.innerHTML = `<h3>${exerciseJson.titleA}</h3>`;
   meaningsList.innerHTML = `<h3>${exerciseJson.titleB}</h3>`;
 
   if(exerciseJson.shuffleA) {
