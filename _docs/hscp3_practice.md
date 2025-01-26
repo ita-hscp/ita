@@ -21,4 +21,8 @@ title: தமிழ் சொற்களோடு பொருத்துக
     </div>
   </div>
 <script src="{{ site.baseurl }}/scripts/match.js"></script>
+<script src="{{ site.baseurl }}/scripts/track.js"></script>
+<script>
+tracker();
+</script>
 
