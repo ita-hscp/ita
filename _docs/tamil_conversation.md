@@ -10,7 +10,6 @@ title: உரையாடல் பயிற்சி
     <select id="weeks">
          <option value="1">17</option>
          <option value="2">18</option>
-          <option value="3">5</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
