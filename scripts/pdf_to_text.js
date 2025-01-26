@@ -19,7 +19,7 @@ fileInput.addEventListener("change", async (event) => {
         const viewport = page.getViewport({ scale: 1.5 });
 
         // Create canvas to render PDF page
-        const canvas = document.createElement("pdf-canvas");
+        const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         canvas.width = viewport.width;
         canvas.height = viewport.height;
