@@ -281,8 +281,8 @@ wordsList.innerHTML = `<h3>${exerciseJson.titleA}</h3>`;
 
 // Drag and drop functionality
 function initializeDragAndDrop() {
-  const words = document.querySelectorAll(".word");
-  const dropZones = document.querySelectorAll(".drop-zone");
+  const words = document.querySelectorAll(".match-word");
+  const dropZones = document.querySelectorAll(".match-drop-zone");
 
   let draggedItem = null;
 
