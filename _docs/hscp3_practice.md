@@ -12,11 +12,11 @@ title: தமிழ் சொற்களோடு பொருத்துக
     </select>
   </div>
 
-  <div class="container">
-    <div class="list" id="words-list">
+  <div class="match-container">
+    <div class="match-list" id="words-list">
       <h3>ஒருமை</h3>
     </div>
-    <div class="list" id="meanings-list">
+    <div class="match-list" id="meanings-list">
       <h3>பன்மை</h3>
     </div>
   </div>

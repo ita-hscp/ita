@@ -239,7 +239,7 @@ function loadExercise(exercise) {
     const shuffledWords = shuffleArray(Object.keys(exerciseJson.data));
     shuffledWords.forEach(key => {
       const wordElement = document.createElement("div");
-      wordElement.className = "word";
+      wordElement.className = "match-word";
       wordElement.draggable = true;
       wordElement.dataset.word = key.toLowerCase();
       wordElement.textContent = key;
@@ -248,7 +248,7 @@ function loadExercise(exercise) {
     const shuffledMeanings = (Object.entries(exerciseJson.data));
   shuffledMeanings.forEach(([key, value]) => {
     const meaningElement = document.createElement("div");
-    meaningElement.className = "drop-zone";
+    meaningElement.className = "match-drop-zone";
     meaningElement.dataset.word = key.toLowerCase();
     meaningElement.textContent = value;
     meaningsList.appendChild(meaningElement);
@@ -257,7 +257,7 @@ function loadExercise(exercise) {
     // Shuffle and load words
     Object.keys(exerciseJson.data).forEach(key => {
       const wordElement = document.createElement("div");
-      wordElement.className = "word";
+      wordElement.className = "match-word";
       wordElement.draggable = true;
       wordElement.dataset.word = key.toLowerCase();
       wordElement.textContent = key;
@@ -266,7 +266,7 @@ function loadExercise(exercise) {
     const shuffledMeanings = shuffleArray(Object.entries(exerciseJson.data));
   shuffledMeanings.forEach(([key, value]) => {
     const meaningElement = document.createElement("div");
-    meaningElement.className = "drop-zone";
+    meaningElement.className = "match-drop-zone";
     meaningElement.dataset.word = key.toLowerCase();
     meaningElement.textContent = value;
     meaningsList.appendChild(meaningElement);
