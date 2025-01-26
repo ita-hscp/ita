@@ -18,29 +18,7 @@ async function getExercise() {
     const selectedValue = dropdown.value; // Get the value of the selected option
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     const header = await getWorkSheet(null, "header")
-    if (selectedText === "5" ) {
-         workSheet ={
-  "intro":[
-  "தமிழ் உரையாடல் தேர்வு  . முழு வாக்கியங்களாக பேசவும்", "இன்றைய தலைப்பு \"யாரால் நஷ்டம் ?\""
-  ],
-  "conversations":[
-"உன் பெயர்  என்ன ?",
-"திருடர்கள்  எங்கே  தங்கி இருந்தார்கள் ?",
-"பாட்டி ஏன் குடத்தை  கொடுத்தார் ?",
-"நன்கு திருடர்கள் பாட்டியிடம் என்ன சொன்னார்கள் ?",
-" பாட்டியிடம் அரசர்  என்ன  சொன்னார் ", "இந்த கதையில்  யார்  பாட்டிக்கு உதவினார் ?",
-"இந்த கதையிலிருந்து நீ தெரிந்து கொண்டது என்ன ?",
-"நன்றி. வணக்கம்"
-  ],
-  "words": [
-    "வார நாட்கள்"
-  ],
-  "test": [
-  ],
-  "class": "HSCP1"
-} } {
     workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
-}
     workSheet['week']=selectedText;
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
