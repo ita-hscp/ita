@@ -38,7 +38,7 @@ function validateAndSubmit() {
             console.log('Response:', data); // Handle the server response (success)
             sessionStorage.setItem('sessionToken', data.sessionToken);
             sessionStorage.setItem("allowedRoles",  data.roles || []);
-            sessionStorage.setItem("weeks",  data.week || [18]);
+            sessionStorage.setItem("weeks",  data.week || [18,19]);
             sessionStorage.setItem("className",  data.className || "1E");
             alert('Password changed successfully!');
             closeModal();
