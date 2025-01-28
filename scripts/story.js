@@ -18,7 +18,7 @@ function setStoryImage1(name){
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18];
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,19];
     // Array of options to add
     // Loop through the array and add options
     let index = 1;
@@ -76,6 +76,11 @@ async function getStoryExercise() {
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
     // workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
+   let segments= [];
+   for(let i=1;i<=10;i++){
+      segments.push("story_"+selectedText+"_"+i+".png")
+   }
+   
     workSheet={
   "intro": [
     "வணக்கம். முதல் படத்தில் முழு கதையையும் புரிந்து கொள்ளுங்கள்",
@@ -83,19 +88,8 @@ async function getStoryExercise() {
     "ஒவ்வொரு படத்திற்கும் குறைந்தது ஒரு வாக்கியமாவது பேசுங்கள்.", 
 
   ],
-  "full": "story_full_18.png",
-  "segments": [
-    "story_18_1.png",
-    "story_18_2.png",
-    "story_18_3.png",
-    "story_18_4.png",
-    "story_18_5.png",
-    "story_18_6.png",
-    "story_18_7.png",
-    "story_18_8.png",
-    "story_18_9.png",
-    "story_18_10.png"
-  ],
+  "full": "story_full_"+selectedText+".png",
+  "segments":segments ,
     "week": "18"
 }
     const topicSelected = document.getElementById('topicSelected');
