@@ -18,7 +18,7 @@ function setStoryImage1(name){
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,19,20];
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20];
     // Array of options to add
     // Loop through the array and add options
     let index = 1;
@@ -90,7 +90,7 @@ async function getStoryExercise() {
   ],
   "full": "story_full_"+selectedText+".png",
   "segments":segments ,
-    "week": "18"
+    "week": selectedText
 }
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
