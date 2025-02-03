@@ -26,7 +26,7 @@ window.addEventListener("load", async (event) => {
     const tableBody = document.querySelector("#jsonTable tbody");
     const query = {
         "className": "HSCP1E",
-        "week": "20",
+        "week": "ALL",
         "assignmentType": "conversation"
     }
     const jsonData = await getClassReport(query);
@@ -52,9 +52,10 @@ window.addEventListener("load", async (event) => {
 async function loadReport() {
     const query = {
         "className": "HSCP1E",
-        "week": "20",
+        "week": "17",
         "assignmentType": "conversation"
     }
+    const tableBody = document.querySelector("#jsonTable tbody");
     const week = document.getElementById("weekFilter").getValue;
     const assignmentType = document.getElementById("assignmentTypeFilter").getValue;
     query['week'] = week;
