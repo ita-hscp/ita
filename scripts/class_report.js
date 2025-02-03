@@ -48,7 +48,11 @@ window.addEventListener("load", async (event) => {
 
 
 async function loadReport(){
-    event.preventDefault();
+    const query = {
+        "className": "HSCP1E",
+        "week": "20",
+        "assignmentType": "conversation"
+    }
     const week = document.getElementById("weekFilter").getValue;
     const assignmentType = document.getElementById("assignmentTypeFilter").getValue;
     query['week'] = week;
