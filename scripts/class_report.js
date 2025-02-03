@@ -57,7 +57,6 @@ async function loadReport() {
     }
     const tableBody = document.querySelector("#jsonTable tbody");
     const weekElement = document.getElementById("weekFilter");
-    dropdown.options[dropdown.selectedIndex].text
     query['week'] = weekElement.options[weekElement.selectedIndex].value
     const assignmentType = document.getElementById("assignmentTypeFilter")
     query['assignmentType'] =  assignmentType.options[assignmentType.selectedIndex].value;
