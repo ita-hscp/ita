@@ -31,7 +31,7 @@ window.addEventListener("load", async (event) => {
     }
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
-        jsonData.forEach(item => {
+        jsonData.report.forEach(item => {
             const row = document.createElement("tr");
             row.innerHTML = `
             <td>${item.id}</td>
@@ -60,9 +60,10 @@ async function loadReport() {
     query['week'] = week;
     query['assignmentType'] = assignmentType;
     const jsonData = await getClassReport(query);
-    jsonData.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+    if (jsonData?.report) {
+        jsonData.report.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
             <td>${item.id}</td>
             <td>${item.week}</td>
             <td>${item.assignmentType}</td>
@@ -72,7 +73,8 @@ async function loadReport() {
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
         `;
-        tableBody.appendChild(row);
-    });
+            tableBody.appendChild(row);
+        });
+    }
 };
 
