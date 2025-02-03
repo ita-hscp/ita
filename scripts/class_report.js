@@ -45,9 +45,8 @@ window.addEventListener("load", async (event) => {
     });
 });
 
-const loadDocument = document.getElementById("loadReport");
 
-loadDocument.addEventListener("click", async (event) => {
+async function loadReport(){
     event.preventDefault();
     const week = document.getElementById("weekFilter").getValue;
     const assignmentType = document.getElementById("assignmentTypeFilter").getValue;
@@ -68,5 +67,5 @@ loadDocument.addEventListener("click", async (event) => {
         `;
         tableBody.appendChild(row);
     });
-});
+};
 
