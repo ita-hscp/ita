@@ -5,7 +5,8 @@ async function getClassReport(reportQuery) {
     const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-            'Authorization': sessionStorage.getItem('sessionToken')
+            'Authorization': sessionStorage.getItem('sessionToken'),
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(reportQuery)
     });
