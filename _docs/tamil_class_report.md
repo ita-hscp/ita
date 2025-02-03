@@ -8,6 +8,22 @@ title: Class Report
     tracker();
 </script>
 
+ <label for="weekFilter">Filter by Week:</label>
+    <select id="weekFilter">
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="All">All</option>
+    </select>  
+
+<label for="assignmentTypeFilter">Filter by Assignment Type:</label>
+    <select id="assignmentTypeFilter">
+        <option value="conversation">Conversation</option>
+        <option value="story">Story</option>
+        <option value="all">All</option>
+    </select>
+    
+<button id="loadReport" onclick="loadReport()">Load Report</button>
 
 <div id="classReport">
 <table id="jsonTable">
