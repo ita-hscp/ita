@@ -30,9 +30,10 @@ window.addEventListener("load", async (event) => {
         "assignmentType": "conversation"
     }
     const jsonData = await getClassReport(query);
-    jsonData.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+    if (jsonData?.report) {
+        jsonData.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
             <td>${item.id}</td>
             <td>${item.week}</td>
             <td>${item.assignmentType}</td>
@@ -42,12 +43,13 @@ window.addEventListener("load", async (event) => {
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
         `;
-        tableBody.appendChild(row);
-    });
+            tableBody.appendChild(row);
+        });
+    }
 });
 
 
-async function loadReport(){
+async function loadReport() {
     const query = {
         "className": "HSCP1E",
         "week": "20",
