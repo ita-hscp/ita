@@ -4,6 +4,11 @@ order: 3
 title: Class Report
 ---
 
+<script src="{{ site.baseurl }}/scripts/track.js">
+    tracker();
+</script>
+
+
 <div id="classReport">
 <table id="jsonTable">
         <thead>
@@ -23,3 +28,4 @@ title: Class Report
 </table>
 </div>
 
+<script src="{{ site.baseurl }}/scripts/class_report.js">
