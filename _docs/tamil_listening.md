@@ -1,5 +1,5 @@
 ---
-category: HSCP 1
+category: HSCP 3
 order: 1
 title: கேட்டல்‌ கருத்தறிதல் பயிற்சி
 ---
