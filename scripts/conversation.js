@@ -15,8 +15,7 @@ const transcription = document.getElementById('userInput');
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
-    const selectedValue = dropdown.value; // Get the value of the selected option
-    const selectedText = dropdown.options[dropdown.selectedIndex].text;
+    let selectedText = dropdown.options[dropdown.selectedIndex].text;
     if(dropdown.options[dropdown.selectedIndex].value?.includes("listen")){
         selectedText= dropdown.options[dropdown.selectedIndex].value
     }
