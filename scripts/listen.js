@@ -25,8 +25,8 @@ async function getExercise() {
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     const linkDiv = document.getElementById('div-link')
-    topicSelected.innerHTML = workSheet.intro[1]
-    linkDiv.textContent= workSheet.link
+    topicSelected.textContent = workSheet.intro[1]
+    linkDiv.innerHTML= workSheet.link
     await speakApi(workSheet.intro[0])
     await speakApi(workSheet.intro[1])
     base64AudioList = [];
