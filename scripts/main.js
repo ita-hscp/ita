@@ -3,7 +3,7 @@ window.addEventListener("load", (event) => {
 if(tokenValid){
     const mainPage=document.getElementById("mainPage");
     if(mainPage){
-        mainPage.innerHTML=`<p> <h2>வாரம் 20</h2> </br> <h3> உரையாடல் பயிற்சி :  விழாக்கள்‌ </h3>
+        mainPage.innerHTML=`<p> <h2>வாரம் 21</h2> </br> <h3> உரையாடல் பயிற்சி :  விழாக்கள்‌ </h3>
                 <h3> கேட்டல்‌ கருத்தறிதல்‌: 'ஆயிரம்‌ நாணயங்கள்‌'  </h3>
         <h3> Due Date: Feb, 09 2025 </h3>
         </br>
