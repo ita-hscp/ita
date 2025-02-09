@@ -74,7 +74,7 @@ async function loadReport() {
             <td>${item.comments}</td>
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
-            <td><button class="play-btn" data-id="${item.id}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
         `;
             tableBody.appendChild(row);
         });
@@ -84,12 +84,13 @@ async function loadReport() {
 
 
 async function addAudio(reportData) {
+    const audioMap = new Map();
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
-            const audio = new Audio();
-            const item = reportData.filter(item => item.id == audioId)[0]
-            if (!audio.src) {
+            if (!audioMap.has(audioId)) {
+                let audio = new Audio();
+                const item = reportData.filter(item => item.id == audioId)[0]
                 try {
                     // Fetch the audio file based on item.id
                     const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
@@ -107,6 +108,7 @@ async function addAudio(reportData) {
                         window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
                         return;
                     }
+                    audioMap.set(audioId, new Audio(url));
                     const blob = await response.blob();
                     const url = URL.createObjectURL(blob);
                     audio.src = url;
@@ -114,7 +116,9 @@ async function addAudio(reportData) {
                     console.error("Error fetching audio file:", error);
                     return;
                 }
+
             }
+            const audio = audioMap.get(audioId)
 
             // Play or pause the audio
             if (audio.paused) {
