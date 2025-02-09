@@ -39,6 +39,7 @@ title: Class Report
                 <th>Comments</th>
                 <th>Completion Date</th>
                 <th>Due Date</th>
+                <th>Audio</th>
             </tr>
         </thead>
         <tbody>
