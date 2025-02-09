@@ -62,6 +62,7 @@ async function loadReport() {
     query['assignmentType'] =  assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
+        tableBody.innerHTML = "";
         jsonData.report.forEach(item => {
             const row = document.createElement("tr");
             row.innerHTML = `
