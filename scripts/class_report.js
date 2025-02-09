@@ -92,7 +92,7 @@ async function addAudio(reportData) {
             if (!audio.src) {
                 try {
                     // Fetch the audio file based on item.id
-                    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/HSCP1E/${item.week}/${item.assignmentType}`);
+                    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/HSCP1E/${item.week}/${item.assignmentType}`);
                     if (response.status === 401) {
                         // Redirect to login page if not authenticated
                         window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
