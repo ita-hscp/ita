@@ -87,8 +87,9 @@ async function addAudio(reportData) {
     const audioMap = new Map();
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
+            let audio = audioMap.get(audioId);
             const audioId = this.getAttribute("data-id");
-            if (!audioMap.has(audioId)) {
+            if (!audio) {
                 const item = reportData.filter(item => item.id == audioId)[0]
                 try {
                     // Fetch the audio file based on item.id
@@ -107,7 +108,8 @@ async function addAudio(reportData) {
                         window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
                         return;
                     }
-                    audioMap.set(audioId, new Audio());
+                    audio = new Audio();
+                    audioMap.set(audioId, audio);
                     const blob = await response.blob();
                     const url = URL.createObjectURL(blob);
                     audio.src = url;
@@ -116,7 +118,6 @@ async function addAudio(reportData) {
                     return;
                 }
             }
-            const audio = audioMap.get(audioId)
 
             // Play or pause the audio
             if (audio.paused) {
