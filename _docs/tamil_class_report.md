@@ -21,6 +21,7 @@ title: Class Report
     <select id="assignmentTypeFilter">
         <option value="conversation">Conversation</option>
         <option value="story">Story</option>
+         <option value="listen">Listening</option>
         <option value="all">All</option>
     </select>
     
