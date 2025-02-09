@@ -87,8 +87,8 @@ async function addAudio(reportData) {
     const audioMap = new Map();
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
-            let audio = audioMap.get(audioId);
             const audioId = this.getAttribute("data-id");
+            let audio = audioMap.get(audioId);
             if (!audio) {
                 const item = reportData.filter(item => item.id == audioId)[0]
                 try {
