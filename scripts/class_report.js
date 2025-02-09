@@ -59,7 +59,7 @@ async function loadReport() {
     const weekElement = document.getElementById("weekFilter");
     query['week'] = weekElement.options[weekElement.selectedIndex].value
     const assignmentType = document.getElementById("assignmentTypeFilter")
-    query['assignmentType'] =  assignmentType.options[assignmentType.selectedIndex].value;
+    query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
         tableBody.innerHTML = "";
@@ -74,9 +74,58 @@ async function loadReport() {
             <td>${item.comments}</td>
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
+            <td><button class="play-btn" data-id="${item.id}">▶ Play</button></td>
         `;
             tableBody.appendChild(row);
         });
+        addAudio(jsonData.report);
     }
 };
+
+
+async function addAudio(reportData) {
+    document.querySelectorAll(".play-btn").forEach(button => {
+        button.addEventListener("click", async function () {
+            const audioId = this.getAttribute("data-id");
+            const audio = new Audio();
+            const item = reportData.filter(item => item.id == audioId)[0]
+            if (!audio.src) {
+                try {
+                    // Fetch the audio file based on item.id
+                    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/HSCP1E/${item.week}/${item.assignmentType}`);
+                    if (response.status === 401) {
+                        // Redirect to login page if not authenticated
+                        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
+                        return;
+                    }
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    audio.src = url;
+                } catch (error) {
+                    console.error("Error fetching audio file:", error);
+                    return;
+                }
+            }
+
+            // Play or pause the audio
+            if (audio.paused) {
+                audio.play();
+                this.textContent = "⏸ Pause";
+
+                // Pause all other audios
+                document.querySelectorAll(".play-btn").forEach(btn => {
+                    if (btn !== this) btn.textContent = "▶ Play";
+                });
+
+                // Reset button text when audio ends
+                audio.onended = () => {
+                    this.textContent = "▶ Play";
+                };
+            } else {
+                audio.pause();
+                this.textContent = "▶ Play";
+            }
+        });
+    });
+}
 
