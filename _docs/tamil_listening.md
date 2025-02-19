@@ -9,6 +9,7 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
         <option value="21-listen">21</option>
+        <option value="22-listen">22</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
