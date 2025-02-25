@@ -9,19 +9,16 @@ const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
 const transcription = document.getElementById('userInput');
-// const progressBar = document.getElementById('progressBar');
-// const progressText = document.getElementById('progressText');
-
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
     let selectedText = dropdown.options[dropdown.selectedIndex].text;
-    if(dropdown.options[dropdown.selectedIndex].value?.includes("listen")){
-        selectedText= dropdown.options[dropdown.selectedIndex].value
+    if (dropdown.options[dropdown.selectedIndex].value?.includes("listen")) {
+        selectedText = dropdown.options[dropdown.selectedIndex].value
     }
     const header = await getWorkSheet(null, "header")
     workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
-    workSheet['week']=selectedText;
+    workSheet['week'] = selectedText;
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
@@ -29,7 +26,7 @@ async function getExercise() {
     await speakApi(workSheet.intro[1])
     base64AudioList = [];
     startBtn.disabled = false;
-    clearButton.disabled = true;
+    clearButton.disabled = false;
     const messages = chatBox.querySelectorAll(".message");
     if (messages) {
         messages.forEach(message => message.remove());
@@ -122,7 +119,7 @@ saveButton.addEventListener("click", async (event) => {
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
-    formData.append("week", workSheet.week?workSheet.week:"18");
+    formData.append("week", workSheet.week ? workSheet.week : "18");
     const spinner = document.getElementById('conversation-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
@@ -161,6 +158,30 @@ saveButton.addEventListener("click", async (event) => {
         })
 });
 
+function handleSpeechRecognition(event) {
+    let interimTranscript = '';
+    let finalTranscript = '';
+    for (let i = 0; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+        } else {
+            interimTranscript += transcript;
+        }
+        transcription.innerHTML = `${transcript}`;
+    }
+    transcription.innerHTML = `${finalTranscript}`;
+    event.results = []
+}
+
+async function handleRecording(event) {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const audioURL = URL.createObjectURL(audioBlob);
+    console.log('Audio URL:', audioURL);
+    audioBlobList.push(...audioChunks)
+    // Clear chunks for the next recording
+    audioChunks = [];
+}
 
 // Function to display a message
 function displayMessage(message, type) {
@@ -194,12 +215,18 @@ if (!('webkitSpeechRecognition' in window)) {
         transcription.innerHTML = ""
         audioChunks = []
         if (mediaRecorder) {
+            mediaRecorder.onstop = () => {
+                console.log("Ignore Recording")
+            }
             await mediaRecorder.stop();
-            await mediaRecorder.start();
+            // await mediaRecorder.start();
         }
         if (recognition) {
+            recognition.onresult = (event) => {
+                console.log("Ignore Listening")
+            }
             await recognition.stop();
-            await recognition.start();
+            // await recognition.start();
         }
         console.log('Audio recording started');
         // Start the speech recognition
@@ -210,59 +237,38 @@ if (!('webkitSpeechRecognition' in window)) {
 
 
     startBtn.addEventListener('click', async () => {
-        recognition.start(); // Start the speech recognition
+        await recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream,{ type: 'audio/wav' });
+            mediaRecorder = new MediaRecorder(stream, { type: 'audio/wav' });
             mediaRecorder.ondataavailable = (event) => {
                 audioChunks.push(event.data);
             };
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioURL = URL.createObjectURL(audioBlob);
-                console.log('Audio URL:', audioURL);
-                audioBlobList.push(...audioChunks)
-                // Clear chunks for the next recording
-                audioChunks = [];
-            };
-            mediaRecorder.start();
+            mediaRecorder.onstop = handleRecording;
+            await mediaRecorder.start();
             console.log('Audio recording started');
+            recognition.onresult = handleSpeechRecognition;
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error detected: ' + event.error);
+            };
+            recognition.onend = () => {
+                console.log("Recognition on end")
+            };
         } catch (error) {
             console.error('Error accessing microphone:', error);
         }
     });
-    sendBtn.addEventListener('click', () => {
+    sendBtn.addEventListener('click', async () => {
         recognition.stop(); // Stop the speech recognition
         startBtn.disabled = false;
         sendBtn.disabled = true;
         if (mediaRecorder) {
-            mediaRecorder.stop();
+            await mediaRecorder.stop();
             console.log('Audio recording stopped');
         }
         startBtn.textContent = 'record';
     });
-    recognition.onresult = (event) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
-        for (let i = 0; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-                finalTranscript += transcript;
-            } else {
-                interimTranscript += transcript;
-            }
-            transcription.innerHTML = `${transcript}`;
-        }
-        transcription.innerHTML = `${finalTranscript}`;
-        event.results = []
-    };
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error detected: ' + event.error);
-    };
-    recognition.onend = () => {
-        console.log("Recognition on end")
-    };
 }
