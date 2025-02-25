@@ -31,7 +31,7 @@ async function getExercise() {
     await speakApi(workSheet.intro[1])
     base64AudioList = [];
     startBtn.disabled = false;
-    clearButton.disabled = true;
+    clearButton.disabled = false;
     const messages = chatBox.querySelectorAll(".message");
     if (messages) {
         messages.forEach(message => message.remove());

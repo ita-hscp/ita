@@ -118,6 +118,7 @@ async function sendMessage() {
             userInput.textContent = "";
         }
         startBtn.disabled = false;
+        clearButton.disabled =false;
         let botResponse = workSheet.segments[counter];
         counter++;
         await fetchImage1(botResponse);
