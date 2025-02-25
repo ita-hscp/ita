@@ -211,7 +211,6 @@ if (!('webkitSpeechRecognition' in window)) {
         || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     let mediaRecorder;
-    let audioChunks = [];
     recognition.lang = 'ta';
     recognition.continuous = true; // Keep recognizing speech continuously
     recognition.interimResults = true; // Show interim results
