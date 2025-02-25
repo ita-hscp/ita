@@ -239,7 +239,7 @@ if (!('webkitSpeechRecognition' in window)) {
         // Start the speech recognition
         startBtn.disabled = false;
         sendBtn.disabled = true;
-        startBtn.textContent = 'listening';
+        startBtn.textContent = 'record';
     });
 
 
