@@ -164,6 +164,32 @@ saveButton.addEventListener("click", async (event) => {
 });
 
 
+function handleSpeechRecognition(event) {
+    let interimTranscript = '';
+    let finalTranscript = '';
+    for (let i = 0; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+        } else {
+            interimTranscript += transcript;
+        }
+        transcription.innerHTML = `${transcript}`;
+    }
+    transcription.innerHTML = `${finalTranscript}`;
+    event.results = []
+}
+
+async function handleRecording(event) {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const audioURL = URL.createObjectURL(audioBlob);
+    console.log('Audio URL:', audioURL);
+    audioBlobList.push(...audioChunks)
+    // Clear chunks for the next recording
+    audioChunks = [];
+}
+
+
 // Function to display a message
 function displayMessage(message, type) {
     const chatBox = document.getElementById('chatBox');
@@ -196,75 +222,61 @@ if (!('webkitSpeechRecognition' in window)) {
         transcription.innerHTML = ""
         audioChunks = []
         if (mediaRecorder) {
+            mediaRecorder.onstop = () => {
+                console.log("Ignore Recording")
+            }
+            mediaRecorder.ondataavailable = () => { }
             await mediaRecorder.stop();
-            await mediaRecorder.start();
+            // await mediaRecorder.start();
         }
         if (recognition) {
+            recognition.onresult = (event) => {
+                console.log("Ignore Listening")
+            }
             await recognition.stop();
-            await recognition.start();
+            // await recognition.start();
         }
         console.log('Audio recording started');
         // Start the speech recognition
-        startBtn.disabled = true;
-        sendBtn.disabled = false;
+        startBtn.disabled = false;
+        sendBtn.disabled = true;
         startBtn.textContent = 'listening';
     });
 
 
     startBtn.addEventListener('click', async () => {
-        recognition.start(); // Start the speech recognition
+        await recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream,{ type: 'audio/wav' });
+            mediaRecorder = new MediaRecorder(stream, { type: 'audio/wav' });
             mediaRecorder.ondataavailable = (event) => {
                 audioChunks.push(event.data);
             };
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioURL = URL.createObjectURL(audioBlob);
-                console.log('Audio URL:', audioURL);
-                audioBlobList.push(...audioChunks)
-                // Clear chunks for the next recording
-                audioChunks = [];
-            };
-            mediaRecorder.start();
+            mediaRecorder.onstop = handleRecording;
+            await mediaRecorder.start();
             console.log('Audio recording started');
+            recognition.onresult = handleSpeechRecognition;
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error detected: ' + event.error);
+            };
+            recognition.onend = () => {
+                console.log("Recognition on end")
+            };
         } catch (error) {
             console.error('Error accessing microphone:', error);
         }
     });
-    sendBtn.addEventListener('click', () => {
+    sendBtn.addEventListener('click', async () => {
         recognition.stop(); // Stop the speech recognition
         startBtn.disabled = false;
         sendBtn.disabled = true;
         if (mediaRecorder) {
-            mediaRecorder.stop();
+            await mediaRecorder.stop();
             console.log('Audio recording stopped');
         }
         startBtn.textContent = 'record';
     });
-    recognition.onresult = (event) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
-        for (let i = 0; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-                finalTranscript += transcript;
-            } else {
-                interimTranscript += transcript;
-            }
-            transcription.innerHTML = `${transcript}`;
-        }
-        transcription.innerHTML = `${finalTranscript}`;
-        event.results = []
-    };
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error detected: ' + event.error);
-    };
-    recognition.onend = () => {
-        console.log("Recognition on end")
-    };
 }

@@ -218,6 +218,7 @@ if (!('webkitSpeechRecognition' in window)) {
             mediaRecorder.onstop = () => {
                 console.log("Ignore Recording")
             }
+            mediaRecorder.ondataavailable = () => { }
             await mediaRecorder.stop();
             // await mediaRecorder.start();
         }
@@ -230,8 +231,8 @@ if (!('webkitSpeechRecognition' in window)) {
         }
         console.log('Audio recording started');
         // Start the speech recognition
-        startBtn.disabled = true;
-        sendBtn.disabled = false;
+        startBtn.disabled = false;
+        sendBtn.disabled = true;
         startBtn.textContent = 'listening';
     });
 
