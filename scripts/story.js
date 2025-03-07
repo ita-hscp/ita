@@ -18,7 +18,7 @@ function setStoryImage1(name){
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20];
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20,23];
     // Array of options to add
     // Loop through the array and add options
     let index = 1;
@@ -77,7 +77,7 @@ async function getStoryExercise() {
     //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
     // workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
    let segments= [];
-   for(let i=1;i<=10;i++){
+   for(let i=1;i<=8;i++){
       segments.push("story_"+selectedText+"_"+i+".png")
    }
    
