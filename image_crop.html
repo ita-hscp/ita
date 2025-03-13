@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Cropper</title>
+    <style>
+        canvas { border: 1px solid black; cursor: crosshair; }
+    </style>
+</head>
+<body>
+    <h2>Upload and Crop Image</h2>
+    <input type="file" id="upload" accept="image/*"> <br><br>
+    <label>Prefix Name: <input type="text" id="prefix" placeholder="Enter prefix"></label> <br><br>
+    <canvas id="canvas"></canvas> <br><br>
+    <div id="downloads"></div>
+    <button id="download" disabled>Download Cropped Images</button>
+    
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const upload = document.getElementById("upload");
+        const downloadBtn = document.getElementById("download");
+        const prefixInput = document.getElementById("prefix");
+        let img = new Image();
+        let startX, startY, endX, endY, isDrawing = false;
+        let cropRegions = [];
+        let imageCount = 1;
+        
+        upload.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        img.onload = () => {
+            canvas.width = img.width / 2;
+            canvas.height = img.height / 2;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        
+        canvas.addEventListener("mousedown", (e) => {
+            startX = e.offsetX;
+            startY = e.offsetY;
+            isDrawing = true;
+        });
+        
+        canvas.addEventListener("mouseup", (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+            endX = e.offsetX;
+            endY = e.offsetY;
+            cropRegions.push({ startX, startY, width: endX - startX, height: endY - startY });
+            downloadBtn.disabled = false;
+        });
+        
+        downloadBtn.addEventListener("click", () => {
+            cropRegions.forEach((region, index) => {
+                const croppedCanvas = document.createElement("canvas");
+                const croppedCtx = croppedCanvas.getContext("2d");
+                
+                croppedCanvas.width = region.width;
+                croppedCanvas.height = region.height;
+                croppedCtx.drawImage(canvas, region.startX, region.startY, region.width, region.height, 0, 0, region.width, region.height);
+                
+                const link = document.createElement("a");
+                const prefix = prefixInput.value.trim() || "cropped";
+                link.download = `${prefix}_${imageCount}.png`;
+                link.href = croppedCanvas.toDataURL("image/png");
+                link.click();
+                imageCount++;
+            });
+            cropRegions = []; // Clear selected regions after download
+        });
+    </script>
+</body>
+</html>
