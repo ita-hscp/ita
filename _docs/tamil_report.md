@@ -1,5 +1,5 @@
 ---
-category: Teacher
+category: HSCP 1
 order: 3
 title: Student Report
 ---
@@ -7,6 +7,9 @@ title: Student Report
 <script src="{{ site.baseurl }}/scripts/track.js">
     tracker();
 </script>
+<br>
+In Progress
+<br>
 
  <label for="weekFilter">Filter by Week:</label>
     <select id="weekFilter">
@@ -14,6 +17,12 @@ title: Student Report
         <option value="18">18</option>
         <option value="20">20</option>
         <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+         <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
         <option value="All">All</option>
     </select>  
 
@@ -21,7 +30,7 @@ title: Student Report
     <select id="assignmentTypeFilter">
         <option value="conversation">Conversation</option>
         <option value="story">Story</option>
-         <option value="listen">Listening</option>
+        <option value="listen">Listening</option>
         <option value="all">All</option>
     </select>
     

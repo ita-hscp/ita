@@ -13,7 +13,11 @@ title: உரையாடல் பயிற்சி
         <option value="3">20</option>
         <option value="4">21</option>
         <option value="5">22</option>
-         <option value="6">23</option>
+        <option value="6">23</option>
+        <option value="7">24</option>
+        <option value="8">25</option>
+        <option value="9">26</option>
+        <option value="10">27</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
