@@ -109,6 +109,11 @@ async function sendMessage() {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
+        if (message !== "") {
+            displayMessage(message, 'sent');
+            // Clear input field
+            userInput.textContent = "";
+        }
     }
     if ((message || counter == 0) && workSheet && workSheet.segments && workSheet.segments.length > counter) {
         // Display the sent message
