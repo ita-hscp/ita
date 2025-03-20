@@ -1,7 +1,6 @@
 
 async function getClassReport(reportQuery) {
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/student';
-    reportQuery.userId='User_34149'
     // Fetch the json
     const response = await fetch(apiUrl, {
         method: 'POST',
