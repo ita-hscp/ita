@@ -14,7 +14,16 @@ title: Class Report
         <option value="18">18</option>
         <option value="20">20</option>
         <option value="21">21</option>
-        <option value="All">All</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+         <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
     </select>  
 
 <label for="assignmentTypeFilter">Filter by Assignment Type:</label>
