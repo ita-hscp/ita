@@ -18,6 +18,10 @@ title: உரையாடல் பயிற்சி
         <option value="8">25</option>
         <option value="9">26</option>
         <option value="10">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>

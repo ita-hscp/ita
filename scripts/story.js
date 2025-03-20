@@ -18,7 +18,7 @@ function setStoryImage1(name){
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20,23,24];
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20,23,24,25,26,27,28,29,30,31,32];
     // Array of options to add
     // Loop through the array and add options
     let index = 1;
