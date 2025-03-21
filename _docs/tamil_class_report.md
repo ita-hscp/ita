@@ -35,6 +35,7 @@ title: Class Report
     </select>
     
 <button id="loadReport" onclick="loadReport()">Load Report</button>
+<button id="saveReport" onclick="saveReport()">Save Report</button>
 
 <div id="classReport">
 <table id="jsonTable">
@@ -55,5 +56,7 @@ title: Class Report
         </tbody>
 </table>
 </div>
+
+
 
 <script src="{{ site.baseurl }}/scripts/class_report.js">

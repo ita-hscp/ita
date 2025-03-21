@@ -22,38 +22,36 @@ async function getClassReport(reportQuery) {
 }
 
 
-window.addEventListener("load", async (event) => {
-    const tableBody = document.querySelector("#jsonTable tbody");
-    const query = {
-        "className": "HSCP1E",
-        "week": "ALL",
-        "assignmentType": "conversation"
-    }
-    const jsonData = await getClassReport(query);
-    if (jsonData?.report) {
-        jsonData.report.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.week}</td>
-            <td>${item.assignmentType}</td>
-            <td>${item.status}</td>
-            <td>${item.score}</td>
-            <td>${item.comments}</td>
-            <td>${item.completionDate}</td>
-            <td>${item.dueDate}</td>
-        `;
-            tableBody.appendChild(row);
-        });
-    }
-});
+// window.addEventListener("load", async (event) => {
+//     const tableBody = document.querySelector("#jsonTable tbody");
+//     const query = {
+//         "className": "HSCP1E",
+//         "week": "ALL",
+//         "assignmentType": "conversation"
+//     }
+//     const jsonData = await getClassReport(query);
+//     if (jsonData?.report) {
+//         jsonData.report.forEach(item => {
+//             const row = document.createElement("tr");
+//             row.innerHTML = `
+//             <td>${item.id}</td>
+//             <td>${item.week}</td>
+//             <td>${item.assignmentType}</td>
+//             <td>${item.status}</td>
+//             <td>${item.score}</td>
+//             <td>${item.comments}</td>
+//             <td>${item.completionDate}</td>
+//             <td>${item.dueDate}</td>
+//         `;
+//             tableBody.appendChild(row);
+//         });
+//     }
+// });
 
 
 async function loadReport() {
     const query = {
-        "className": "HSCP1E",
-        "week": "17",
-        "assignmentType": "conversation"
+        "className": "HSCP1E"
     }
     const tableBody = document.querySelector("#jsonTable tbody");
     const weekElement = document.getElementById("weekFilter");
@@ -62,26 +60,45 @@ async function loadReport() {
     query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
-        tableBody.innerHTML = "";
-        jsonData.report.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.week}</td>
-            <td>${item.assignmentType}</td>
-            <td>${item.status}</td>
-            <td>${item.score}</td>
-            <td>${item.comments}</td>
-            <td>${item.completionDate}</td>
-            <td>${item.dueDate}</td>
-            <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
-        `;
-            tableBody.appendChild(row);
-        });
+        renderTableRows(jsonData.report)
         addAudio(jsonData.report);
     }
 };
 
+function renderTableRows(data) {
+    const tableBody = document.querySelector("#jsonTable tbody");
+    tableBody.innerHTML = "";
+    data.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.id}</td>
+            <td>${item.week}</td>
+            <td>${item.type}</td>
+            <td>${item.status}</td>
+            <td class="score">${item.score}</td>
+            <td class="comments">${item.comments}</td>
+            <td>${item.completion}</td>
+            <td>${item.due}</td>
+            <td>${item.audio}</td>
+            <td><button class="feedback-btn" data-index="${index}">Add Feedback</button></td>
+        `;
+        tableBody.appendChild(row);
+    });
+    function handleFeedback(event) {
+        if (event.target.classList.contains("feedback-btn")) {
+            const index = event.target.getAttribute("data-index");
+            const newScore = prompt("Enter Score:", "");
+            const newComment = prompt("Enter Feedback:", "");
+            
+            if (newScore !== null && newComment !== null) {
+                data[index].score = newScore;
+                data[index].comments = newComment;
+                renderTableRows(data);
+            }
+        }
+    }
+    tableBody.addEventListener("click", handleFeedback);
+}
 
 async function addAudio(reportData) {
     const audioMap = new Map();
@@ -139,5 +156,43 @@ async function addAudio(reportData) {
             }
         });
     });
+}
+
+async function saveReport(){
+    const tableBody = document.querySelector("#jsonTable tbody");
+    const rows = tableBody.querySelectorAll("tr");
+    const report = [];
+    rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const item = {
+            id: cells[0].textContent,
+            week: cells[1].textContent,
+            score: cells[4].textContent,
+            comments: cells[5].textContent,
+        };
+        report.push(item);
+    });
+    const query = {
+        "className": "HSCP1E",
+        "report": report
+    }
+    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/save', {
+        method: 'POST',
+        headers: {
+            'Authorization': sessionStorage.getItem('sessionToken'),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(query)
+    });
+    if (response.status === 401) {
+        // Redirect to login page if not authenticated
+        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
+        return;
+    }
+    if (response.ok) {
+        alert("Report saved successfully");
+    } else {
+        alert("Error saving report");
+    }
 }
 
