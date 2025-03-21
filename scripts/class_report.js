@@ -73,13 +73,13 @@ function renderTableRows(data) {
         row.innerHTML = `
             <td>${item.id}</td>
             <td>${item.week}</td>
-            <td>${item.type}</td>
+            <td>${item.assignmentType}</td>
             <td>${item.status}</td>
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
-            <td>${item.completion}</td>
-            <td>${item.due}</td>
-            <td>${item.audio}</td>
+            <td>${item.completionDate}</td>
+            <td>${item.dueDate}</td>
+            <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
             <td><button class="feedback-btn" data-index="${index}">Add Feedback</button></td>
         `;
         tableBody.appendChild(row);
@@ -195,4 +195,49 @@ async function saveReport(){
         alert("Error saving report");
     }
 }
+
+const modal = document.getElementById("feedbackModal");
+const modalScore = document.getElementById("modalScore");
+const modalComments = document.getElementById("modalComments");
+const submitFeedbackBtn = document.getElementById("submitFeedback");
+const closeModalBtn = document.getElementById("closeModal");
+let selectedIndex = null;
+const tableBody = document.querySelector("#jsonTable tbody");
+
+// Show Modal
+function showModal(index) {
+    selectedIndex = index;
+    modal.style.display = "block";
+}
+
+// Close Modal
+function closeModal() {
+    modal.style.display = "none";
+    modalScore.value = "";
+    modalComments.value = "";
+}
+
+// Handle Feedback Button Click
+tableBody.addEventListener("click", function (event) {
+    if (event.target.classList.contains("feedback-btn")) {
+        const index = event.target.getAttribute("data-index");
+        showModal(index);
+    }
+});
+
+// Submit Feedback
+submitFeedbackBtn.addEventListener("click", function () {
+    if (selectedIndex !== null) {
+        sampleData[selectedIndex].score = modalScore.value;
+        sampleData[selectedIndex].comments = modalComments.value;
+        renderTableRows();
+        closeModal();
+    }
+});
+
+// Close Modal on Button Click
+closeModalBtn.addEventListener("click", closeModal);
+
+
+
 

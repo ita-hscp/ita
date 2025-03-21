@@ -57,6 +57,16 @@ title: Class Report
 </table>
 </div>
 
+<!-- Modal Popup -->
+<div id="feedbackModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+    <h3>Add Feedback</h3>
+    <label>Score:</label>
+    <input type="text" id="modalScore"><br><br>
+    <label>Feedback:</label>
+    <textarea id="modalComments"></textarea><br><br>
+    <button id="submitFeedback">Submit</button>
+    <button id="closeModal">Cancel</button>
+</div>
 
 
 <script src="{{ site.baseurl }}/scripts/class_report.js">
