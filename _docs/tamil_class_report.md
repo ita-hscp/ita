@@ -29,7 +29,7 @@ title: Class Report
 <label for="assignmentTypeFilter">Filter by Assignment Type:</label>
     <select id="assignmentTypeFilter">
         <option value="conversation">Conversation</option>
-        <option value="story">Story</option>
+        <option value="storyTelling">Story</option>
          <option value="listen">Listening</option>
         <option value="all">All</option>
     </select>
