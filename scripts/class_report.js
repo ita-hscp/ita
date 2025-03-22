@@ -20,7 +20,7 @@ async function getClassReport(reportQuery) {
     }
     return response.json()
 }
-
+let sampleData = [];
 
 // window.addEventListener("load", async (event) => {
 //     const tableBody = document.querySelector("#jsonTable tbody");
@@ -60,6 +60,7 @@ async function loadReport() {
     query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
+        sampleData = jsonData.report;
         renderTableRows(jsonData.report)
         addAudio(jsonData.report);
     }
@@ -84,6 +85,8 @@ function renderTableRows(data) {
         `;
         tableBody.appendChild(row);
     });
+    // Submit Feedback
+
     function handleFeedback(event) {
         if (event.target.classList.contains("feedback-btn")) {
             const index = event.target.getAttribute("data-index");
