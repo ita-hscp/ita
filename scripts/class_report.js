@@ -87,17 +87,17 @@ function renderTableRows(data) {
     });
     // Submit Feedback
 
-    function handleFeedback(event) {
-        if (event.target.classList.contains("feedback-btn")) {
-            const index = event.target.getAttribute("data-index");
-            if (newScore !== null && newComment !== null) {
-                data[index].score = newScore;
-                data[index].comments = newComment;
-                renderTableRows(data);
-            }
-        }
-    }
-    tableBody.addEventListener("click", handleFeedback);
+    // function handleFeedback(event) {
+    //     if (event.target.classList.contains("feedback-btn")) {
+    //         const index = event.target.getAttribute("data-index");
+    //         if (newScore !== null && newComment !== null) {
+    //             data[index].score = newScore;
+    //             data[index].comments = newComment;
+    //             renderTableRows(data);
+    //         }
+    //     }
+    // }
+    // tableBody.addEventListener("click", handleFeedback);
 }
 
 async function addAudio(reportData) {
