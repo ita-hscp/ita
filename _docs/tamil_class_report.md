@@ -48,8 +48,8 @@ title: Class Report
                 <th>Score</th>
                 <th>Comments</th>
                 <th>Completion Date</th>
-                <th>Due Date</th>
                 <th>Audio</th>
+                <th>Add Feedback</th>
             </tr>
         </thead>
         <tbody>

@@ -53,9 +53,8 @@ function renderTableRows(data) {
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
             <td>${item.completionDate}</td>
-            <td>${item.dueDate}</td>
             <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
-            <td><button class="feedback-btn" data-index="${index}">Add Feedback</button></td>
+            <td><button class="feedback-btn" data-index="${index}">Feedback</button></td>
         `;
         tableBody.appendChild(row);
     });
@@ -194,6 +193,7 @@ submitFeedbackBtn.addEventListener("click", function () {
         sampleData[selectedIndex].score = modalScore.value;
         sampleData[selectedIndex].comments = modalComments.value;
         renderTableRows(sampleData);
+        addAudio(sampleData);
         closeModal();
     }
 });
