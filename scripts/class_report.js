@@ -230,7 +230,7 @@ submitFeedbackBtn.addEventListener("click", function () {
     if (selectedIndex !== null) {
         sampleData[selectedIndex].score = modalScore.value;
         sampleData[selectedIndex].comments = modalComments.value;
-        renderTableRows();
+        renderTableRows(sampleData);
         closeModal();
     }
 });
