@@ -22,32 +22,6 @@ async function getClassReport(reportQuery) {
 }
 let sampleData = [];
 
-// window.addEventListener("load", async (event) => {
-//     const tableBody = document.querySelector("#jsonTable tbody");
-//     const query = {
-//         "className": "HSCP1E",
-//         "week": "ALL",
-//         "assignmentType": "conversation"
-//     }
-//     const jsonData = await getClassReport(query);
-//     if (jsonData?.report) {
-//         jsonData.report.forEach(item => {
-//             const row = document.createElement("tr");
-//             row.innerHTML = `
-//             <td>${item.id}</td>
-//             <td>${item.week}</td>
-//             <td>${item.assignmentType}</td>
-//             <td>${item.status}</td>
-//             <td>${item.score}</td>
-//             <td>${item.comments}</td>
-//             <td>${item.completionDate}</td>
-//             <td>${item.dueDate}</td>
-//         `;
-//             tableBody.appendChild(row);
-//         });
-//     }
-// });
-
 
 async function loadReport() {
     const query = {
@@ -85,19 +59,6 @@ function renderTableRows(data) {
         `;
         tableBody.appendChild(row);
     });
-    // Submit Feedback
-
-    // function handleFeedback(event) {
-    //     if (event.target.classList.contains("feedback-btn")) {
-    //         const index = event.target.getAttribute("data-index");
-    //         if (newScore !== null && newComment !== null) {
-    //             data[index].score = newScore;
-    //             data[index].comments = newComment;
-    //             renderTableRows(data);
-    //         }
-    //     }
-    // }
-    // tableBody.addEventListener("click", handleFeedback);
 }
 
 async function addAudio(reportData) {
@@ -162,13 +123,15 @@ async function saveReport(){
     const tableBody = document.querySelector("#jsonTable tbody");
     const rows = tableBody.querySelectorAll("tr");
     const report = [];
-    rows.forEach(row => {
+    rows.forEach((row,index) => {
         const cells = row.querySelectorAll("td");
         const item = {
-            id: cells[0].textContent,
+            id:  sampleData[index].assignmentId,
+            userId:  cells[0].textContent,
             week: cells[1].textContent,
             score: cells[4].textContent,
             comments: cells[5].textContent,
+
         };
         report.push(item);
     });
