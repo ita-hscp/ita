@@ -90,9 +90,6 @@ function renderTableRows(data) {
     function handleFeedback(event) {
         if (event.target.classList.contains("feedback-btn")) {
             const index = event.target.getAttribute("data-index");
-            const newScore = prompt("Enter Score:", "");
-            const newComment = prompt("Enter Feedback:", "");
-            
             if (newScore !== null && newComment !== null) {
                 data[index].score = newScore;
                 data[index].comments = newComment;
