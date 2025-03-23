@@ -22,38 +22,36 @@ async function getClassReport(reportQuery) {
 }
 
 
-window.addEventListener("load", async (event) => {
-    const tableBody = document.querySelector("#jsonTable tbody");
-    const query = {
-        "className": "HSCP1E",
-        "week": "ALL",
-        "assignmentType": "conversation"
-    }
-    const jsonData = await getClassReport(query);
-    if (jsonData?.report) {
-        jsonData.report.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.week}</td>
-            <td>${item.assignmentType}</td>
-            <td>${item.status}</td>
-            <td>${item.score}</td>
-            <td>${item.comments}</td>
-            <td>${item.completionDate}</td>
-            <td>${item.dueDate}</td>
-        `;
-            tableBody.appendChild(row);
-        });
-    }
-});
+// window.addEventListener("load", async (event) => {
+//     const tableBody = document.querySelector("#jsonTable tbody");
+//     const query = {
+//         "className": "HSCP1E",
+//         "week": "ALL",
+//         "assignmentType": "conversation"
+//     }
+//     const jsonData = await getClassReport(query);
+//     if (jsonData?.report) {
+//         jsonData.report.forEach(item => {
+//             const row = document.createElement("tr");
+//             row.innerHTML = `
+//             <td>${item.id}</td>
+//             <td>${item.week}</td>
+//             <td>${item.assignmentType}</td>
+//             <td>${item.status}</td>
+//             <td>${item.score}</td>
+//             <td>${item.comments}</td>
+//             <td>${item.completionDate}</td>
+//             <td>${item.dueDate}</td>
+//         `;
+//             tableBody.appendChild(row);
+//         });
+//     }
+// });
 
 
 async function loadReport() {
     const query = {
-        "className": "HSCP1E",
-        "week": "17",
-        "assignmentType": "conversation"
+        "className": "HSCP1E"
     }
     const tableBody = document.querySelector("#jsonTable tbody");
     const weekElement = document.getElementById("weekFilter");
@@ -74,7 +72,7 @@ async function loadReport() {
             <td>${item.comments}</td>
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
-            <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.assignmentId}" data-id="${item.assignmentId}">▶ Play</button></td>
         `;
             tableBody.appendChild(row);
         });
@@ -90,7 +88,7 @@ async function addAudio(reportData) {
             const audioId = this.getAttribute("data-id");
             let audio = audioMap.get(audioId);
             if (!audio) {
-                const item = reportData.filter(item => item.id == audioId)[0]
+                const item = reportData.filter(item => item.assignmentId == audioId)[0]
                 try {
                     // Fetch the audio file based on item.id
                     const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
