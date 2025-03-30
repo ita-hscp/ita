@@ -39,7 +39,7 @@ async function getExerciseData(week, className) {
     if (week)
         query += "week=" + week + "&";
     if (className)
-        query += "className=" + topic + "&";
+        query += "className=" + className + "&";
     
     query += 'assignmentType=story&';
 
