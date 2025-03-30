@@ -10,15 +10,17 @@ const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
-
-function setStoryImage1(name){
-   const image=  document.getElementById('imageplaceholder');
-  image.innerHTML="<img id=\"storyImagePh\" src=\"/ita/images/"+name+"\" >"
- }
+/*
+*  Store Image 
+*/
+function setStoryImage1(name) {
+    const image = document.getElementById('imageplaceholder');
+    image.innerHTML = "<img id=\"storyImagePh\" src=\"/ita/images/" + name + "\" >"
+}
 
 function addOptions() {
     const dropdown = document.getElementById("weeks");
-    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18,20,23,24,25,26,27,28,29,30,31,32];
+    const items = sessionStorage.getItem('week') ? sessionStorage.getItem('week') : [18, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32];
     // Array of options to add
     // Loop through the array and add options
     let index = 1;
@@ -38,6 +40,8 @@ async function getExerciseData(week, className) {
         query += "week=" + week + "&";
     if (className)
         query += "className=" + topic + "&";
+    
+    query += 'assignmentType=story&';
 
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercise' + (query.length > 0 ? "?" + query : "");
     // Fetch the json
@@ -52,46 +56,47 @@ async function getExerciseData(week, className) {
         return;
     }
     if (!response.ok) {
-        return {}
+        return { ok: false}
     }
-    return response.json()
+    return {ok: true,data: response.json() }
 }
 
 async function fetchImage1(filename, type) {
-     setStoryImage1(filename)
-     const img= document.getElementById('storyImagePh');
-     if (type === 'full') {
-            img.classList.add('full-img');
-            img.style.width = '90%';
-            img.style.height = '90%';
-        } else {
-            img.classList.add('segment-img');
-            img.style.width = '50%';
-            img.style.height = '50%';
-        }
+    setStoryImage1(filename)
+    const img = document.getElementById('storyImagePh');
+    if (type === 'full') {
+        img.classList.add('full-img');
+        img.style.width = '90%';
+        img.style.height = '90%';
+    } else {
+        img.classList.add('segment-img');
+        img.style.width = '50%';
+        img.style.height = '50%';
+    }
 }
 
 async function getStoryExercise() {
     const dropdown = document.getElementById("weeks");
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
-    //[{"class":"HSCP1","subject":"conversation","data":{"week17":{"full":"story_full_17","segments":10}}}]
-    // workSheet = await getExerciseData(selectedText === "" ? "1" : selectedText, null);
-   let segments= [];
-   for(let i=1;i<=8;i++){
-      segments.push("story_"+selectedText+"_"+i+".png")
-   }
-   
-    workSheet={
-  "intro": [
-    "வணக்கம். முதல் படத்தில் முழு கதையையும் புரிந்து கொள்ளுங்கள்",
-    "கீழ் வரும் படங்களை பார்த்து கதை சொல்லவும்.",
-    "ஒவ்வொரு படத்திற்கும் குறைந்தது ஒரு வாக்கியமாவது பேசுங்கள்.", 
+    let segments = [];
+    for (let i = 1; i <= 10; i++) {
+        segments.push("story_" + selectedText + "_" + i + ".png")
+    }
 
-  ],
-  "full": "story_full_"+selectedText+".png",
-  "segments":segments ,
-    "week": selectedText
-}
+    workSheet = {
+        "intro": [
+            "வணக்கம். முதல் படத்தில் முழு கதையையும் புரிந்து கொள்ளுங்கள்",
+            "கீழ் வரும் படங்களை பார்த்து கதை சொல்லவும்.",
+            "ஒவ்வொரு படத்திற்கும் குறைந்தது ஒரு வாக்கியமாவது பேசுங்கள்.",
+
+        ],
+        "full": "story_full_" + selectedText + ".png",
+        "segments": segments,
+        "week": selectedText
+    }
+
+    let jsonData= getExerciseData(selectedText,'HSCP1E');
+    workSheet = jsonData?.ok ? jsonData.data :workSheet;
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
     await speakApi(workSheet.intro[0])
@@ -105,7 +110,7 @@ async function getStoryExercise() {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
-    if (workSheet && workSheet.segments && counter >= workSheet.segments.length){
+    if (workSheet && workSheet.segments && counter >= workSheet.segments.length) {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
@@ -123,7 +128,7 @@ async function sendMessage() {
             userInput.textContent = "";
         }
         startBtn.disabled = false;
-        clearButton.disabled =false;
+        clearButton.disabled = false;
         let botResponse = workSheet.segments[counter];
         counter++;
         await fetchImage1(botResponse);
@@ -304,5 +309,5 @@ if (!('webkitSpeechRecognition' in window)) {
         }
         startBtn.textContent = 'record';
     });
-    
+
 }
