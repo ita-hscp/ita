@@ -95,7 +95,7 @@ async function getStoryExercise() {
         "week": selectedText
     }
 
-    let jsonData= getExerciseData(selectedText,'HSCP1E');
+    let jsonData=await getExerciseData(selectedText,'HSCP1E');
     workSheet = jsonData?.ok ? jsonData.data :workSheet;
     const topicSelected = document.getElementById('topicSelected');
     topicSelected.textContent = workSheet.intro[1]
