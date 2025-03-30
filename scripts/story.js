@@ -58,7 +58,7 @@ async function getExerciseData(week, className) {
     if (!response.ok) {
         return { ok: false}
     }
-    return {ok: true,data: response.json() }
+    return {ok: true,data: await response.json() }
 }
 
 async function fetchImage1(filename, type) {
