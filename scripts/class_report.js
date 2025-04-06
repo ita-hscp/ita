@@ -1,4 +1,11 @@
 
+const modal = document.getElementById("feedbackModal");
+const modalScore = document.getElementById("modalScore");
+const modalComments = document.getElementById("modalComments");
+const submitFeedbackBtn = document.getElementById("submitFeedback");
+const closeModalBtn = document.getElementById("closeModal");
+let selectedIndex = null;
+const tableBody = document.querySelector("#jsonTable tbody");
 async function getClassReport(reportQuery) {
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/report';
     // Fetch the json
@@ -53,7 +60,7 @@ function renderTableRows(data) {
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
             <td>${item.completionDate}</td>
-            <td><button class="play-btn" id="${item.id}" data-id="${item.id}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.id}" data-id="${item.id}" data-index="${index}">▶ Play</button></td>
             <td><button class="feedback-btn" data-index="${index}">Feedback</button></td>
         `;
         tableBody.appendChild(row);
@@ -65,35 +72,21 @@ async function addAudio(reportData) {
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
+            const index = this.getAttribute("data-index");
             let audio = audioMap.get(audioId);
             if (!audio) {
                 const item = reportData.filter(item => item.id == audioId)[0]
-                try {
-                    // Fetch the audio file based on item.id
-                    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': sessionStorage.getItem('sessionToken'),
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(item)
-                        }
-                    );
-                    if (response.status === 401) {
-                        // Redirect to login page if not authenticated
-                        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
-                        return;
-                    }
-                    audio = new Audio();
-                    audioMap.set(audioId, audio);
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    audio.src = url;
-                } catch (error) {
-                    console.error("Error fetching audio file:", error);
+                const response=await getAudioFromBackEnd(item);
+                if(response.redirect){
+                    window.location.href = response.url;
                     return;
                 }
+                if(response.audioFound){
+                    audio=response.audio;
+                    audioMap.set(audioId,audio);
+                    showModal(index);
+                }
+
             }
 
             // Play or pause the audio
@@ -105,7 +98,6 @@ async function addAudio(reportData) {
                 document.querySelectorAll(".play-btn").forEach(btn => {
                     if (btn !== this) btn.textContent = "▶ Play";
                 });
-
                 // Reset button text when audio ends
                 audio.onended = () => {
                     this.textContent = "▶ Play";
@@ -116,6 +108,36 @@ async function addAudio(reportData) {
             }
         });
     });
+}
+
+async function getAudioFromBackEnd(item){
+    try {
+        // Fetch the audio file based on item.id
+        const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': sessionStorage.getItem('sessionToken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            }
+        );
+        if (response.status === 401) {
+            // Redirect to login page if not authenticated
+            // window.location.href =  // Replace '/login' with your actual login URL
+            return {redirect: true, url:"https://ita-hscp.github.io/ita/Login"};
+        }
+        let audio = new Audio();
+        audioMap.set(audioId, audio);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        audio.src = url;
+        return {audioFound:false,audio:audio,redirect: false}
+    } catch (error) {
+        console.error("Error fetching audio file:", error);
+    }
+    return  {audioFound:false,redirect: false};
 }
 
 async function saveReport(){
@@ -158,13 +180,7 @@ async function saveReport(){
     }
 }
 
-const modal = document.getElementById("feedbackModal");
-const modalScore = document.getElementById("modalScore");
-const modalComments = document.getElementById("modalComments");
-const submitFeedbackBtn = document.getElementById("submitFeedback");
-const closeModalBtn = document.getElementById("closeModal");
-let selectedIndex = null;
-const tableBody = document.querySelector("#jsonTable tbody");
+
 
 // Show Modal
 function showModal(index) {
