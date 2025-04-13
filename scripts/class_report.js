@@ -4,6 +4,7 @@ const modalScore = document.getElementById("modalScore");
 const modalComments = document.getElementById("modalComments");
 const submitFeedbackBtn = document.getElementById("submitFeedback");
 const closeModalBtn = document.getElementById("closeModal");
+const audioMap = new Map();
 let selectedIndex = null;
 const tableBody = document.querySelector("#jsonTable tbody");
 async function getClassReport(reportQuery) {
@@ -68,7 +69,6 @@ function renderTableRows(data) {
 }
 
 async function addAudio(reportData) {
-    const audioMap = new Map();
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
@@ -129,6 +129,10 @@ async function getAudioFromBackEnd(item){
             return {redirect: true, url:"https://ita-hscp.github.io/ita/Login"};
         }
         let audio = new Audio();
+/* The line `audioMap.set(audioId, audio);` is adding a key-value pair to a Map data structure named
+`audioMap`. In this case, it is associating the `audioId` as the key and the `audio` object as the
+corresponding value in the map. This allows for easy retrieval and storage of audio objects based on
+their unique `audioId`. */
         audioMap.set(audioId, audio);
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
