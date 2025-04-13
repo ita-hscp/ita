@@ -61,7 +61,7 @@ function renderTableRows(data) {
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
             <td>${item.completionDate}</td>
-            <td><button class="play-btn" id="${item.id}" data-id="${item.id}" data-index="${index}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.id}" data-id="${item.assignmentId}" data-index="${index}">▶ Play</button></td>
             <td><button class="feedback-btn" data-index="${index}">Feedback</button></td>
         `;
         tableBody.appendChild(row);
