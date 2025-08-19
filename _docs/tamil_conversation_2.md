@@ -9,7 +9,6 @@ title: உரையாடல் பயிற்சி
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
-         <option value="1">1</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
