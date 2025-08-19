@@ -139,6 +139,40 @@ function bufferToWav(buffer) {
     });
 }
 
+async function getAudioBuffer(audioBlob) {
+    if (!audioBlob) {
+        console.error('No audio blob provided');
+        return null;
+    }
+    try {
+        if(audioBlob.arrayBuffer){
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        return await audioContext.decodeAudioData(arrayBuffer);
+        }
+        const reader = new FileReader();
+        return new Promise((resolve, reject) => {
+            reader.onload = async (event) => {
+                const arrayBuffer = event.target.result;
+                try {
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                    resolve(audioBuffer);
+                } catch (error) {
+                    console.error('Error decoding audio data:', error);
+                    reject(error);
+                }
+            };
+            reader.onerror = (error) => {
+                console.error('Error reading audio blob:', error);
+                reject(error);
+            };
+            reader.readAsArrayBuffer(audioBlob);
+        });
+    } catch (error) {
+        console.error('Error decoding audio data:', error);
+        return null;
+    }
+    
+}
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
@@ -206,13 +240,10 @@ async function getAudio(text) {
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
-
-        // Convert the response into a Blob (audio file)
+       // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
-        // Create an AudioContext if not already created
-        botAudioBuffer = audioBlob;
+        const arrayBuffer = await getAudioBuffer(audioBlob);
         botAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
         return audioBlob;
     } catch (error) {
         console.error('Error fetching audio:', error);
