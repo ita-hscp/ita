@@ -5,11 +5,140 @@ let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
+let combineAudioList = [];
+let audioContext;
+let botAudioBuffer = null;
+let userAudioBuffer = null;
+
+let recordedChunks = [];
+let combinedAudioBuffer = null;
+let combinedBlob = null;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
 const transcription = document.getElementById('userInput');
+
+// Combine bot audio and user response
+async function combineAudio() {
+    if (!botAudioBuffer || !userAudioBuffer) {
+        updateStatus('Both bot audio and your response are needed to combine.');
+        return;
+    }
+
+    try {
+        // Calculate the combined length
+        const combinedLength = botAudioBuffer.length + userAudioBuffer.length;
+
+        // Create a new buffer for the combined audio
+        combinedAudioBuffer = audioContext.createBuffer(
+            Math.max(botAudioBuffer.numberOfChannels, userAudioBuffer.numberOfChannels),
+            combinedLength,
+            audioContext.sampleRate
+        );
+
+        // Copy bot audio data
+        for (let channel = 0; channel < botAudioBuffer.numberOfChannels; channel++) {
+            const combinedChannelData = combinedAudioBuffer.getChannelData(channel);
+            const botChannelData = botAudioBuffer.getChannelData(channel);
+
+            for (let i = 0; i < botAudioBuffer.length; i++) {
+                combinedChannelData[i] = botChannelData[i];
+            }
+        }
+
+        // Copy user audio data
+        for (let channel = 0; channel < userAudioBuffer.numberOfChannels; channel++) {
+            if (channel >= combinedAudioBuffer.numberOfChannels) break;
+
+            const combinedChannelData = combinedAudioBuffer.getChannelData(channel);
+            const userChannelData = userAudioBuffer.getChannelData(channel);
+
+            for (let i = 0; i < userAudioBuffer.length; i++) {
+                combinedChannelData[i + botAudioBuffer.length] = userChannelData[i];
+            }
+        }
+
+        // Convert the combined audio buffer to a blob
+        const offlineContext = new OfflineAudioContext(
+            combinedAudioBuffer.numberOfChannels,
+            combinedAudioBuffer.length,
+            combinedAudioBuffer.sampleRate
+        );
+
+        const source = offlineContext.createBufferSource();
+        source.buffer = combinedAudioBuffer;
+        source.connect(offlineContext.destination);
+        source.start(0);
+
+        const renderedBuffer = await offlineContext.startRendering();
+
+        // Convert to WAV format for better compatibility
+        const wavBlob = await bufferToWav(renderedBuffer);
+        combinedBlob = wavBlob;
+        return wavBlob;
+
+    } catch (error) {
+        updateStatus('Error combining audio: ' + error.message);
+        console.error('Error combining audio', error);
+    }
+}
+
+// Convert AudioBuffer to WAV format
+function bufferToWav(buffer) {
+    return new Promise((resolve) => {
+        const numOfChannels = buffer.numberOfChannels;
+        const length = buffer.length * numOfChannels * 2;
+        const sampleRate = buffer.sampleRate;
+
+        // Create the WAV file
+        const wavDataView = new DataView(new ArrayBuffer(44 + length));
+
+        // "RIFF" chunk descriptor
+        writeString(wavDataView, 0, 'RIFF');
+        wavDataView.setUint32(4, 36 + length, true);
+        writeString(wavDataView, 8, 'WAVE');
+
+        // "fmt " sub-chunk
+        writeString(wavDataView, 12, 'fmt ');
+        wavDataView.setUint32(16, 16, true);
+        wavDataView.setUint16(20, 1, true); // PCM format
+        wavDataView.setUint16(22, numOfChannels, true);
+        wavDataView.setUint32(24, sampleRate, true);
+        wavDataView.setUint32(28, sampleRate * numOfChannels * 2, true); // Byte rate
+        wavDataView.setUint16(32, numOfChannels * 2, true); // Block align
+        wavDataView.setUint16(34, 16, true); // Bits per sample
+
+        // "data" sub-chunk
+        writeString(wavDataView, 36, 'data');
+        wavDataView.setUint32(40, length, true);
+
+        // Write the PCM samples
+        const channelData = [];
+        let offset = 44;
+
+        // Get data from all channels
+        for (let i = 0; i < numOfChannels; i++) {
+            channelData.push(buffer.getChannelData(i));
+        }
+
+        // Interleave the channel data and convert to 16-bit PCM
+        for (let i = 0; i < buffer.length; i++) {
+            for (let channel = 0; channel < numOfChannels; channel++) {
+                // Convert float audio data (-1 to 1) to 16-bit PCM
+                const sample = Math.max(-1, Math.min(1, channelData[channel][i]));
+                const int16Sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                wavDataView.setInt16(offset, int16Sample, true);
+                offset += 2;
+            }
+        }
+
+        // Create Blob and resolve
+        const wavBlob = new Blob([wavDataView], { type: 'audio/wav' });
+        resolve(wavBlob);
+    });
+}
+
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
@@ -38,18 +167,20 @@ async function getExercise() {
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContext = new AudioContext();
         const tasks = await getAllPendingTasks("உரையாடல் பயிற்சி");
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
         if (tasks && tasks.length > 0) {
             tasks.forEach(task => {
                 const option = document.createElement("option");
-                option.value = task.week ;
+                option.value = task.week;
                 option.textContent = task.week;
                 dropdown.appendChild(option);
                 weekWorkSheet[task.week] = task.content;
             });
-        } 
+        }
     }
 });
 
@@ -78,7 +209,9 @@ async function getAudio(text) {
 
         // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
-
+        // Create an AudioContext if not already created
+        botAudioBuffer = audioBlob;
+        botAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
         return audioBlob;
     } catch (error) {
@@ -130,10 +263,26 @@ saveButton.addEventListener("click", async (event) => {
     // progressContainer.style.display = 'flex';
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
+    const audioPlayer = document.getElementById('audio-player');
+    if (combineAudio.length === 0) {
+        alert('No audio recorded. Please record your conversation before saving.');
+        return;
+    }
+    // Create a URL for the Blob object and set it as the source for the audio player
+    
     const formData = new FormData();
     const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
+    if (combineAudioList.length > 0) {
+        const blob = new Blob(combineAudioList, { type: 'audio/webm' });
+        const audioURL = URL.createObjectURL(blob);
+        formData.append('audioFiles[]', blob, filename);
+        audioPlayer.src = audioURL;
+        audioPlayer.style.display = 'block';
+    }else {
+        formData.append('audioFiles[]', audioBlob, filename);
+    }
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
@@ -194,6 +343,12 @@ function handleSpeechRecognition(event) {
 
 async function handleRecording(event) {
     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const arrayBuffer = await audioBlob.arrayBuffer();
+    userAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    combinedBlob = await combineAudio();
+    if (combinedBlob) {
+        combineAudioList.push(combinedBlob);
+    }
     const audioURL = URL.createObjectURL(audioBlob);
     console.log('Audio URL:', audioURL);
     audioBlobList.push(...audioChunks)
@@ -263,6 +418,7 @@ if (!('webkitSpeechRecognition' in window)) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream, { type: 'audio/wav' });
             mediaRecorder.ondataavailable = (event) => {
+
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = handleRecording;

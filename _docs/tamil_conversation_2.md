@@ -26,6 +26,9 @@ title: உரையாடல் பயிற்சி
     </div>
   </div>
 <button id="conversation-saveButton" disabled>Finish Conversation</button>
+<div>
+        <audio id="audio-player" controls style="width: 100%; margin-top: 20px; display: none;"></audio>
+</div>
  <div class="conversation-spinner" id="conversation-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
         <progress id="progressBar" value="0" max="100"></progress>
