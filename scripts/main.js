@@ -17,6 +17,13 @@ async function mainContent() {
     // return response.json();
     setTimeout(() => {
     }, 1000); // Simulate a delay for the main content
+    const currentDate = new Date();
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
     const textContent = currentDate.toLocaleDateString(undefined, options);
     return {
         "title": "வாரம் 1",
@@ -36,10 +43,10 @@ async function mainContent() {
     };
 
 }
-window.addEventListener("load",async (event) => {
+window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
-        
+
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
             const dateElement = document.getElementById("date");
