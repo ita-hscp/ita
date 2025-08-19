@@ -39,6 +39,7 @@ async function mainContent() {
 window.addEventListener("load",async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
+        
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
             const dateElement = document.getElementById("date");
@@ -50,9 +51,9 @@ window.addEventListener("load",async (event) => {
                 day: 'numeric'
             };
             const textContent = currentDate.toLocaleDateString(undefined, options);
-            const mainContent = await mainContent();
-            mainPage.innerHTML = `<p> <h2>${mainContent.title}</h2> </br>
-                <p>${mainContent.content}</p>`
+            const content = await mainContent();
+            mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
+                <p>${content.content}</p>`
         }
     }
 });
