@@ -5,6 +5,7 @@ title: உரையாடல் பயிற்சி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">

@@ -1,5 +1,6 @@
 let counter = 0;
 let workSheet = {};
+let weekWorkSheet = {};
 let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
@@ -17,7 +18,8 @@ async function getExercise() {
         selectedText = dropdown.options[dropdown.selectedIndex].value
     }
     const header = await getWorkSheet(null, "header")
-    workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
+    // workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
+    workSheet = weekWorkSheet[selectedText] ? weekWorkSheet[selectedText] : await getWorkSheet(selectedText, null);
     workSheet['week'] = selectedText;
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
@@ -33,7 +35,23 @@ async function getExercise() {
     }
     sendMessage();
 }
-
+window.addEventListener("load", async (event) => {
+    const tokenValid = sessionStorage.getItem("sessionToken");
+    if (tokenValid) {
+        const tasks = await getAllPendingTasks("உரையாடல் பயிற்சி");
+        const dropdown = document.getElementById("weeks");
+        // Add week numbers to the dropdown from tasks week
+        if (tasks && tasks.length > 0) {
+            tasks.forEach(task => {
+                const option = document.createElement("option");
+                option.value = task.week ;
+                option.textContent = task.week;
+                dropdown.appendChild(option);
+                weekWorkSheet[task.week] = task.content;
+            });
+        } 
+    }
+});
 
 async function getAudio(text) {
     try {
