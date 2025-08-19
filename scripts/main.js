@@ -1,24 +1,3 @@
-window.addEventListener("load",async (event) => {
-    const tokenValid = sessionStorage.getItem("sessionToken");
-    if (tokenValid) {
-        const mainPage = document.getElementById("mainPage");
-        if (mainPage) {
-            const dateElement = document.getElementById("date");
-            const currentDate = new Date()
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            };
-            const textContent = currentDate.toLocaleDateString(undefined, options);
-            const mainContent = await mainContent();
-            mainPage.innerHTML = `<p> <h2>${mainContent.title}</h2> </br>
-                <p>${mainContent.content}</p>`
-        }
-    }
-});
-
 async function mainContent() {
     // const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/mainContent', {
     //     method: 'GET',
@@ -46,7 +25,7 @@ async function mainContent() {
             <p>இந்த வாரம் நீங்கள் செய்ய வேண்டிய பயிற்சிகள் கீழே உள்ளன:</p>
             <ul>
                 <li> உரையாடல் பயிற்சி  1: ஓலைச்சுவடிகள்‌</li>
-                <li> கேட்டல்‌ கருத்தறிதல் 2: அன்புடைமை</li>
+                <li> கேட்டல்‌ கருத்தறிதல் 1: அன்புடைமை</li>
             </ul>
         
             <!-- Add Due date in Tamil -->
@@ -57,3 +36,25 @@ async function mainContent() {
     };
 
 }
+window.addEventListener("load",async (event) => {
+    const tokenValid = sessionStorage.getItem("sessionToken");
+    if (tokenValid) {
+        const mainPage = document.getElementById("mainPage");
+        if (mainPage) {
+            const dateElement = document.getElementById("date");
+            const currentDate = new Date()
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const textContent = currentDate.toLocaleDateString(undefined, options);
+            const mainContent = await mainContent();
+            mainPage.innerHTML = `<p> <h2>${mainContent.title}</h2> </br>
+                <p>${mainContent.content}</p>`
+        }
+    }
+});
+
+
