@@ -27,8 +27,10 @@ async function mainContent() {
     const textContent = currentDate.toLocaleDateString(undefined, options);
     return {
         "title": "வாரம் 1",
-        "content": `<p> <h2>வாரம் 1</h2> </br> 
-            <h3>முக்கிய அறிவிப்பு</h3>
+        "content": ` 
+            <p>வணக்கம் மாணவர்களே,</p>
+            <p>இந்த வாரம் நாம் தமிழ் மொழியில் உரையாடல் மற்றும் கேட்டல்‌ பயிற்சிகளை செய்யப்போகிறோம்.</p>
+            <p>உங்கள் பயிற்சிகளை முடிக்க நீங்கள் கீழே உள்ள வாரத்திற்கேற்ப தேர்வு செய்யவும்.</p>
             <p>இந்த வாரம் நீங்கள் செய்ய வேண்டிய பயிற்சிகள் கீழே உள்ளன:</p>
             <ul>
                 <li> உரையாடல் பயிற்சி  1: ஓலைச்சுவடிகள்‌</li>
@@ -38,8 +40,7 @@ async function mainContent() {
             <!-- Add Due date in Tamil -->
             <h3> இன்று தேதி </h3>
             <div id="date">${textContent}</div> 
-            <h3>காலக்கெடு</h3>
-            <p>இந்த பயிற்சிகளை முடிக்க கடைசி தேதி: <span id="dueDate">09-25-2025 </span></p>`
+            <h3>பயிற்சிகள் முடிக்க கடைசி தேதி (Due Date)</h3> <span id="dueDate">09-25-2025 </span>`
     };
 
 }
