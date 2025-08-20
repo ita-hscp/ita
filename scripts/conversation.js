@@ -15,7 +15,7 @@ const transcription = document.getElementById('userInput');
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
-    let selectedText = dropdown.options[dropdown.selectedIndex].value;
+    let selectedText = dropdown.options[dropdown.selectedIndex].text;
     if (dropdown.options[dropdown.selectedIndex].value?.includes("listen")) {
         selectedText = dropdown.options[dropdown.selectedIndex].value
     }
@@ -105,10 +105,17 @@ async function speak(audioBlob) {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
+    audioBlobList.forEach(item => item.sent=true)
     if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
+          if (message) {
+            displayMessage(message, 'sent');
+            // Clear input field
+            userInput.textContent = "";
+            counter++;
+        }
         return
     }
     if ((message || counter == 0) && workSheet && workSheet.conversations && workSheet.conversations.length > counter) {
@@ -256,6 +263,7 @@ if (!('webkitSpeechRecognition' in window)) {
         userInput.innerHTML = "";
         transcription.innerHTML = ""
         audioChunks = []
+        audioBlobList = audioBlobList.filter(item => item.sent === true);
         if (mediaRecorder) {
             mediaRecorder.onstop = () => {
                 console.log("Ignore Recording")
