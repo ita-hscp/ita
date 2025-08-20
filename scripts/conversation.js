@@ -106,7 +106,7 @@ async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
     audioBlobList.forEach(item => item.sent=true)
-    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
+    if (workSheet && workSheet.conversations && counter >= workSheet.conversations.length) {
         startBtn.disabled = true;
         clearButton.disabled = true;
         saveButton.disabled = false;
@@ -118,7 +118,7 @@ async function sendMessage() {
         }
         return
     }
-    if ((message || counter == 0) && workSheet && workSheet.conversations && workSheet.conversations.length > counter) {
+    if ((message || counter == 0) && workSheet && workSheet.conversations && counter < workSheet.conversations.length) {
         // Display the sent message
         if (message) {
             displayMessage(message, 'sent');
