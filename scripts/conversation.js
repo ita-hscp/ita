@@ -303,7 +303,6 @@ saveButton.addEventListener("click", async (event) => {
     // Create a URL for the Blob object and set it as the source for the audio player
     
     const formData = new FormData();
-    const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
     if (combineAudioList.length > 0) {
@@ -313,6 +312,7 @@ saveButton.addEventListener("click", async (event) => {
         audioPlayer.src = audioURL;
         audioPlayer.style.display = 'block';
     }else {
+        const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
         formData.append('audioFiles[]', audioBlob, filename);
         const audioURL = URL.createObjectURL(audioBlob);
         audioPlayer.src = audioURL;
