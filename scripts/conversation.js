@@ -139,6 +139,12 @@ function bufferToWav(buffer) {
     });
 }
 
+  // Helper function to write strings to DataView
+        function writeString(dataView, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                dataView.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
 async function getAudioBuffer(audioBlob) {
     if (!audioBlob) {
         console.error('No audio blob provided');
