@@ -242,8 +242,7 @@ async function getAudio(text) {
         }
        // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
-        const arrayBuffer = await getAudioBuffer(audioBlob);
-        botAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        botAudioBuffer = await getAudioBuffer(audioBlob);
         return audioBlob;
     } catch (error) {
         console.error('Error fetching audio:', error);
