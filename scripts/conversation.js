@@ -305,7 +305,6 @@ saveButton.addEventListener("click", async (event) => {
 
     const formData = new FormData();
     const filename = `audio.webm`;
-    formData.append(`audioFiles[]`, audioBlob, filename);
     if (combineAudioList.length > 0) {
         const blob = new Blob(combineAudioList, { type: 'audio/webm' });
         const audioURL = URL.createObjectURL(blob);
