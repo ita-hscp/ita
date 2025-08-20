@@ -139,21 +139,21 @@ function bufferToWav(buffer) {
     });
 }
 
-  // Helper function to write strings to DataView
-        function writeString(dataView, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                dataView.setUint8(offset + i, string.charCodeAt(i));
-            }
-        }
+// Helper function to write strings to DataView
+function writeString(dataView, offset, string) {
+    for (let i = 0; i < string.length; i++) {
+        dataView.setUint8(offset + i, string.charCodeAt(i));
+    }
+}
 async function getAudioBuffer(audioBlob) {
     if (!audioBlob) {
         console.error('No audio blob provided');
         return null;
     }
     try {
-        if(audioBlob.arrayBuffer){
-        const arrayBuffer = await audioBlob.arrayBuffer();
-        return await audioContext.decodeAudioData(arrayBuffer);
+        if (audioBlob.arrayBuffer) {
+            const arrayBuffer = await audioBlob.arrayBuffer();
+            return await audioContext.decodeAudioData(arrayBuffer);
         }
         const reader = new FileReader();
         return new Promise((resolve, reject) => {
@@ -177,7 +177,7 @@ async function getAudioBuffer(audioBlob) {
         console.error('Error decoding audio data:', error);
         return null;
     }
-    
+
 }
 
 async function getExercise() {
@@ -246,7 +246,7 @@ async function getAudio(text) {
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
-       // Convert the response into a Blob (audio file)
+        // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
         botAudioBuffer = await getAudioBuffer(audioBlob);
         return audioBlob;
@@ -269,6 +269,11 @@ async function speak(audioBlob) {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
+    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
+        startBtn.disabled = true;
+        clearButton.disabled = true;
+        saveButton.disabled = false;
+    }
     if ((message || counter == 0) && workSheet && workSheet.conversations && workSheet.conversations.length > counter) {
         // Display the sent message
         if (message) {
@@ -284,11 +289,7 @@ async function sendMessage() {
         await speak(audioBlob)
         // await speakApi(botResponse)
     }
-    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
-        startBtn.disabled = true;
-        clearButton.disabled = true;
-        saveButton.disabled = false;
-    }
+
 }
 
 
@@ -301,7 +302,7 @@ saveButton.addEventListener("click", async (event) => {
     const messages = chatBox.querySelectorAll(".message");
     const audioPlayer = document.getElementById('audio-player');
     // Create a URL for the Blob object and set it as the source for the audio player
-    
+
     const formData = new FormData();
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
@@ -311,7 +312,7 @@ saveButton.addEventListener("click", async (event) => {
         formData.append('audioFiles[]', blob, filename);
         audioPlayer.src = audioURL;
         audioPlayer.style.display = 'block';
-    }else {
+    } else {
         const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
         formData.append('audioFiles[]', audioBlob, filename);
         const audioURL = URL.createObjectURL(audioBlob);
