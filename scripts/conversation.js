@@ -300,10 +300,6 @@ saveButton.addEventListener("click", async (event) => {
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
     const audioPlayer = document.getElementById('audio-player');
-    if (combineAudio.length === 0) {
-        alert('No audio recorded. Please record your conversation before saving.');
-        return;
-    }
     // Create a URL for the Blob object and set it as the source for the audio player
     
     const formData = new FormData();
