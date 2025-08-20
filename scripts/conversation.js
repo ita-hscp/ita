@@ -6,6 +6,7 @@ let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
 let recordingNumber = 0;
+let exerciseId =null;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
@@ -14,7 +15,7 @@ const transcription = document.getElementById('userInput');
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
-    let selectedText = dropdown.options[dropdown.selectedIndex].text;
+    let selectedText = dropdown.options[dropdown.selectedIndex].value;
     if (dropdown.options[dropdown.selectedIndex].value?.includes("listen")) {
         selectedText = dropdown.options[dropdown.selectedIndex].value
     }
@@ -22,8 +23,11 @@ async function getExercise() {
     // workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
     workSheet = weekWorkSheet[selectedText] ? weekWorkSheet[selectedText] : await getWorkSheet(selectedText, null);
     workSheet['week'] = selectedText;
+    exerciseId=dropdown.options[dropdown.selectedIndex].value
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
+    const exerciseStartBtn = document.getElementById("exercise-btn");
+    exerciseStartBtn.disabled = true
     topicSelected.textContent = workSheet.intro[1]
     await speakApi(workSheet.intro[0])
     await speakApi(workSheet.intro[1])
@@ -45,7 +49,7 @@ window.addEventListener("load", async (event) => {
         if (tasks && tasks.length > 0) {
             tasks.forEach(task => {
                 const option = document.createElement("option");
-                option.value = task.week;
+                option.value = task.exerciseId;
                 option.textContent = task.week;
                 dropdown.appendChild(option);
                 weekWorkSheet[task.week] = task.content;
@@ -101,6 +105,12 @@ async function speak(audioBlob) {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
+    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
+        startBtn.disabled = true;
+        clearButton.disabled = true;
+        saveButton.disabled = false;
+        return
+    }
     if ((message || counter == 0) && workSheet && workSheet.conversations && workSheet.conversations.length > counter) {
         // Display the sent message
         if (message) {
@@ -115,11 +125,6 @@ async function sendMessage() {
         const audioBlob = await getAudio(botResponse)
         await speak(audioBlob)
         // await speakApi(botResponse)
-    }
-    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
-        startBtn.disabled = true;
-        clearButton.disabled = true;
-        saveButton.disabled = false;
     }
 }
 
@@ -149,6 +154,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
     formData.append("week", workSheet.week ? workSheet.week : "18");
+    formData.append("exerciseId",exerciseId);
     const spinner = document.getElementById('conversation-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
