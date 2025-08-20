@@ -12,7 +12,7 @@ let userAudioBuffer = null;
 
 let recordedChunks = [];
 let combinedAudioBuffer = null;
-let combinedBlob = null;
+// let combinedBlob = null;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
@@ -75,7 +75,7 @@ async function combineAudio() {
 
         // Convert to WAV format for better compatibility
         const wavBlob = await bufferToWav(renderedBuffer);
-        combinedBlob = wavBlob;
+        // combinedBlob = wavBlob;
         return wavBlob;
 
     } catch (error) {
@@ -380,12 +380,12 @@ async function handleRecording(event) {
     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
     const arrayBuffer = await audioBlob.arrayBuffer();
     userAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-    combinedBlob = await combineAudio();
+    const combinedBlob = await combineAudio();
     if (combinedBlob) {
         combineAudioList.push(combinedBlob);
     }
-    const audioURL = URL.createObjectURL(audioBlob);
-    console.log('Audio URL:', audioURL);
+    // const audioURL = URL.createObjectURL(audioBlob);
+    // console.log('Audio URL:', audioURL);
     audioBlobList.push(...audioChunks)
     // Clear chunks for the next recording
     audioChunks = [];
