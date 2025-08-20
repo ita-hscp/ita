@@ -5,180 +5,12 @@ let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
-let combineAudioList = [];
-let audioContext;
-let botAudioBuffer = null;
-let userAudioBuffer = null;
-
-let recordedChunks = [];
-let combinedAudioBuffer = null;
-// let combinedBlob = null;
+let recordingNumber = 0;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
 const transcription = document.getElementById('userInput');
-
-// Combine bot audio and user response
-async function combineAudio() {
-    if (!botAudioBuffer || !userAudioBuffer) {
-        updateStatus('Both bot audio and your response are needed to combine.');
-        return;
-    }
-
-    try {
-        // Calculate the combined length
-        const combinedLength = botAudioBuffer.length + userAudioBuffer.length;
-
-        // Create a new buffer for the combined audio
-        combinedAudioBuffer = audioContext.createBuffer(
-            Math.max(botAudioBuffer.numberOfChannels, userAudioBuffer.numberOfChannels),
-            combinedLength,
-            audioContext.sampleRate
-        );
-
-        // Copy bot audio data
-        for (let channel = 0; channel < botAudioBuffer.numberOfChannels; channel++) {
-            const combinedChannelData = combinedAudioBuffer.getChannelData(channel);
-            const botChannelData = botAudioBuffer.getChannelData(channel);
-
-            for (let i = 0; i < botAudioBuffer.length; i++) {
-                combinedChannelData[i] = botChannelData[i];
-            }
-        }
-
-        // Copy user audio data
-        for (let channel = 0; channel < userAudioBuffer.numberOfChannels; channel++) {
-            if (channel >= combinedAudioBuffer.numberOfChannels) break;
-
-            const combinedChannelData = combinedAudioBuffer.getChannelData(channel);
-            const userChannelData = userAudioBuffer.getChannelData(channel);
-
-            for (let i = 0; i < userAudioBuffer.length; i++) {
-                combinedChannelData[i + botAudioBuffer.length] = userChannelData[i];
-            }
-        }
-
-        // Convert the combined audio buffer to a blob
-        const offlineContext = new OfflineAudioContext(
-            combinedAudioBuffer.numberOfChannels,
-            combinedAudioBuffer.length,
-            combinedAudioBuffer.sampleRate
-        );
-
-        const source = offlineContext.createBufferSource();
-        source.buffer = combinedAudioBuffer;
-        source.connect(offlineContext.destination);
-        source.start(0);
-
-        const renderedBuffer = await offlineContext.startRendering();
-
-        // Convert to WAV format for better compatibility
-        const wavBlob = await bufferToWav(renderedBuffer);
-        // combinedBlob = wavBlob;
-        return wavBlob;
-
-    } catch (error) {
-        updateStatus('Error combining audio: ' + error.message);
-        console.error('Error combining audio', error);
-    }
-}
-
-// Convert AudioBuffer to WAV format
-function bufferToWav(buffer) {
-    return new Promise((resolve) => {
-        const numOfChannels = buffer.numberOfChannels;
-        const length = buffer.length * numOfChannels * 2;
-        const sampleRate = buffer.sampleRate;
-
-        // Create the WAV file
-        const wavDataView = new DataView(new ArrayBuffer(44 + length));
-
-        // "RIFF" chunk descriptor
-        writeString(wavDataView, 0, 'RIFF');
-        wavDataView.setUint32(4, 36 + length, true);
-        writeString(wavDataView, 8, 'WAVE');
-
-        // "fmt " sub-chunk
-        writeString(wavDataView, 12, 'fmt ');
-        wavDataView.setUint32(16, 16, true);
-        wavDataView.setUint16(20, 1, true); // PCM format
-        wavDataView.setUint16(22, numOfChannels, true);
-        wavDataView.setUint32(24, sampleRate, true);
-        wavDataView.setUint32(28, sampleRate * numOfChannels * 2, true); // Byte rate
-        wavDataView.setUint16(32, numOfChannels * 2, true); // Block align
-        wavDataView.setUint16(34, 16, true); // Bits per sample
-
-        // "data" sub-chunk
-        writeString(wavDataView, 36, 'data');
-        wavDataView.setUint32(40, length, true);
-
-        // Write the PCM samples
-        const channelData = [];
-        let offset = 44;
-
-        // Get data from all channels
-        for (let i = 0; i < numOfChannels; i++) {
-            channelData.push(buffer.getChannelData(i));
-        }
-
-        // Interleave the channel data and convert to 16-bit PCM
-        for (let i = 0; i < buffer.length; i++) {
-            for (let channel = 0; channel < numOfChannels; channel++) {
-                // Convert float audio data (-1 to 1) to 16-bit PCM
-                const sample = Math.max(-1, Math.min(1, channelData[channel][i]));
-                const int16Sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
-                wavDataView.setInt16(offset, int16Sample, true);
-                offset += 2;
-            }
-        }
-
-        // Create Blob and resolve
-        const wavBlob = new Blob([wavDataView], { type: 'audio/wav' });
-        resolve(wavBlob);
-    });
-}
-
-// Helper function to write strings to DataView
-function writeString(dataView, offset, string) {
-    for (let i = 0; i < string.length; i++) {
-        dataView.setUint8(offset + i, string.charCodeAt(i));
-    }
-}
-async function getAudioBuffer(audioBlob) {
-    if (!audioBlob) {
-        console.error('No audio blob provided');
-        return null;
-    }
-    try {
-        if (audioBlob.arrayBuffer) {
-            const arrayBuffer = await audioBlob.arrayBuffer();
-            return await audioContext.decodeAudioData(arrayBuffer);
-        }
-        const reader = new FileReader();
-        return new Promise((resolve, reject) => {
-            reader.onload = async (event) => {
-                const arrayBuffer = event.target.result;
-                try {
-                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                    resolve(audioBuffer);
-                } catch (error) {
-                    console.error('Error decoding audio data:', error);
-                    reject(error);
-                }
-            };
-            reader.onerror = (error) => {
-                console.error('Error reading audio blob:', error);
-                reject(error);
-            };
-            reader.readAsArrayBuffer(audioBlob);
-        });
-    } catch (error) {
-        console.error('Error decoding audio data:', error);
-        return null;
-    }
-
-}
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
@@ -207,8 +39,6 @@ async function getExercise() {
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioContext = new AudioContext();
         const tasks = await getAllPendingTasks("உரையாடல் பயிற்சி");
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
@@ -246,9 +76,11 @@ async function getAudio(text) {
         if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
         }
+
         // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
-        botAudioBuffer = await getAudioBuffer(audioBlob);
+
+
         return audioBlob;
     } catch (error) {
         console.error('Error fetching audio:', error);
@@ -269,11 +101,6 @@ async function speak(audioBlob) {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
-    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
-        startBtn.disabled = true;
-        clearButton.disabled = true;
-        saveButton.disabled = false;
-    }
     if ((message || counter == 0) && workSheet && workSheet.conversations && workSheet.conversations.length > counter) {
         // Display the sent message
         if (message) {
@@ -289,7 +116,11 @@ async function sendMessage() {
         await speak(audioBlob)
         // await speakApi(botResponse)
     }
-
+    if (workSheet && workSheet.conversations && workSheet.conversations.length <= counter) {
+        startBtn.disabled = true;
+        clearButton.disabled = true;
+        saveButton.disabled = false;
+    }
 }
 
 
@@ -300,24 +131,20 @@ saveButton.addEventListener("click", async (event) => {
     // progressContainer.style.display = 'flex';
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
-    const audioPlayer = document.getElementById('audio-player');
-    // Create a URL for the Blob object and set it as the source for the audio player
-
     const formData = new FormData();
-    const filename = `audio.webm`;
-    if (combineAudioList.length > 0) {
-        const blob = new Blob(combineAudioList, { type: 'audio/webm' });
-        const audioURL = URL.createObjectURL(blob);
-        formData.append('audioFiles[]', blob, filename);
-        audioPlayer.src = audioURL;
-        audioPlayer.style.display = 'block';
-    } else {
-        const audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
-        formData.append('audioFiles[]', audioBlob, filename);
-        const audioURL = URL.createObjectURL(audioBlob);
-        audioPlayer.src = audioURL;
-        audioPlayer.style.display = 'block';
-    }
+    audioBlobList.forEach((recording, index) => {
+        // Add each audio file with a unique name
+        formData.append(`audioFiles[]`, recording.blob, `recording_${recording.number}.webm`);
+
+        // Add metadata for each recording
+        formData.append(`recordingNumber_${index}`, recording.number);
+        formData.append(`timestamp_${index}`, recording.timestamp);
+    });
+    // Add total number of recordings
+    formData.append('totalRecordings', audioBlobList.length);
+
+    // Add recording IDs for reference
+    formData.append('recordingIds', JSON.stringify(audioBlobList.map(r => r.id)));
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
@@ -377,16 +204,18 @@ function handleSpeechRecognition(event) {
 }
 
 async function handleRecording(event) {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-    const arrayBuffer = await audioBlob.arrayBuffer();
-    userAudioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-    const combinedBlob = await combineAudio();
-    if (combinedBlob) {
-        combineAudioList.push(combinedBlob);
-    }
-    // const audioURL = URL.createObjectURL(audioBlob);
-    // console.log('Audio URL:', audioURL);
-    audioBlobList.push(...audioChunks)
+    const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+    recordingNumber++;
+
+    // Store recording
+    const recording = {
+        id: crypto.randomUUID(), // Unique ID for this recording
+        number: recordingNumber,
+        blob: audioBlob,
+        timestamp: new Date().toISOString(),
+        sent: false
+    };
+    audioBlobList.push(recording);
     // Clear chunks for the next recording
     audioChunks = [];
 }
@@ -451,9 +280,12 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.textContent = 'listening';
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream, { type: 'audio/wav' });
+            const options = {
+                mimeType: 'audio/webm;codecs=opus',
+                audioBitsPerSecond: 128000
+            };
+            mediaRecorder = new MediaRecorder(stream, options);
             mediaRecorder.ondataavailable = (event) => {
-
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = handleRecording;
