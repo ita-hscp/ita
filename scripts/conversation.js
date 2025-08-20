@@ -314,6 +314,9 @@ saveButton.addEventListener("click", async (event) => {
         audioPlayer.style.display = 'block';
     }else {
         formData.append('audioFiles[]', audioBlob, filename);
+        const audioURL = URL.createObjectURL(audioBlob);
+        audioPlayer.src = audioURL;
+        audioPlayer.style.display = 'block';
     }
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
