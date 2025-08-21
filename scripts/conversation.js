@@ -327,5 +327,8 @@ if (!('webkitSpeechRecognition' in window)) {
             console.log('Audio recording stopped');
         }
         startBtn.textContent = 'record';
+        if(!saveButton.disabled){
+            startBtn.disabled=true
+        }
     });
 }
