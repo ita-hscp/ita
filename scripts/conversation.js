@@ -6,7 +6,7 @@ let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
 let recordingNumber = 0;
-let exerciseId =null;
+let exerciseId = null;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
@@ -23,7 +23,7 @@ async function getExercise() {
     // workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
     workSheet = weekWorkSheet[selectedText] ? weekWorkSheet[selectedText] : await getWorkSheet(selectedText, null);
     workSheet['week'] = selectedText;
-    exerciseId=dropdown.options[dropdown.selectedIndex].value
+    exerciseId = dropdown.options[dropdown.selectedIndex].value
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     const exerciseStartBtn = document.getElementById("exercise-btn");
@@ -105,17 +105,19 @@ async function speak(audioBlob) {
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
     const message = userInput.textContent.trim();
-    audioBlobList.forEach(item => item.sent=true)
+    audioBlobList.forEach(item => item.sent = true)
     if (workSheet && workSheet.conversations && counter >= workSheet.conversations.length) {
-        startBtn.disabled = true;
+
         clearButton.disabled = true;
         saveButton.disabled = false;
-          if (message) {
+        if (message) {
             displayMessage(message, 'sent');
             // Clear input field
             userInput.textContent = "";
             counter++;
         }
+        const startBtn = document.getElementById('conversation-start-btn');
+        startBtn.disabled = true;
         return
     }
     if ((message || counter == 0) && workSheet && workSheet.conversations && counter < workSheet.conversations.length) {
@@ -161,7 +163,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append("content", JSON.stringify(messageArray));
     formData.append("work", "conversation");
     formData.append("week", workSheet.week ? workSheet.week : "18");
-    formData.append("exerciseId",exerciseId);
+    formData.append("exerciseId", exerciseId);
     const spinner = document.getElementById('conversation-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
