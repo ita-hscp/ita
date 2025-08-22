@@ -73,44 +73,33 @@ async function addAudio(reportData) {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
             const index = this.getAttribute("data-index");
-            let audio = audioMap.get(audioId);
-            if (!audio) {
+            let audioListJson = audioMap.get(audioId);
+            if (!audioListJson) {
                 const item = reportData.filter(item => item.assignmentId == audioId)[0]
-                const response=await getAudioFromBackEnd(item);
-                if(response.redirect){
+                const response = await getAudioFromBackEnd(item);
+                if (response.redirect) {
                     window.location.href = response.url;
                     return;
                 }
-                if(response.audioFound){
-                    audio=response.audio;
-                    audioMap.set(audioId,audio);
+                if (response.audioFound) {
+                    audioListJson = response.audioJson;
+                    audioMap.set(audioId, audioListJson);
                     showModal(index);
                 }
 
             }
 
-            // Play or pause the audio
-            if (audio.paused) {
-                audio.play();
-                this.textContent = "⏸ Pause";
-
-                // Pause all other audios
-                document.querySelectorAll(".play-btn").forEach(btn => {
-                    if (btn !== this) btn.textContent = "▶ Play";
-                });
-                // Reset button text when audio ends
-                audio.onended = () => {
-                    this.textContent = "▶ Play";
-                };
+            if (audioListJson) {
+                audioData = audioListJson
+                playButtonListener();
             } else {
-                audio.pause();
-                this.textContent = "▶ Play";
+                alert("No audio found for this entry.");
             }
         });
     });
 }
 
-async function getAudioFromBackEnd(item){
+async function getAudioFromBackEnd(item) {
     try {
         // Fetch the audio file based on item.id
         const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
@@ -126,33 +115,39 @@ async function getAudioFromBackEnd(item){
         if (response.status === 401) {
             // Redirect to login page if not authenticated
             // window.location.href =  // Replace '/login' with your actual login URL
-            return {redirect: true, url:"https://ita-hscp.github.io/ita/Login"};
+            return { redirect: true, url: "https://ita-hscp.github.io/ita/Login" };
         }
-        let audio = new Audio();
-/* The line `audioMap.set(audioId, audio);` is adding a key-value pair to a Map data structure named
-`audioMap`. In this case, it is associating the `audioId` as the key and the `audio` object as the
-corresponding value in the map. This allows for easy retrieval and storage of audio objects based on
-their unique `audioId`. */
-        audioMap.set(audioId, audio);
+        
+        /* The line `audioMap.set(audioId, audio);` is adding a key-value pair to a Map data structure named
+        `audioMap`. In this case, it is associating the `audioId` as the key and the `audio` object as the
+        corresponding value in the map. This allows for easy retrieval and storage of audio objects based on
+        their unique `audioId`. */
+        
+        //blob has audio json from backend {id: "bot-1", botBlob: "base64-encoded-audio-data-1"}
+        //Decode base64 audio data
+
         const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        audio.src = url;
-        return {audioFound:false,audio:audio,redirect: false}
+        if(blob){
+            const text = await blob.text();
+            const audioJson = await JSON.parse(text);
+            audioMap.set(item.assignmentId, audioJson);
+        }
+        return { audioFound: false, audioJson: audioJson, redirect: false }
     } catch (error) {
         console.error("Error fetching audio file:", error);
     }
-    return  {audioFound:false,redirect: false};
+    return { audioFound: false, redirect: false };
 }
 
-async function saveReport(){
+async function saveReport() {
     const tableBody = document.querySelector("#jsonTable tbody");
     const rows = tableBody.querySelectorAll("tr");
     const report = [];
-    rows.forEach((row,index) => {
+    rows.forEach((row, index) => {
         const cells = row.querySelectorAll("td");
         const item = {
-            id:  sampleData[index].assignmentId,
-            userId:  cells[0].textContent,
+            id: sampleData[index].assignmentId,
+            userId: cells[0].textContent,
             week: cells[1].textContent,
             score: cells[4].textContent,
             comments: cells[5].textContent,
@@ -222,5 +217,115 @@ submitFeedbackBtn.addEventListener("click", function () {
 closeModalBtn.addEventListener("click", closeModal);
 
 
+// Validate JSON format
+function validateJsonFormat(data) {
+    if (!Array.isArray(data)) {
+        return false;
+    }
 
+    for (const segment of data) {
+        if (!segment.botBlob && !segment.userBlob) {
+            return false;
+        }
+    }
+
+    return true;
+}
+function playButtonListener(){
+    if (!audioData || isPlaying) return;
+
+    if (!audioContext) {
+        // Create audio context on first play (to handle autoplay restrictions)
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    prepareAndPlayAudio();
+}
+
+// Prepare audio data and start playback
+function prepareAndPlayAudio() {
+    if (!audioData || audioData.length === 0) {
+        statusElement.textContent = 'No audio data to play.';
+        return;
+    }
+
+    statusElement.textContent = 'Preparing audio...';
+    isPlaying = true;
+    playButton.disabled = true;
+
+    // Reset audio queue
+    audioQueue = [];
+
+    // Process all segments and create an audio queue
+    audioData.forEach(segment => {
+        // Add user audio if exists
+
+        // Add bot audio if exists
+        if (segment.botBlob) {
+            audioQueue.push({
+                blob: segment.botBlob,
+                type: 'bot'
+            });
+        }
+        if (segment.userBlob) {
+            audioQueue.push({
+                blob: segment.userBlob,
+                type: 'user'
+            });
+        }
+    });
+
+    // Start playing the queue
+    playNextInQueue();
+}
+
+// Play the next audio in the queue
+function playNextInQueue() {
+    if (audioQueue.length === 0) {
+        // Queue is empty, playback complete
+        statusElement.textContent = 'Playback complete.';
+        isPlaying = false;
+        playButton.disabled = false;
+        return;
+    }
+
+    const audioItem = audioQueue.shift();
+    statusElement.textContent = `Playing ${audioItem.type} audio...`;
+
+    // Convert base64 to audio buffer
+    const base64Data = audioItem.blob;
+
+    // Remove data URL prefix if present
+    let base64String = base64Data;
+    if (base64String.includes(',')) {
+        base64String = base64String.split(',')[1];
+    }
+
+    // Decode base64
+    const binaryString = atob(base64String);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Decode audio data
+    audioContext.decodeAudioData(
+        bytes.buffer,
+        function (buffer) {
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+
+            // Play this audio and when done, play the next one
+            source.onended = playNextInQueue;
+            source.start(0);
+        },
+        function (error) {
+            console.error('Error decoding audio data:', error);
+            statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
+            // Try to play the next one even if this one failed
+            playNextInQueue();
+        }
+    );
+}
 
