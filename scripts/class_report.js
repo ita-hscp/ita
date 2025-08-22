@@ -75,7 +75,7 @@ async function addAudio(reportData) {
             const index = this.getAttribute("data-index");
             let audio = audioMap.get(audioId);
             if (!audio) {
-                const item = reportData.filter(item => item.id == audioId)[0]
+                const item = reportData.filter(item => item.assignmentId == audioId)[0]
                 const response=await getAudioFromBackEnd(item);
                 if(response.redirect){
                     window.location.href = response.url;
