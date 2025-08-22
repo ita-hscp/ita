@@ -5,6 +5,7 @@ let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
+let botAudioBlobList= [];
 let recordingNumber = 0;
 let exerciseId = null;
 const saveButton = document.getElementById("conversation-saveButton");
@@ -83,7 +84,7 @@ async function getAudio(text) {
 
         // Convert the response into a Blob (audio file)
         const audioBlob = await response.blob();
-
+        botAudioBlobList.push({  blob: audioBlob, number: botAudioBlobList.length + 1, timestamp: new Date().toISOString(), id: crypto.randomUUID(), sent: false });
 
         return audioBlob;
     } catch (error) {
@@ -137,6 +138,50 @@ async function sendMessage() {
     }
 }
 
+/* Create a json file from the audio blobs 
+ *  audios : [
+    {
+        "id": "bot-1",
+        "blob": "base64-encoded-audio-data-1"
+    },
+    {
+        "id": "user-1",
+        "blob": "base64-encoded-audio-data-2"
+    },
+    {
+        "id": "bot-2",
+        "blob": "base64-encoded-audio-data-3"
+    },
+    {
+        "id": "user-2",
+        "blob": "base64-encoded-audio-data-4"
+    }
+]}*/
+async function blobToBase64(blob) {
+  // Serialize the blob to base64 string including metadata
+  return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);   
+  });
+}
+
+async function combineAudioBlobs() {
+    const length = Math.max(audioBlobList.length, botAudioBlobList.length);
+    const combinedBlobs = [];
+    for (let i = 0; i < length; i++) {
+        const userBlob = audioBlobList[i] ? audioBlobList[i].blob : null;
+        const botBlob = botAudioBlobList[i] ? botAudioBlobList[i].blob : null;
+        // Combine user and bot audio blobs as needed
+        combinedBlobs.push({
+            "id": `user-${i + 1}`,
+            "botBlob": botBlob ? await blobToBase64(botBlob) : null,
+            "userBlob": userBlob ? await blobToBase64(userBlob) : null
+        });
+    }
+    return combinedBlobs;
+}
 
 saveButton.addEventListener("click", async (event) => {
     const chatBox = document.getElementById("chatBox");
@@ -146,17 +191,18 @@ saveButton.addEventListener("click", async (event) => {
     // Get all messages inside the chat box
     const messages = chatBox.querySelectorAll(".message");
     const formData = new FormData();
-    audioBlobList.forEach((recording, index) => {
-        // Add each audio file with a unique name
-        formData.append(`audioFiles[]`, recording.blob, `recording_${recording.number}.webm`);
+    // audioBlobList.forEach((recording, index) => {
+    //     // Add each audio file with a unique name
+    //     formData.append(`audioFiles[]`, recording.blob, `recording_${recording.number}.webm`);
 
-        // Add metadata for each recording
-        formData.append(`recordingNumber_${index}`, recording.number);
-        formData.append(`timestamp_${index}`, recording.timestamp);
-    });
+    //     // Add metadata for each recording
+    //     formData.append(`recordingNumber_${index}`, recording.number);
+    //     formData.append(`timestamp_${index}`, recording.timestamp);
+    // });
+    const combinedBlobs = await combineAudioBlobs();
+    formData.append(`audioFiles[]`, combinedBlobs, `recording.webm`);
     // Add total number of recordings
     formData.append('totalRecordings', audioBlobList.length);
-
     // Add recording IDs for reference
     formData.append('recordingIds', JSON.stringify(audioBlobList.map(r => r.id)));
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
@@ -220,6 +266,8 @@ function handleSpeechRecognition(event) {
 
 async function handleRecording(event) {
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+    //Convert audioBlob to base64
+    const base64Audio = await blobToBase64(audioBlob);
     recordingNumber++;
 
     // Store recording
