@@ -200,7 +200,9 @@ saveButton.addEventListener("click", async (event) => {
     //     formData.append(`timestamp_${index}`, recording.timestamp);
     // });
     const combinedBlobs = await combineAudioBlobs();
-    formData.append(`audioFiles[]`, combinedBlobs, `recording.webm`);
+    //convert json to blob
+    const jsonBlob = new Blob([JSON.stringify(combinedBlobs)], { type: 'application/json' });
+    formData.append(`audioFiles[]`, jsonBlob, `recording.webm`);
     // Add total number of recordings
     formData.append('totalRecordings', audioBlobList.length);
     // Add recording IDs for reference
