@@ -5,23 +5,10 @@ title: உரையாடல் பயிற்சி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
-         <option value="1">17</option>
-         <option value="2">18</option>
-        <option value="3">20</option>
-        <option value="4">21</option>
-        <option value="5">22</option>
-        <option value="6">23</option>
-        <option value="7">24</option>
-        <option value="8">25</option>
-        <option value="9">26</option>
-        <option value="10">27</option>
-        <option value="28">28</option>
-        <option value="29">29</option>
-        <option value="30">30</option>
-        <option value="31">31</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
@@ -39,6 +26,9 @@ title: உரையாடல் பயிற்சி
     </div>
   </div>
 <button id="conversation-saveButton" disabled>Finish Conversation</button>
+<div>
+        <audio id="audio-player" controls style="width: 100%; margin-top: 20px; display: none;"></audio>
+</div>
  <div class="conversation-spinner" id="conversation-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
         <progress id="progressBar" value="0" max="100"></progress>
