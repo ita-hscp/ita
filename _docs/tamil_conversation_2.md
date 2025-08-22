@@ -4,7 +4,7 @@ order: 1
 title: உரையாடல் பயிற்சி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
-<script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/speech_new.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
  <label for="weeks">Choose a week:</label>
@@ -34,7 +34,7 @@ title: உரையாடல் பயிற்சி
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
 </div> -->
-<script src="{{ site.baseurl }}/scripts/conversation.js"></script>
+<script src="{{ site.baseurl }}/scripts/conversation_v1.js"></script>
 <script>
 tracker();
 </script>
