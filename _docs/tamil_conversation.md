@@ -34,7 +34,7 @@ title: உரையாடல் பயிற்சி
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
 </div> -->
-<script src="{{ site.baseurl }}/scripts/conversation.js"></script>
+<script src="{{ site.baseurl }}/scripts/conversation_v1.js"></script>
 <script>
 tracker();
 </script>
