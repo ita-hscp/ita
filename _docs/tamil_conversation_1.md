@@ -4,7 +4,7 @@ order: 1
 title: உரையாடல் பயிற்சி
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
-<script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/speech_new.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lamejs/lame.min.js"></script>
 
  <label for="weeks">Choose a week:</label>
