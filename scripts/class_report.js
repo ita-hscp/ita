@@ -5,6 +5,9 @@ const modalComments = document.getElementById("modalComments");
 const submitFeedbackBtn = document.getElementById("submitFeedback");
 const closeModalBtn = document.getElementById("closeModal");
 let isPlaying = false;
+let audioContext = null;
+let playButton = null;
+let audioQueue = [];
 const audioMap = new Map();
 let selectedIndex = null;
 const tableBody = document.querySelector("#jsonTable tbody");
@@ -91,8 +94,8 @@ async function addAudio(reportData) {
             }
 
             if (audioListJson) {
-                audioData = audioListJson
-                playButtonListener();
+                audioData = audioListJson;
+
             } else {
                 alert("No audio found for this entry.");
             }
@@ -118,23 +121,23 @@ async function getAudioFromBackEnd(item) {
             // window.location.href =  // Replace '/login' with your actual login URL
             return { redirect: true, url: "https://ita-hscp.github.io/ita/Login" };
         }
-        
+
         /* The line `audioMap.set(audioId, audio);` is adding a key-value pair to a Map data structure named
         `audioMap`. In this case, it is associating the `audioId` as the key and the `audio` object as the
         corresponding value in the map. This allows for easy retrieval and storage of audio objects based on
         their unique `audioId`. */
-        
+
         //blob has audio json from backend {id: "bot-1", botBlob: "base64-encoded-audio-data-1"}
         //Decode base64 audio data
 
         const blob = await response.blob();
-        if(blob){
+        if (blob) {
             const text = await blob.text();
             const audioJson = await JSON.parse(text);
             audioMap.set(item.assignmentId, audioJson);
             return { audioFound: true, audioJson: audioJson, redirect: false };
         }
-       
+
     } catch (error) {
         console.error("Error fetching audio file:", error);
     }
@@ -233,7 +236,7 @@ function validateJsonFormat(data) {
 
     return true;
 }
-function playButtonListener(){
+function playButtonListener() {
     if (!audioData || isPlaying) return;
 
     if (!audioContext) {
@@ -246,6 +249,8 @@ function playButtonListener(){
 
 // Prepare audio data and start playback
 function prepareAndPlayAudio() {
+    const playButton = document.getElementById('playBtn-modal');
+    const statusElement = document.getElementById('stopBtn-modal');
     if (!audioData || audioData.length === 0) {
         statusElement.textContent = 'No audio data to play.';
         return;
@@ -283,9 +288,11 @@ function prepareAndPlayAudio() {
 
 // Play the next audio in the queue
 function playNextInQueue() {
+    const playButton = document.getElementById('playBtn-modal');
+    const statusElement = document.getElementById('stopBtn-modal');
     if (audioQueue.length === 0) {
         // Queue is empty, playback complete
-        statusElement.textContent = 'Playback complete.';
+        tusElement.textContent = 'Playback complete.';
         isPlaying = false;
         playButton.disabled = false;
         return;
@@ -324,7 +331,7 @@ function playNextInQueue() {
         },
         function (error) {
             console.error('Error decoding audio data:', error);
-            statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
+            // statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
             // Try to play the next one even if this one failed
             playNextInQueue();
         }
