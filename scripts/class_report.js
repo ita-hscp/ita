@@ -131,8 +131,9 @@ async function getAudioFromBackEnd(item) {
             const text = await blob.text();
             const audioJson = await JSON.parse(text);
             audioMap.set(item.assignmentId, audioJson);
+            return { audioFound: false, audioJson: audioJson, redirect: false };
         }
-        return { audioFound: false, audioJson: audioJson, redirect: false }
+       
     } catch (error) {
         console.error("Error fetching audio file:", error);
     }
