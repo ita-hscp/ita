@@ -37,13 +37,15 @@ let sampleData = [];
 
 async function loadReport() {
     const query = {
-        "className": "HSCP1E"
+        "className": "HSCP2"
     }
     const tableBody = document.querySelector("#jsonTable tbody");
     const weekElement = document.getElementById("weekFilter");
-    query['week'] = weekElement.options[weekElement.selectedIndex].value
+    query['week'] = "1" // weekElement.options[weekElement.selectedIndex].value
     const assignmentType = document.getElementById("assignmentTypeFilter")
     query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
+    query['sectionName'] = "B" // sectionElement.options[sectionElement.selectedIndex].value;
+    query['assignmentType'] =  "உரையாடல் பயிற்சி" // assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
         sampleData = jsonData.report;
@@ -161,7 +163,7 @@ async function saveReport() {
         report.push(item);
     });
     const query = {
-        "className": "HSCP1E",
+        "className": "HSCP2B",
         "report": report
     }
     const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/save', {
