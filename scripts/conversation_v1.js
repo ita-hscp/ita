@@ -315,7 +315,7 @@ if (!('webkitSpeechRecognition' in window)) {
         userInput.innerHTML = "";
         transcription.innerHTML = ""
         audioChunks = []
-        audioBlobList = audioBlobList.filter(item => item.sent === true);
+        // audioBlobList = audioBlobList.filter(item => item.sent === true);
         if (mediaRecorder) {
             mediaRecorder.onstop = () => {
                 console.log("Ignore Recording")
