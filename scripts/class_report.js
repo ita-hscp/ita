@@ -292,7 +292,7 @@ function playNextInQueue() {
     const statusElement = document.getElementById('stopBtn-modal');
     if (audioQueue.length === 0) {
         // Queue is empty, playback complete
-        tusElement.textContent = 'Playback complete.';
+        statusElement.textContent = 'Playback complete.';
         isPlaying = false;
         playButton.disabled = false;
         return;
