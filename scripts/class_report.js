@@ -4,6 +4,7 @@ const modalScore = document.getElementById("modalScore");
 const modalComments = document.getElementById("modalComments");
 const submitFeedbackBtn = document.getElementById("submitFeedback");
 const closeModalBtn = document.getElementById("closeModal");
+let isPlaying = false;
 const audioMap = new Map();
 let selectedIndex = null;
 const tableBody = document.querySelector("#jsonTable tbody");
@@ -131,7 +132,7 @@ async function getAudioFromBackEnd(item) {
             const text = await blob.text();
             const audioJson = await JSON.parse(text);
             audioMap.set(item.assignmentId, audioJson);
-            return { audioFound: false, audioJson: audioJson, redirect: false };
+            return { audioFound: true, audioJson: audioJson, redirect: false };
         }
        
     } catch (error) {
