@@ -42,6 +42,7 @@ async function getExercise() {
     base64AudioList = [];
     startBtn.disabled = false;
     clearButton.disabled = false;
+    previewButton.disabled = false;
     const messages = chatBox.querySelectorAll(".message");
     if (messages) {
         messages.forEach(message => message.remove());
