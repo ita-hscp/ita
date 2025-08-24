@@ -69,6 +69,17 @@
     width: 100%;
   }
 
+  #conversation-preview-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+
   .input-area button:disabled {
     background-color: #cccccc; /* Grey background */
     color: #666666; /* Dimmed text color */
@@ -77,6 +88,13 @@
   }
 
   #conversation-saveButton:disabled {
+    background-color: #cccccc; /* Grey background */
+    color: #666666; /* Dimmed text color */
+    cursor: not-allowed; /* Show 'not allowed' cursor */
+    opacity: 0.6; /* Slightly transparent */
+  }
+
+  #conversation-preview-btn:disabled {
     background-color: #cccccc; /* Grey background */
     color: #666666; /* Dimmed text color */
     cursor: not-allowed; /* Show 'not allowed' cursor */
