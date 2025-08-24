@@ -8,6 +8,7 @@ let audioBlobList = [];
 let botAudioBlobList= [];
 let recordingNumber = 0;
 let exerciseId = null;
+let clearButtonPressed=false;
 const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
@@ -267,6 +268,7 @@ function handleSpeechRecognition(event) {
 }
 
 async function handleRecording(event) {
+    if(clearButtonPressed) return;
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
     //Convert audioBlob to base64
     const base64Audio = await blobToBase64(audioBlob);
@@ -280,6 +282,7 @@ async function handleRecording(event) {
         timestamp: new Date().toISOString(),
         sent: false
     };
+    
     audioBlobList.push(recording);
     // Clear chunks for the next recording
     audioChunks = [];
@@ -314,24 +317,16 @@ if (!('webkitSpeechRecognition' in window)) {
         const userInput = document.getElementById('userInput');
         userInput.innerHTML = "";
         transcription.innerHTML = ""
-        audioChunks = []
+        clearButtonPressed=true;
         // audioBlobList = audioBlobList.filter(item => item.sent === true);
         if (mediaRecorder) {
-            mediaRecorder.onstop = () => {
-                console.log("Ignore Recording")
-            }
-            mediaRecorder.ondataavailable = () => { }
             await mediaRecorder.stop();
-            // await mediaRecorder.start();
         }
         if (recognition) {
-            recognition.onresult = (event) => {
-                console.log("Ignore Listening")
-            }
             await recognition.stop();
-            // await recognition.start();
         }
-        console.log('Audio recording started');
+        console.log('Audio recording cleared');
+        audioChunks = []
         // Start the speech recognition
         startBtn.disabled = false;
         sendBtn.disabled = true;
@@ -340,6 +335,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 
     startBtn.addEventListener('click', async () => {
+        clearButtonPressed=false;
         await recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
@@ -352,6 +348,7 @@ if (!('webkitSpeechRecognition' in window)) {
             };
             mediaRecorder = new MediaRecorder(stream, options);
             mediaRecorder.ondataavailable = (event) => {
+                if(clearButtonPressed) return;
                 audioChunks.push(event.data);
             };
             mediaRecorder.onstop = handleRecording;
