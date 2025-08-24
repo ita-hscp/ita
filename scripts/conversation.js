@@ -11,6 +11,7 @@ const saveButton = document.getElementById("conversation-saveButton");
 const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
+const previewButton = document.getElementById('conversation-preview-btn');
 const transcription = document.getElementById('userInput');
 
 async function getExercise() {
@@ -34,6 +35,7 @@ async function getExercise() {
     base64AudioList = [];
     startBtn.disabled = false;
     clearButton.disabled = false;
+    previewButton.disabled = true;
     const messages = chatBox.querySelectorAll(".message");
     if (messages) {
         messages.forEach(message => message.remove());
