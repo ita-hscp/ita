@@ -403,7 +403,7 @@ if (!('webkitSpeechRecognition' in window)) {
 // Prepare audio data and start playback
 function prepareAndPlayAudio() {
     const playButton = document.getElementById('conversation-play-btn');
-    const statusElement = document.getElementById('conversation-status');
+    const statusElement = document.getElementById('conversation-preview-status');
     if (!audioData || audioData.length === 0) {
         statusElement.textContent = 'No audio data to play.';
         return;
@@ -442,7 +442,7 @@ function prepareAndPlayAudio() {
 // Play the next audio in the queue
 function playNextInQueue() {
     const playButton = document.getElementById('conversation-play-btn');
-    const statusElement = document.getElementById('conversation-status');
+    const statusElement = document.getElementById('conversation-preview-status');
     if (audioQueue.length === 0) {
         // Queue is empty, playback complete
         statusElement.textContent = 'Playback complete.';
