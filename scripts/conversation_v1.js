@@ -402,7 +402,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 // Prepare audio data and start playback
 function prepareAndPlayAudio() {
-    const playButton = document.getElementById('conversation-play-btn');
+    const playButton = document.getElementById('conversation-preview-btn');
     const statusElement = document.getElementById('conversation-preview-status');
     if (!audioData || audioData.length === 0) {
         statusElement.textContent = 'No audio data to play.';
@@ -424,13 +424,13 @@ function prepareAndPlayAudio() {
         if (segment.botBlob) {
             audioQueue.push({
                 blob: segment.botBlob,
-                type: 'bot'
+                type: 'system'
             });
         }
         if (segment.userBlob) {
             audioQueue.push({
                 blob: segment.userBlob,
-                type: 'user'
+                type: 'your'
             });
         }
     });
@@ -441,7 +441,7 @@ function prepareAndPlayAudio() {
 
 // Play the next audio in the queue
 function playNextInQueue() {
-    const playButton = document.getElementById('conversation-play-btn');
+    const playButton = document.getElementById('conversation-preview-btn');
     const statusElement = document.getElementById('conversation-preview-status');
     if (audioQueue.length === 0) {
         // Queue is empty, playback complete
