@@ -50,7 +50,7 @@ async function loadReport() {
     if (jsonData?.report) {
         sampleData = jsonData.report;
         renderTableRows(jsonData.report)
-        addAudio(jsonData.report);
+        addAudio(jsonData.report, query);
     }
 };
 
@@ -74,7 +74,7 @@ function renderTableRows(data) {
     });
 }
 
-async function addAudio(reportData) {
+async function addAudio(reportData, query) {
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
@@ -83,6 +83,7 @@ async function addAudio(reportData) {
             let audioListJson = audioMap.get(audioId);
             if (!audioListJson) {
                 const item = reportData.filter(item => item.fileId == audioId)[0]
+                item['assignmentType'] = query['assignmentType'];
                 const response = await getAudioFromBackEnd(item);
                 if (response.redirect) {
                     window.location.href = response.url;
