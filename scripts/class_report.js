@@ -67,7 +67,7 @@ function renderTableRows(data) {
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
             <td>${item.completionDate}</td>
-            <td><button class="play-btn" id="${item.id}" data-id="${item.fileId}" data-index="${index}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.userId}" data-id="${item.fileId}" data-index="${index}">▶ Play</button></td>
             <td><button class="feedback-btn" data-index="${index}">Feedback</button></td>
         `;
         tableBody.appendChild(row);
@@ -78,10 +78,11 @@ async function addAudio(reportData) {
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
+            const userId = this.getAttribute("id");
             const index = this.getAttribute("data-index");
             let audioListJson = audioMap.get(audioId);
             if (!audioListJson) {
-                const item = reportData.filter(item => item.assignmentId == audioId)[0]
+                const item = reportData.filter(item => item.fileId == audioId)[0]
                 const response = await getAudioFromBackEnd(item);
                 if (response.redirect) {
                     window.location.href = response.url;
@@ -136,7 +137,7 @@ async function getAudioFromBackEnd(item) {
         if (blob) {
             const text = await blob.text();
             const audioJson = await JSON.parse(text);
-            audioMap.set(item.assignmentId, audioJson);
+            audioMap.set(item.fileId, audioJson);
             return { audioFound: true, audioJson: audioJson, redirect: false };
         }
 
@@ -153,7 +154,7 @@ async function saveReport() {
     rows.forEach((row, index) => {
         const cells = row.querySelectorAll("td");
         const item = {
-            id: sampleData[index].assignmentId,
+            taskId: sampleData[index].taskId,
             userId: cells[0].textContent,
             week: cells[1].textContent,
             score: cells[4].textContent,
