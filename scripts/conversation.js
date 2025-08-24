@@ -203,6 +203,7 @@ saveButton.addEventListener("click", async (event) => {
 });
 
 function handleSpeechRecognition(event) {
+    if(clearButtonPressed) return;
     let interimTranscript = '';
     let finalTranscript = '';
     for (let i = 0; i < event.results.length; i++) {
@@ -256,6 +257,7 @@ if (!('webkitSpeechRecognition' in window)) {
         || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     let mediaRecorder;
+    let clearButtonPressed=false
     recognition.lang = 'ta';
     recognition.continuous = true; // Keep recognizing speech continuously
     recognition.interimResults = true; // Show interim results
@@ -266,18 +268,12 @@ if (!('webkitSpeechRecognition' in window)) {
         transcription.innerHTML = ""
         audioChunks = []
         audioBlobList = audioBlobList.filter(item => item.sent === true);
+        clearButtonPressed=true
         if (mediaRecorder) {
-            mediaRecorder.onstop = () => {
-                console.log("Ignore Recording")
-            }
-            mediaRecorder.ondataavailable = () => { }
             await mediaRecorder.stop();
             // await mediaRecorder.start();
         }
         if (recognition) {
-            recognition.onresult = (event) => {
-                console.log("Ignore Listening")
-            }
             await recognition.stop();
             // await recognition.start();
         }
@@ -294,6 +290,7 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
+        clearButtonPressed=false
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const options = {
@@ -302,7 +299,9 @@ if (!('webkitSpeechRecognition' in window)) {
             };
             mediaRecorder = new MediaRecorder(stream, options);
             mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
+                if(!clearButtonPressed){
+                    audioChunks.push(event.data);
+                }
             };
             mediaRecorder.onstop = handleRecording;
             await mediaRecorder.start();
