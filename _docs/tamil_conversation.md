@@ -25,6 +25,8 @@ title: உரையாடல் பயிற்சி
         <audio id="audioPlayer" controls></audio>
     </div>
   </div>
+<button id="conversation-preview-btn" disabled>Preview Before upload</button>
+<div class="status" id="conversation-preview-status"></div>
 <button id="conversation-saveButton" disabled>Finish Conversation</button>
 <div>
         <audio id="audio-player" controls style="width: 100%; margin-top: 20px; display: none;"></audio>

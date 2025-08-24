@@ -14,6 +14,12 @@ const clearButton = document.getElementById("conversation-clear-btn");
 const startBtn = document.getElementById('conversation-start-btn');
 const sendBtn = document.getElementById('conversation-send-btn');
 const transcription = document.getElementById('userInput');
+const previewButton = document.getElementById('conversation-preview-btn');
+let isPlaying = false;
+let audioContext = null;
+let playButton = null;
+let audioQueue = [];
+let audioData = null;
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
@@ -112,6 +118,7 @@ async function sendMessage() {
 
         clearButton.disabled = true;
         saveButton.disabled = false;
+        previewButton.disabled = false;
         if (message) {
             displayMessage(message, 'sent');
             // Clear input field
@@ -378,4 +385,110 @@ if (!('webkitSpeechRecognition' in window)) {
             startBtn.disabled=true
         }
     });
+
+    
+
+    async function playButtonListener() {
+        audioData = await combineAudioBlobs();
+    if (!audioData || isPlaying) return;
+
+    if (!audioContext) {
+        // Create audio context on first play (to handle autoplay restrictions)
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    prepareAndPlayAudio();
+}
+
+// Prepare audio data and start playback
+function prepareAndPlayAudio() {
+    const playButton = document.getElementById('conversation-play-btn');
+    const statusElement = document.getElementById('conversation-status');
+    if (!audioData || audioData.length === 0) {
+        statusElement.textContent = 'No audio data to play.';
+        return;
+    }
+
+    statusElement.textContent = 'Preparing audio...';
+    isPlaying = true;
+    playButton.disabled = true;
+
+    // Reset audio queue
+    audioQueue = [];
+
+    // Process all segments and create an audio queue
+    audioData.forEach(segment => {
+        // Add user audio if exists
+
+        // Add bot audio if exists
+        if (segment.botBlob) {
+            audioQueue.push({
+                blob: segment.botBlob,
+                type: 'bot'
+            });
+        }
+        if (segment.userBlob) {
+            audioQueue.push({
+                blob: segment.userBlob,
+                type: 'user'
+            });
+        }
+    });
+
+    // Start playing the queue
+    playNextInQueue();
+}
+
+// Play the next audio in the queue
+function playNextInQueue() {
+    const playButton = document.getElementById('conversation-play-btn');
+    const statusElement = document.getElementById('conversation-status');
+    if (audioQueue.length === 0) {
+        // Queue is empty, playback complete
+        statusElement.textContent = 'Playback complete.';
+        isPlaying = false;
+        playButton.disabled = false;
+        return;
+    }
+
+    const audioItem = audioQueue.shift();
+    statusElement.textContent = `Playing ${audioItem.type} audio...`;
+
+    // Convert base64 to audio buffer
+    const base64Data = audioItem.blob;
+
+    // Remove data URL prefix if present
+    let base64String = base64Data;
+    if (base64String.includes(',')) {
+        base64String = base64String.split(',')[1];
+    }
+
+    // Decode base64
+    const binaryString = atob(base64String);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Decode audio data
+    audioContext.decodeAudioData(
+        bytes.buffer,
+        function (buffer) {
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+
+            // Play this audio and when done, play the next one
+            source.onended = playNextInQueue;
+            source.start(0);
+        },
+        function (error) {
+            console.error('Error decoding audio data:', error);
+            // statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
+            // Try to play the next one even if this one failed
+            playNextInQueue();
+        }
+    );
+}
+previewButton.addEventListener('click', playButtonListener);
 }
