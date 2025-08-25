@@ -34,9 +34,7 @@ In Progress
 <table id="jsonTable">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Week</th>
-                <th>Assignment Type</th>
                  <th>Status</th>
                 <th>Score</th>
                 <th>Comments</th>

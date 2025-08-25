@@ -69,9 +69,7 @@ async function loadReport() {
         jsonData.report.forEach(item => {
             const row = document.createElement("tr");
             row.innerHTML = `
-            <td>${item.id}</td>
             <td>${item.week}</td>
-            <td>${item.assignmentType}</td>
             <td>${item.status}</td>
             <td>${item.score}</td>
             <td>${item.comments}</td>
