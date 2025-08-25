@@ -1,3 +1,11 @@
+let isPlaying = false;
+let audioContext = null;
+let playButton = null;
+let audioQueue = [];
+const audioMap = new Map();
+let selectedIndex = null;
+let audioData = null;
+
 
 async function getClassReport(reportQuery) {
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/student';
@@ -51,11 +59,8 @@ async function getClassReport(reportQuery) {
 
 async function loadReport() {
     const query = {
-        "className": "HSCP1E"
     }
     const tableBody = document.querySelector("#jsonTable tbody");
-    const weekElement = document.getElementById("weekFilter");
-    query['week'] = weekElement.options[weekElement.selectedIndex].value
     const assignmentType = document.getElementById("assignmentTypeFilter")
     query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
@@ -72,7 +77,7 @@ async function loadReport() {
             <td>${item.comments}</td>
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
-            <td><button class="play-btn" id="${item.assignmentId}" data-id="${item.assignmentId}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.assignmentId}" data-id="${item.fileId}">▶ Play</button></td>
         `;
             tableBody.appendChild(row);
         });
@@ -88,7 +93,7 @@ async function addAudio(reportData) {
             const audioId = this.getAttribute("data-id");
             let audio = audioMap.get(audioId);
             if (!audio) {
-                const item = reportData.filter(item => item.assignmentId == audioId)[0]
+                const item = reportData.filter(item => item.fileId == audioId)[0]
                 try {
                     // Fetch the audio file based on item.id
                     const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
@@ -106,36 +111,114 @@ async function addAudio(reportData) {
                         window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace '/login' with your actual login URL
                         return;
                     }
-                    audio = new Audio();
-                    audioMap.set(audioId, audio);
                     const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    audio.src = url;
+                    if (blob) {
+                        const text = await blob.text();
+                        const audioJson = await JSON.parse(text);
+                        audioMap.set(item.fileId, audioJson);
+                    }
+
                 } catch (error) {
                     console.error("Error fetching audio file:", error);
-                    return;
                 }
             }
-
-            // Play or pause the audio
-            if (audio.paused) {
-                audio.play();
-                this.textContent = "⏸ Pause";
-
-                // Pause all other audios
-                document.querySelectorAll(".play-btn").forEach(btn => {
-                    if (btn !== this) btn.textContent = "▶ Play";
-                });
-
-                // Reset button text when audio ends
-                audio.onended = () => {
-                    this.textContent = "▶ Play";
-                };
-            } else {
-                audio.pause();
-                this.textContent = "▶ Play";
-            }
+            audioData = audioMap.get(audioId);
+            isPlaying=false;
+            playButtonListener();
         });
     });
 }
+
+function playButtonListener() {
+    if (!audioData || isPlaying) return;
+
+    if (!audioContext) {
+        // Create audio context on first play (to handle autoplay restrictions)
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    prepareAndPlayAudio();
+}
+
+// Prepare audio data and start playback
+function prepareAndPlayAudio() {
+
+    if (!audioData || audioData.length === 0) {
+        return;
+    }
+
+    isPlaying = true;
+
+    // Reset audio queue
+    audioQueue = [];
+
+    // Process all segments and create an audio queue
+    audioData.forEach(segment => {
+        // Add user audio if exists
+
+        // Add bot audio if exists
+        if (segment.botBlob) {
+            audioQueue.push({
+                blob: segment.botBlob,
+                type: 'bot'
+            });
+        }
+        if (segment.userBlob) {
+            audioQueue.push({
+                blob: segment.userBlob,
+                type: 'user'
+            });
+        }
+    });
+
+    // Start playing the queue
+    playNextInQueue();
+}
+
+// Play the next audio in the queue
+function playNextInQueue() {
+    if (audioQueue.length === 0) {
+        // Queue is empty, playback complete
+        isPlaying = false;
+        return;
+    }
+
+    const audioItem = audioQueue.shift();
+    // Convert base64 to audio buffer
+    const base64Data = audioItem.blob;
+
+    // Remove data URL prefix if present
+    let base64String = base64Data;
+    if (base64String.includes(',')) {
+        base64String = base64String.split(',')[1];
+    }
+
+    // Decode base64
+    const binaryString = atob(base64String);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    // Decode audio data
+    audioContext.decodeAudioData(
+        bytes.buffer,
+        function (buffer) {
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+
+            // Play this audio and when done, play the next one
+            source.onended = playNextInQueue;
+            source.start(0);
+        },
+        function (error) {
+            console.error('Error decoding audio data:', error);
+            // statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
+            // Try to play the next one even if this one failed
+            playNextInQueue();
+        }
+    );
+}
+
 
