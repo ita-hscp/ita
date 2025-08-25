@@ -10,28 +10,19 @@ title: Class Report
 
  <label for="weekFilter">Filter by Week:</label>
     <select id="weekFilter">
-        <option value="17">17</option>
-        <option value="18">18</option>
-        <option value="20">20</option>
-        <option value="21">21</option>
-        <option value="22">22</option>
-        <option value="23">23</option>
-        <option value="24">24</option>
-        <option value="25">25</option>
-        <option value="26">26</option>
-         <option value="27">27</option>
-        <option value="28">28</option>
-        <option value="29">29</option>
-        <option value="30">30</option>
-        <option value="31">31</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
     </select>  
 
 <label for="assignmentTypeFilter">Filter by Assignment Type:</label>
     <select id="assignmentTypeFilter">
-        <option value="conversation">Conversation</option>
-        <option value="storyTelling">Story</option>
-         <option value="listen">Listening</option>
-        <option value="all">All</option>
+        <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
+        <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
+        <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
+        <option value="அனைத்து">அனைத்து</option>
     </select>
     
 <button id="loadReport" onclick="loadReport()">Load Report</button>
