@@ -37,15 +37,11 @@ let sampleData = [];
 
 async function loadReport() {
     const query = {
-        "className": "HSCP2"
     }
-    const tableBody = document.querySelector("#jsonTable tbody");
     const weekElement = document.getElementById("weekFilter");
-    query['week'] = "1" // weekElement.options[weekElement.selectedIndex].value
+    query['week'] = weekElement.options[weekElement.selectedIndex].value;
     const assignmentType = document.getElementById("assignmentTypeFilter")
     query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
-    query['sectionName'] = "B" // sectionElement.options[sectionElement.selectedIndex].value;
-    query['assignmentType'] =  "உரையாடல் பயிற்சி" // assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
         sampleData = jsonData.report;
