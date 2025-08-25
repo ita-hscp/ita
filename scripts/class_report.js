@@ -63,7 +63,7 @@ function renderTableRows(data) {
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
             <td>${item.completionDate}</td>
-            <td><button class="play-btn" id="${item.userId}" data-id="${item.fileId}" data-index="${index}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.userId}" data-id="${item.fileId}" data-task="${item.id}" data-index="${index}">▶ Play</button></td>
             <td><button class="feedback-btn" data-index="${index}">Feedback</button></td>
         `;
         tableBody.appendChild(row);
@@ -151,7 +151,7 @@ async function saveReport() {
     rows.forEach((row, index) => {
         const cells = row.querySelectorAll("td");
         const item = {
-            taskId: sampleData[index].taskId,
+            id: sampleData[index].id,
             userId: cells[0].textContent,
             week: cells[1].textContent,
             score: cells[4].textContent,
