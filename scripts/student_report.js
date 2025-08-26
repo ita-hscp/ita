@@ -79,19 +79,28 @@ async function loadReport() {
         `;
             tableBody.appendChild(row);
         });
-        addAudio(jsonData.report);
+        addAudio(jsonData.report, query);
     }
 };
 
 
-async function addAudio(reportData) {
+async function addAudio(reportData, query) {
     const audioMap = new Map();
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
             let audio = audioMap.get(audioId);
+            playButton = this;
+            if (isPlaying) {
+                // Pause the currently playing audio
+                audioContext.suspend();
+                isPlaying = false;
+                playButton.textContent = "▶ Play";
+            }
+            selectedIndex = this.getAttribute("data-index");
             if (!audio) {
                 const item = reportData.filter(item => item.fileId == audioId)[0]
+                item['assignmentType'] = query['assignmentType'];
                 try {
                     // Fetch the audio file based on item.id
                     const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/audio`,
@@ -146,7 +155,7 @@ function prepareAndPlayAudio() {
     }
 
     isPlaying = true;
-
+    playButton.textContent = "⏸ Playing...";
     // Reset audio queue
     audioQueue = [];
 
@@ -178,6 +187,7 @@ function playNextInQueue() {
     if (audioQueue.length === 0) {
         // Queue is empty, playback complete
         isPlaying = false;
+        playButton.textContent = "▶ Play";
         return;
     }
 
