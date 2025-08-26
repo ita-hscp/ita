@@ -5,6 +5,7 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
@@ -34,7 +35,7 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
   <div class="status" id="conversation-preview-status"></div>
   <button id="conversation-saveButton" disabled>Finish Conversation</button>
 </div>
-<button id="conversation-saveButton" disabled>Finish Conversation</button>
+
  <div class="conversation-spinner" id="conversation-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
         <progress id="progressBar" value="0" max="100"></progress>
