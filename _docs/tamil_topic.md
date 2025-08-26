@@ -11,8 +11,9 @@ title: "தலைப்பு பயிற்சி"
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
     </select>
+<button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
+
 <div class="story-container">
-    <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
     <div id="topic-chat-container">
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
@@ -33,7 +34,6 @@ title: "தலைப்பு பயிற்சி"
 
 <button id="story-saveButton" disabled>Finish Conversation</button>
 <div class="story-spinner" id="story-spinner"></div>
-<script src="{{ site.baseurl }}/scripts/story_v1.js"></script>
 <script>
 tracker();
 </script>

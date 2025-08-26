@@ -51,22 +51,6 @@ function checkInputForKeyWords(inputText) {
     });
 }
 
-// Event listeners
-window.addEventListener("DOMContentLoaded", () => {
-    renderKeyWords();
-    document.getElementById("topic-send-btn").addEventListener("click", () => {
-        const userInput = document.getElementById("userInput").textContent.trim();
-        checkInputForKeyWords(userInput);
-        // Optionally, display the message in chat
-        const chatBox = document.getElementById("chatBox");
-        const msgElement = document.createElement("div");
-        msgElement.classList.add("message", "user");
-        msgElement.textContent = userInput;
-        chatBox.appendChild(msgElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
-        document.getElementById("userInput").textContent = "";
-    });
-});
 
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
