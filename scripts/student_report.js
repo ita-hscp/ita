@@ -96,6 +96,7 @@ async function addAudio(reportData, query) {
                 audioContext.suspend();
                 isPlaying = false;
                 playButton.textContent = "▶ Play";
+                return;
             }
             selectedIndex = this.getAttribute("data-index");
             if (!audio) {

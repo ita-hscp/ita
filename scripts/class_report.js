@@ -10,6 +10,7 @@ let playButton = null;
 let audioQueue = [];
 const audioMap = new Map();
 let selectedIndex = null;
+let assignmentType =null
 const tableBody = document.querySelector("#jsonTable tbody");
 async function getClassReport(reportQuery) {
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/report';
@@ -40,8 +41,9 @@ async function loadReport() {
     }
     const weekElement = document.getElementById("weekFilter");
     query['week'] = weekElement.options[weekElement.selectedIndex].value;
-    const assignmentType = document.getElementById("assignmentTypeFilter")
-    query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
+    const assignmentTypeFilter = document.getElementById("assignmentTypeFilter")
+    query['assignmentType'] = assignmentTypeFilter.options[assignmentTypeFilter.selectedIndex].value;
+    assignmentType = query['assignmentType'];
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
         sampleData = jsonData.report;
@@ -74,12 +76,11 @@ async function addAudio(reportData, query) {
     document.querySelectorAll(".play-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const audioId = this.getAttribute("data-id");
-            const userId = this.getAttribute("id");
             const index = this.getAttribute("data-index");
             let audioListJson = audioMap.get(audioId);
             if (!audioListJson) {
                 const item = reportData.filter(item => item.fileId == audioId)[0]
-                item['assignmentType'] = query['assignmentType'];
+                item['assignmentType'] = assignmentType;
                 const response = await getAudioFromBackEnd(item);
                 if (response.redirect) {
                     window.location.href = response.url;
