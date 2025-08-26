@@ -8,14 +8,14 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
 
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
-        <option value="21-listen">21</option>
-        <option value="22-listen">22</option>
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
     <p type="text" id="topicSelected"></p>
 </div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/4j1kypXSaew?si=0utNCHP4zPlAW-uB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div id="videoContainer" style="display: none;">
+  <iframe width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 <div id="div-link"></div>
   <div class="chat-container">
     <div class="chat-box" id="chatBox">
@@ -28,6 +28,12 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
         <audio id="audioPlayer" controls></audio>
     </div>
   </div>
+  <div>
+<div>
+  <button id="conversation-preview-btn" disabled>Preview Before upload</button>
+  <div class="status" id="conversation-preview-status"></div>
+  <button id="conversation-saveButton" disabled>Finish Conversation</button>
+</div>
 <button id="conversation-saveButton" disabled>Finish Conversation</button>
  <div class="conversation-spinner" id="conversation-spinner"></div>
 <!-- <div id="progressContainer" style="display: none;">
