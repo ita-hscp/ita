@@ -6,6 +6,7 @@ title: கதை சொல்லுதல் பயிற்சி
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
+<script>
   function setStoryImage(name){
    const image=  document.getElementById('imageplaceholder');
   image.innerHTML="<img id=\"storyImagePh\" src=\"{{ site.baseurl }}/images/"+name+"\" width=\"120\" height=\"120\">"
