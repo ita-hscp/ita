@@ -24,11 +24,6 @@ let audioData = null;
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
     let selectedText = dropdown.options[dropdown.selectedIndex].text;
-    if (dropdown.options[dropdown.selectedIndex].value?.includes("listen")) {
-        selectedText = dropdown.options[dropdown.selectedIndex].value
-    }
-    const header = await getWorkSheet(null, "header")
-    // workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
     workSheet = weekWorkSheet[selectedText] ? weekWorkSheet[selectedText] : await getWorkSheet(selectedText, null);
     workSheet['week'] = selectedText;
     const link=workSheet.link;

@@ -4,10 +4,11 @@ order: 2
 title: கதை சொல்லுதல் பயிற்சி 
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
-<script src="{{ site.baseurl }}/scripts/speech.js">
+<script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
   function setStoryImage(name){
    const image=  document.getElementById('imageplaceholder');
-  image.innerHTML="<img id="storyImagePh" src=\"{{ site.baseurl }}/images/"+name+"\" width=\"120\" height=\"120\">"
+  image.innerHTML="<img id=\"storyImagePh\" src=\"{{ site.baseurl }}/images/"+name+"\" width=\"120\" height=\"120\">"
  }
 </script>
 
@@ -38,7 +39,7 @@ title: கதை சொல்லுதல் பயிற்சி
 </div>
 <button id="story-saveButton" disabled>Finish Conversation</button>
  <div class="story-spinner" id="story-spinner"></div>
-<script src="{{ site.baseurl }}/scripts/story.js"></script>
+<script src="{{ site.baseurl }}/scripts/story_v1.js"></script>
 <script>
 tracker();
 </script>
