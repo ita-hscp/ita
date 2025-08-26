@@ -60,7 +60,7 @@ function renderTableRows(data) {
         row.innerHTML = `
             <td>${item.userName}</td>
             <td>${item.week}</td>
-            <td>${item.assignmentType}</td>
+            <td>${assignmentType}</td>
             <td>${item.status}</td>
             <td class="score">${item.score}</td>
             <td class="comments">${item.comments}</td>
