@@ -222,7 +222,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append('recordingIds', JSON.stringify(audioBlobList.map(r => r.id)));
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
-    formData.append("work", "conversation");
+    formData.append("work", "listening");
     formData.append("week", workSheet.week ? workSheet.week : "18");
     formData.append("exerciseId", exerciseId);
     const spinner = document.getElementById('conversation-spinner');
