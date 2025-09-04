@@ -238,7 +238,13 @@ function validateJsonFormat(data) {
     return true;
 }
 function playButtonListener() {
-    if (!audioData || isPlaying) return;
+    if (!audioData) return;
+    if (isPlaying){ isPlaying = false;
+        playButton = document.getElementById('playBtn-modal'); 
+        playButton.textContent = '▶ Play';
+        playButton.disabled = false;
+        return;
+    }
 
     if (!audioContext) {
         // Create audio context on first play (to handle autoplay restrictions)
@@ -282,7 +288,7 @@ function prepareAndPlayAudio() {
             });
         }
     });
-
+    playButton.textContent = '⏸ Playing...';
     // Start playing the queue
     playNextInQueue();
 }
@@ -291,7 +297,7 @@ function prepareAndPlayAudio() {
 function playNextInQueue() {
     const playButton = document.getElementById('playBtn-modal');
     const statusElement = document.getElementById('stopBtn-modal');
-    if (audioQueue.length === 0) {
+    if (audioQueue.length === 0 || !isPlaying) {
         // Queue is empty, playback complete
         statusElement.textContent = 'Playback complete.';
         isPlaying = false;
