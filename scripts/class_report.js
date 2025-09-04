@@ -242,7 +242,6 @@ function playButtonListener() {
     if (isPlaying){ isPlaying = false;
         playButton = document.getElementById('playBtn-modal'); 
         playButton.textContent = '▶ Play';
-        playButton.disabled = false;
         return;
     }
 
@@ -265,8 +264,6 @@ function prepareAndPlayAudio() {
 
     statusElement.textContent = 'Preparing audio...';
     isPlaying = true;
-    playButton.disabled = true;
-
     // Reset audio queue
     audioQueue = [];
 
@@ -300,8 +297,8 @@ function playNextInQueue() {
     if (audioQueue.length === 0 || !isPlaying) {
         // Queue is empty, playback complete
         statusElement.textContent = 'Playback complete.';
+        playButton.textContent = '▶ Play';
         isPlaying = false;
-        playButton.disabled = false;
         return;
     }
 
