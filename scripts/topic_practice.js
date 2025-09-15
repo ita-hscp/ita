@@ -41,6 +41,16 @@ function strikeOutWord(word) {
     }
 }
 
+async function blobToBase64(blob) {
+  // Serialize the blob to base64 string including metadata
+  return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);   
+  });
+}
+
 // Check user input for key words
 function checkInputForKeyWords(inputText) {
     keyWords.forEach(word => {
