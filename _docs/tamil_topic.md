@@ -15,6 +15,9 @@ title: "தலைப்பு பயிற்சி"
 
 <div class="story-container">
     <div id="topic-chat-container">
+        <div>
+            <p type="text" id="topicSelected"></p>
+        </div>
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
         <div id="userInput" contenteditable="true"></div>
