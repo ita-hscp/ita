@@ -148,10 +148,10 @@ async function sendMessage() {
 }
 
 exerciseStartButton.addEventListener('click', async () => {
-    await speakApi(workSheet.intro[2])
-    topicSelected.textContent = workSheet.intro[2]
-    sendMessage();
     exerciseStartButton.disabled = true;
+    startBtn.disabled = false;
+    sendBtn.disabled = true;
+    startBtn.textContent = 'record';
     this.style.display = 'none';
 });
 
