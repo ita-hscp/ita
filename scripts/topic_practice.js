@@ -6,6 +6,8 @@ let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
 let audioBlobList = [];
+let recordingNumber = 0;
+let base64AudioList = [];
 const saveButton = document.getElementById("story-saveButton");
 const clearButton = document.getElementById("story-clear-btn");
 const startBtn = document.getElementById('story-start-btn');
@@ -228,14 +230,23 @@ async function handleRecording(event) {
     //Convert audioBlob to base64
     const base64Audio = await blobToBase64(audioBlob);
     recordingNumber++;
-
-    // Store recording
+    let duration = 0;
+    const audioURL = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioURL);
+    await new Promise((resolve) => {
+        audio.onloadedmetadata = () => {
+            duration = audio.duration;
+            resolve();
+        };
+    });
+     // Store recording
     const recording = {
         id: crypto.randomUUID(), // Unique ID for this recording
         number: recordingNumber,
-        blob: audioBlob,
+        blob: base64Audio,
         timestamp: new Date().toISOString(),
-        sent: false
+        sent: false,
+        duration: duration // Will be updated later
     };
     
     audioBlobList.push(recording);
