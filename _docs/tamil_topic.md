@@ -24,10 +24,14 @@ title: "தலைப்பு பயிற்சி"
         <audio id="audioPlayer" controls></audio>
         <span id="topic-score">Score: 0</span>
     </div>
-    <div id="topic-keywords-container">
-        <h3>Key Words</h3>
+    <div id="topic-keywords-container">//in Tamil
+        <p>முக்கிய சொற்கள்</p>
         <ul id="topic-keywords-list">
             <!-- Key words will be dynamically inserted here -->
+            <li>கல்வி</li>
+            <li>பயிற்சி</li>
+            <li>மொழி</li>
+            <li>சொல்</li>
         </ul>
     </div>  
 </div>
