@@ -60,7 +60,7 @@ window.addEventListener("load", async (event) => {
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
         if(tasks) console.log("Tasks:", tasks);
-        if(!tasks){
+        if(!tasks || tasks.length === 0){
             console.log("No tasks found");
             tasks = [];
             tasks.push({week: "1", exerciseId: "23", content: {
