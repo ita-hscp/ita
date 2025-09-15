@@ -20,7 +20,10 @@ title: "தலைப்பு பயிற்சி"
         </div>
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
-        <div id="userInput" contenteditable="true"></div>
+        <div id="userInput" contenteditable="false">
+        <p type="text" id="timeRemaining"></p>
+        <p type="text" id="timeRecorded"></p>
+        </div>
         <button id="story-start-btn" disabled>record</button>
         <button id="story-clear-btn" >clear</button>
         <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>

@@ -132,6 +132,16 @@ async function sendMessage() {
           saveButton.disabled = false;
           saveButton.textContent = 'Ready to Upload';
       }
+      // Show duration pending to be sent
+      console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
+      let remainingDuration = 10 - totalDuration;
+      if (remainingDuration > 0) {
+          console.log(`Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`);
+      }
+      let timeRemaining = document.getElementById('timeRemaining');
+      timeRemaining.textContent = `Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`;
+      let timeRecorded = document.getElementById('timeRecorded');
+        timeRecorded.textContent = `Total recorded duration: ${totalDuration.toFixed(2)} seconds.`;
   }
 }
 
