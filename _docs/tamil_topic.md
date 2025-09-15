@@ -38,4 +38,4 @@ title: "தலைப்பு பயிற்சி"
 tracker();
 </script>
 <div id="tracker"></div>
-<script src="/scripts/topic_practice.js"></script>
+<script src="{{ site.baseurl }}/scripts/topic_practice.js"></script>
