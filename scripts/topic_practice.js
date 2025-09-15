@@ -13,6 +13,7 @@ const sendBtn = document.getElementById('story-send-btn');
 const transcription = document.getElementById('userInput');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
+let topicTranscription = "";
 
 // Example key words for the topic
 let keyWords = ["தமிழ்", "மொழி", "அடிப்படைகள்"];
@@ -114,29 +115,24 @@ async function getStoryExercise() {
 }
 
 async function sendMessage() {
-    const userInput = document.getElementById('userInput');
-    const message = userInput.textContent.trim();
-    if (workSheet && workSheet.keyWords && counter >= workSheet.keyWords.length) {
-        startBtn.disabled = true;
-        clearButton.disabled = true;
-        saveButton.disabled = false;
-        if (message !== "") {
-            displayMessage(message, 'sent');
-            // Clear input field
-            userInput.textContent = "";
-        }
-    }
-    if ((message || counter == 0) && workSheet && workSheet.keyWords && workSheet.keyWords.length > counter) {
-        // Display the sent message
-        if (message) {
-            displayMessage(message, 'sent');
-            // Clear input field
-            userInput.textContent = "";
-        }
-        startBtn.disabled = false;
-        clearButton.disabled = false;   
-        counter++;
-    }
+  // enable save button if the audioBlobList has items and total duration > 10 seconds
+  if (audioBlobList.length > 0) {
+      let totalDuration = 0;
+      for (const item of audioBlobList) {
+          const audioURL = URL.createObjectURL(item.blob);
+          const audio = new Audio(audioURL);
+          await new Promise((resolve) => {
+              audio.onloadedmetadata = () => {
+                  totalDuration += audio.duration;
+                  resolve();
+              };
+          });
+      }
+      if (totalDuration >= 10) {
+          saveButton.disabled = false;
+          saveButton.textContent = 'Ready to Upload';
+      }
+  }
 }
 
 exerciseStartButton.addEventListener('click', async () => {
@@ -153,13 +149,11 @@ saveButton.addEventListener("click", async (event) => {
     // Show progress bar
     // progressContainer.style.display = 'flex';
     // Get all messages inside the chat box
-    const messages = chatBox.querySelectorAll(".message");
     const formData = new FormData();
     audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
-    const messageArray = Array.from(messages).map(message => message.textContent.trim());
-    formData.append("content", JSON.stringify(messageArray));
+    formData.append("content", JSON.stringify(topicTranscription));
     formData.append("work", "தலைப்பு பயிற்சி");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
@@ -211,7 +205,8 @@ function handleSpeechRecognition(event) {
         } else {
             interimTranscript += transcript;
         }
-        transcription.innerHTML = `${transcript}`;
+        //  transcription.innerHTML = `${transcript}`;
+        topicTranscription += ` ${transcript}`;
     }
     transcription.innerHTML = `${finalTranscript}`;
     event.results = []
