@@ -1,6 +1,7 @@
 // scripts/topic_practice.js
 let counter = 0;
 let workSheet = {};
+let weekWorkSheet = {};
 let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
@@ -149,7 +150,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append(`audioFiles[]`, audioBlob, filename);
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
-    formData.append("work", "storyTelling");
+    formData.append("work", "தலைப்பு பயிற்சி");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
     spinner.style.display = "block";
