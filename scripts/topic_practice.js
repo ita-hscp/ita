@@ -192,9 +192,9 @@ saveButton.addEventListener("click", async (event) => {
     // progressContainer.style.display = 'flex';
     // Get all messages inside the chat box
     const formData = new FormData();
-    audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
+    const jsonBlob = new Blob([JSON.stringify(audioBlobList)], { type: 'application/json' });
     const filename = `audio.webm`;
-    formData.append(`audioFiles[]`, audioBlob, filename);
+    formData.append(`audioFiles[]`, jsonBlob, filename);
     formData.append("content", JSON.stringify(topicTranscriptionsList));
     formData.append("score", score);
     formData.append("work", "தலைப்பு பயிற்சி");
