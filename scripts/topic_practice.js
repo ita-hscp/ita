@@ -77,9 +77,9 @@ window.addEventListener("load", async (event) => {
             console.log("No tasks found");
             tasks = [];
             tasks.push({week: "1", exerciseId: "23", content: {
-                // Mock content in Tamil , Intro: For the given topic, you need to understand the main idea and use the key words effectively.
+                // Mock content in Tamil , Intro: For the given topic, you have to speak for 3 minutes and try to use the key words effectively.
                     "intro": [
-            "வணக்கம். இந்த தலைப்பில், நீங்கள் முக்கிய கருத்தை புரிந்து கொள்ள வேண்டும் மற்றும் முக்கிய சொற்களை பயனுள்ளதாக பயன்படுத்த வேண்டும்.",
+            "வணக்கம். இந்த தலைப்பில், நீங்கள் 3 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
             "இன்றைய தலைப்பு தமிழ் மொழி"
         ],
                 // Mock content in Tamil
