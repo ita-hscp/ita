@@ -197,7 +197,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append(`audioFiles[]`, jsonBlob, filename);
     formData.append("content", JSON.stringify(topicTranscriptionsList));
     formData.append("score", score);
-    formData.append("work", "தலைப்பு பயிற்சி");
+    formData.append("work", "topic_practice");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
     spinner.style.display = "block";
