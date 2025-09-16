@@ -332,8 +332,8 @@ if (!('webkitSpeechRecognition' in window)) {
         if(!saveButton.disabled){
             startBtn.disabled=true
         }
-        const userInput = document.getElementById("userInput").textContent.trim();
-        checkInputForKeyWords(userInput);
+        checkInputForKeyWords(topicTranscription);
+        await sendMessage();
     });
 
 }

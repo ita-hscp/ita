@@ -21,8 +21,9 @@ title: "தலைப்பு பயிற்சி"
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
         <div id="userInput">
-            <p type="text" id="timeRemaining"> Required Time: 3 min </p>
-            <p type="text" id="timeRecorded"> Time Recorded: 0 min </p>
+            <p type="text" id="timeRemaining">  </p>
+            <p type="text" id="timeRecorded"> </p>
+            <p type="text" id="topic-score"></p>
         </div>
         <button id="story-start-btn" disabled>record</button>
         <button id="story-clear-btn" >clear</button>
