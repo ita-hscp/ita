@@ -15,6 +15,7 @@ const sendBtn = document.getElementById('story-send-btn');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
 let topicTranscription = "";
+let topicTranscriptionsList = [];
 
 // Example key words for the topic
 let keyWords = ["தமிழ்", "மொழி", "அடிப்படைகள்"];
@@ -149,6 +150,11 @@ async function sendMessage() {
   startBtn.textContent = 'record';
   startBtn.disabled = false;
   sendBtn.disabled = true;
+  if(topicTranscription && topicTranscription.length > 0){
+    checkInputForKeyWords(topicTranscription);
+     topicTranscriptionsList.push(topicTranscription);
+  }
+ 
 }
 
 exerciseStartButton.addEventListener('click', async () => {
@@ -169,7 +175,7 @@ saveButton.addEventListener("click", async (event) => {
     audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
-    formData.append("content", JSON.stringify(topicTranscription));
+    formData.append("content", JSON.stringify(  topicTranscriptionsList));
     formData.append("work", "தலைப்பு பயிற்சி");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
@@ -212,16 +218,15 @@ saveButton.addEventListener("click", async (event) => {
 
 
 async function handleSpeechRecognition(event) {
+    let interimTranscript = '';
     for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-           topicTranscription += ` ${transcript}`;
-            console.log("Final transcript: ", topicTranscription);
-            await sendMessage();
+           interimTranscript += ` ${transcript}`;
         }
     }
     event.results = []
-   
+   topicTranscription = interimTranscript;
 }
 
 async function handleRecording(event) {
@@ -320,8 +325,9 @@ if (!('webkitSpeechRecognition' in window)) {
             recognition.onerror = (event) => {
                 console.error('Speech recognition error detected: ' + event.error);
             };
-            recognition.onend = () => {
+            recognition.onend = async () => {
                 console.log("Recognition on end")
+                 await sendMessage();
             };
         } catch (error) {
             console.error('Error accessing microphone:', error);
@@ -329,7 +335,7 @@ if (!('webkitSpeechRecognition' in window)) {
     });
     sendBtn.addEventListener('click', async () => {
         await recognition.stop(); // Stop the speech recognition
-        startBtn.disabled = false;
+        // startBtn.disabled = false;
         sendBtn.disabled = true;
         if (mediaRecorder) {
             await mediaRecorder.stop();

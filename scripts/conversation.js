@@ -215,7 +215,7 @@ function handleSpeechRecognition(event) {
         } else {
             interimTranscript += transcript;
         }
-        transcription.innerHTML = `${transcript}`;
+        // transcription.innerHTML = `${transcript}`;
     }
     transcription.innerHTML = `${finalTranscript}`;
     event.results = []
