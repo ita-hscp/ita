@@ -19,7 +19,7 @@ let topicTranscriptionsList = [];
 const canvas = document.getElementById('waveform');
 const ctx = canvas.getContext('2d');
 let requiredDuration = 5 * 60; // 5 minutes in seconds
-
+let exerciseId = null;
 let audioCtx, analyser, source, stream, recorder;
 let dataArray, bufferLength, rafId;
 let recording = false;
@@ -130,6 +130,7 @@ async function getStoryExercise() {
     const dropdown = document.getElementById("weeks");
     const selectedText = dropdown.options[dropdown.selectedIndex].text;
     const topicSelected = document.getElementById('topicSelected');
+    exerciseId = dropdown.options[dropdown.selectedIndex].value
     workSheet = weekWorkSheet[selectedText];
     topicSelected.textContent = workSheet.intro[1]
     await speakApi(workSheet.intro[0])
@@ -199,6 +200,7 @@ saveButton.addEventListener("click", async (event) => {
     formData.append("score", score);
     formData.append("work", "topic_practice");
     formData.append("week", workSheet.week);
+    formData.append("exerciseId", exerciseId);
     const spinner = document.getElementById('story-spinner');
     spinner.style.display = "block";
     // console.log(messageArray);
