@@ -159,18 +159,19 @@ async function getStoryExercise() {
 
 async function sendMessage() {
     // enable save button if the audioBlobList has items and total duration > 10 seconds
+    const requiredDuration = 5 * 60; // 5 minutes in seconds
     if (audioBlobList.length > 0) {
         let totalDuration = 0;
         for (const item of audioBlobList) {
             totalDuration += item.duration;
         }
-        if (totalDuration >= 10) {
+        if (totalDuration >= requiredDuration) {
             saveButton.disabled = false;
             saveButton.textContent = 'Ready to Upload';
         }
         // Show duration pending to be sent
         console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
-        let remainingDuration = 5*60 - totalDuration;
+        let remainingDuration = requiredDuration - totalDuration;
         if (remainingDuration > 0) {
             console.log(`Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`);
         }
