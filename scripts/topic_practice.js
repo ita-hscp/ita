@@ -16,7 +16,37 @@ const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
 let topicTranscription = "";
 let topicTranscriptionsList = [];
+ const canvas = document.getElementById('waveform');
+    const ctx = canvas.getContext('2d');
 
+    let audioCtx, analyser, source, stream, recorder;
+    let dataArray, bufferLength, rafId;
+    let recording = false;
+
+      function draw() {
+      rafId = requestAnimationFrame(draw);
+      analyser.getByteTimeDomainData(dataArray);
+
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#0f0';
+      ctx.beginPath();
+
+      let sliceWidth = canvas.width / bufferLength;
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        let v = dataArray[i] / 128.0;
+        let y = v * canvas.height / 2;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        x += sliceWidth;
+      }
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+    }
 // Example key words for the topic
 let keyWords = ["தமிழ்", "மொழி", "அடிப்படைகள்"];
 let score = 0;
@@ -298,8 +328,16 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.disabled = false;
         sendBtn.disabled = true;
         startBtn.textContent = 'record';
+        await clearWaveform();
     });
 
+    async function clearWaveform() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        cancelAnimationFrame(rafId);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     startBtn.addEventListener('click', async () => {
         clearButtonPressed=false;
@@ -308,7 +346,7 @@ if (!('webkitSpeechRecognition' in window)) {
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const options = {
                 mimeType: 'audio/webm;codecs=opus',
                 audioBitsPerSecond: 128000
@@ -318,8 +356,17 @@ if (!('webkitSpeechRecognition' in window)) {
                 if(clearButtonPressed) return;
                 audioChunks.push(event.data);
             };
+            /***  Audio visualization setup  ***/
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        source = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        bufferLength = analyser.fftSize;
+        dataArray = new Uint8Array(bufferLength);
+        source.connect(analyser);
             mediaRecorder.onstop = handleRecording;
             await mediaRecorder.start();
+            draw();
             console.log('Audio recording started');
             recognition.onresult = handleSpeechRecognition;
             recognition.onerror = (event) => {
@@ -350,6 +397,7 @@ if (!('webkitSpeechRecognition' in window)) {
             startBtn.disabled=true
         }
         checkInputForKeyWords(topicTranscription);
+        await clearWaveform();
     });
 
 }

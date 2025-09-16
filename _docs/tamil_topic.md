@@ -19,6 +19,7 @@ title: "தலைப்பு பயிற்சி"
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
         <div id="userInput">
+            <canvas id="waveform" width="400" height="100"></canvas>
             <p type="text" id="timeRemaining"> Total Time Remaining: 5 minutes </p>
             <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
             <p type="text" id="topic-score">Score: 0</p>
