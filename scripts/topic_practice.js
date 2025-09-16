@@ -121,14 +121,7 @@ async function sendMessage() {
   if (audioBlobList.length > 0) {
       let totalDuration = 0;
       for (const item of audioBlobList) {
-          const audioURL = URL.createObjectURL(item.blob);
-          const audio = new Audio(audioURL);
-          await new Promise((resolve) => {
-              audio.onloadedmetadata = () => {
-                  totalDuration += audio.duration;
-                  resolve();
-              };
-          });
+            totalDuration += item.duration;
       }
       if (totalDuration >= 10) {
           saveButton.disabled = false;
