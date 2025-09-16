@@ -1,17 +1,13 @@
-    .topic-keywords-container {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: #f9f9f9;
+#topic-keywords-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    }  
+#topic-keywords-list {
+    list-style-type: none;
+    padding: 0;
     }
-    .topic-keywords-container p {
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    .topic-keywords-container ul {
-        list-style-type: disc;
-        padding-left: 20px;
-    }
-    .topic-keywords-container ul li {
-        margin-bottom: 5px;
-    }
+#topic-keywords-list li {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+    }   
