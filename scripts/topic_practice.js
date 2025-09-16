@@ -116,7 +116,7 @@ window.addEventListener("load", async (event) => {
                 week: "1", exerciseId: "23", content: {
                     // Mock content in Tamil , Intro: For the given topic, you have to speak for 3 minutes and try to use the key words effectively.
                     "intro": [
-                        "வணக்கம். இந்த தலைப்பில், நீங்கள் 3 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
+                        "வணக்கம். இந்த தலைப்பில், நீங்கள் 5 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
                         "இன்றைய தலைப்பு தமிழ் மொழி"
                     ],
                     // Mock content in Tamil
@@ -170,7 +170,7 @@ async function sendMessage() {
         }
         // Show duration pending to be sent
         console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
-        let remainingDuration = 10 - totalDuration;
+        let remainingDuration = 5*60 - totalDuration;
         if (remainingDuration > 0) {
             console.log(`Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`);
         }
