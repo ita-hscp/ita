@@ -19,10 +19,21 @@
     padding: 10px;
 }
 
+#exercise-start-btn,
+#story-clear-btn,
+#story-send-btn,
+#story-saveButton,
+#story-start-btn {
+    margin-bottom: 10px;
+    margin-right: 5px;    
+}
+
 .story-image {
     border-right: 1px solid #ccc;
 }
 /* Add all button disabled in one css filter */
+
+
 #exercise-start-btn:disabled,
 #story-clear-btn:disabled,
 #story-send-btn:disabled,
