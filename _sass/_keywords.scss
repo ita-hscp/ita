@@ -3,6 +3,8 @@
     padding: 10px;
     margin-top: 10px;
     margin-left: 10%;
+        color: blueviolet;
+    background-color: bisque;   
     }  
 #topic-keywords-list {
     list-style-type: none;
@@ -14,3 +16,16 @@
     } 
     
 canvas { border: 1px solid #ccc; background: #111; }
+
+#userInputTopic {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: paleturquoise;
+}

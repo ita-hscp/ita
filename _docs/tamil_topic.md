@@ -18,17 +18,16 @@ title: "தலைப்பு பயிற்சி"
         </div>
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
-        <div id="userInput">
+        <div id="userInputTopic">
             <canvas id="waveform" width="400" height="100"></canvas>
             <p type="text" id="timeRemaining"> Total Time Remaining: 5 minutes </p>
             <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
-            <p type="text" id="topic-score">Score: 0</p>
+            <p type="text" id="topic-score"> Words used: 0</p>
         </div>
         <button id="story-start-btn" disabled>record</button>
         <button id="story-clear-btn" >clear</button>
         <button id="story-send-btn" disabled>save</button>
         <audio id="audioPlayer" controls></audio>
-        <span id="topic-score">Score: 0</span>
     </div>
     <div id="topic-keywords-container">
     <!-- Key words will be dynamically inserted here. Show in a text box -->
