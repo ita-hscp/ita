@@ -273,11 +273,7 @@ if (!('webkitSpeechRecognition' in window)) {
     recognition.interimResults = true; // Show interim results
 
     clearButton.addEventListener('click', async () => {
-        const userInput = document.getElementById('userInput');
-        userInput.innerHTML = "";
-        transcription.innerHTML = ""
         clearButtonPressed=true;
-        // audioBlobList = audioBlobList.filter(item => item.sent === true);
         if (mediaRecorder) {
             await mediaRecorder.stop();
         }
