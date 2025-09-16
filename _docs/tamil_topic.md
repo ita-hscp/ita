@@ -19,13 +19,13 @@ title: "தலைப்பு பயிற்சி"
         <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
         <div id="userInput">
-            <p type="text" id="timeRemaining">  </p>
-            <p type="text" id="timeRecorded"> </p>
-            <p type="text" id="topic-score"></p>
+            <p type="text" id="timeRemaining"> Total Time Remaining: 5 minutes </p>
+            <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
+            <p type="text" id="topic-score">Score: 0</p>
         </div>
         <button id="story-start-btn" disabled>record</button>
         <button id="story-clear-btn" >clear</button>
-        <button id="story-send-btn" disabled>send</button>
+        <button id="story-send-btn" disabled>save</button>
         <audio id="audioPlayer" controls></audio>
         <span id="topic-score">Score: 0</span>
     </div>
