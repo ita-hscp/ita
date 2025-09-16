@@ -12,7 +12,6 @@ const saveButton = document.getElementById("story-saveButton");
 const clearButton = document.getElementById("story-clear-btn");
 const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
-const transcription = document.getElementById('userInput');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
 let topicTranscription = "";
@@ -213,7 +212,6 @@ function handleSpeechRecognition(event) {
         //  transcription.innerHTML = `${transcript}`;
         topicTranscription += ` ${transcript}`;
     }
-    transcription.innerHTML = `${finalTranscript}`;
     event.results = []
 }
 
