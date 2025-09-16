@@ -16,37 +16,37 @@ const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
 let topicTranscription = "";
 let topicTranscriptionsList = [];
- const canvas = document.getElementById('waveform');
-    const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('waveform');
+const ctx = canvas.getContext('2d');
 
-    let audioCtx, analyser, source, stream, recorder;
-    let dataArray, bufferLength, rafId;
-    let recording = false;
+let audioCtx, analyser, source, stream, recorder;
+let dataArray, bufferLength, rafId;
+let recording = false;
 
-      function draw() {
-      rafId = requestAnimationFrame(draw);
-      analyser.getByteTimeDomainData(dataArray);
+function draw() {
+    rafId = requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(dataArray);
 
-      ctx.fillStyle = '#111';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#0f0';
-      ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#0f0';
+    ctx.beginPath();
 
-      let sliceWidth = canvas.width / bufferLength;
-      let x = 0;
-      for (let i = 0; i < bufferLength; i++) {
+    let sliceWidth = canvas.width / bufferLength;
+    let x = 0;
+    for (let i = 0; i < bufferLength; i++) {
         let v = dataArray[i] / 128.0;
         let y = v * canvas.height / 2;
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
         x += sliceWidth;
-      }
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
     }
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.stroke();
+}
 // Example key words for the topic
 let keyWords = ["தமிழ்", "மொழி", "அடிப்படைகள்"];
 let score = 0;
@@ -75,13 +75,13 @@ function strikeOutWord(word) {
 }
 
 async function blobToBase64(blob) {
-  // Serialize the blob to base64 string including metadata
-  return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);   
-  });
+    // Serialize the blob to base64 string including metadata
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
 }
 
 // Check user input for key words
@@ -108,21 +108,23 @@ window.addEventListener("load", async (event) => {
         let tasks = await getAllPendingTasks("தலைப்பு பயிற்சி");
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
-        if(tasks) console.log("Tasks:", tasks);
-        if(!tasks || tasks.length === 0){
+        if (tasks) console.log("Tasks:", tasks);
+        if (!tasks || tasks.length === 0) {
             console.log("No tasks found");
             tasks = [];
-            tasks.push({week: "1", exerciseId: "23", content: {
-                // Mock content in Tamil , Intro: For the given topic, you have to speak for 3 minutes and try to use the key words effectively.
+            tasks.push({
+                week: "1", exerciseId: "23", content: {
+                    // Mock content in Tamil , Intro: For the given topic, you have to speak for 3 minutes and try to use the key words effectively.
                     "intro": [
-            "வணக்கம். இந்த தலைப்பில், நீங்கள் 3 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
-            "இன்றைய தலைப்பு தமிழ் மொழி"
-        ],
-                // Mock content in Tamil
-                title: "தமிழ் மொழி",
-                description: "தமிழ் மொழியின் அடிப்படைகளை கற்றுக்கொள்ளுங்கள்.",
-                keywords: ["தமிழ்", "மொழி", "அடிப்படைகள்"]
-            }});//mock
+                        "வணக்கம். இந்த தலைப்பில், நீங்கள் 3 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
+                        "இன்றைய தலைப்பு தமிழ் மொழி"
+                    ],
+                    // Mock content in Tamil
+                    title: "தமிழ் மொழி",
+                    description: "தமிழ் மொழியின் அடிப்படைகளை கற்றுக்கொள்ளுங்கள்.",
+                    keywords: ["தமிழ்", "மொழி", "அடிப்படைகள்"]
+                }
+            });//mock
         }
         if (tasks && tasks.length > 0) {
             tasks.forEach(task => {
@@ -156,35 +158,35 @@ async function getStoryExercise() {
 }
 
 async function sendMessage() {
-  // enable save button if the audioBlobList has items and total duration > 10 seconds
-  if (audioBlobList.length > 0) {
-      let totalDuration = 0;
-      for (const item of audioBlobList) {
+    // enable save button if the audioBlobList has items and total duration > 10 seconds
+    if (audioBlobList.length > 0) {
+        let totalDuration = 0;
+        for (const item of audioBlobList) {
             totalDuration += item.duration;
-      }
-      if (totalDuration >= 10) {
-          saveButton.disabled = false;
-          saveButton.textContent = 'Ready to Upload';
-      }
-      // Show duration pending to be sent
-      console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
-      let remainingDuration = 10 - totalDuration;
-      if (remainingDuration > 0) {
-          console.log(`Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`);
-      }
-      let timeRemaining = document.getElementById('timeRemaining');
-      timeRemaining.textContent = `Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`;
-      let timeRecorded = document.getElementById('timeRecorded');
+        }
+        if (totalDuration >= 10) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Ready to Upload';
+        }
+        // Show duration pending to be sent
+        console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
+        let remainingDuration = 10 - totalDuration;
+        if (remainingDuration > 0) {
+            console.log(`Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`);
+        }
+        let timeRemaining = document.getElementById('timeRemaining');
+        timeRemaining.textContent = `Remaining duration to be recorded: ${remainingDuration.toFixed(2)} seconds`;
+        let timeRecorded = document.getElementById('timeRecorded');
         timeRecorded.textContent = `Total recorded duration: ${totalDuration.toFixed(2)} seconds.`;
-  }
-  startBtn.textContent = 'record';
-  startBtn.disabled = false;
-  sendBtn.disabled = true;
-  if(topicTranscription && topicTranscription.length > 0){
-    checkInputForKeyWords(topicTranscription);
-     topicTranscriptionsList.push(topicTranscription);
-  }
- 
+    }
+    startBtn.textContent = 'record';
+    startBtn.disabled = false;
+    sendBtn.disabled = true;
+    if (topicTranscription && topicTranscription.length > 0) {
+        checkInputForKeyWords(topicTranscription);
+        topicTranscriptionsList.push(topicTranscription);
+    }
+
 }
 
 exerciseStartButton.addEventListener('click', async () => {
@@ -205,7 +207,7 @@ saveButton.addEventListener("click", async (event) => {
     audioBlob = new Blob(audioBlobList, { type: 'audio/webm' });
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
-    formData.append("content", JSON.stringify(  topicTranscriptionsList));
+    formData.append("content", JSON.stringify(topicTranscriptionsList));
     formData.append("work", "தலைப்பு பயிற்சி");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
@@ -252,15 +254,15 @@ async function handleSpeechRecognition(event) {
     for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-           interimTranscript += ` ${transcript}`;
+            interimTranscript += ` ${transcript}`;
         }
     }
     event.results = []
-   topicTranscription = interimTranscript;
+    topicTranscription = interimTranscript;
 }
 
 async function handleRecording(event) {
-    if(clearButtonPressed) return;
+    if (clearButtonPressed) return;
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
     //Convert audioBlob to base64
     const base64Audio = await blobToBase64(audioBlob);
@@ -274,7 +276,7 @@ async function handleRecording(event) {
             resolve();
         };
     });
-     // Store recording
+    // Store recording
     const recording = {
         id: crypto.randomUUID(), // Unique ID for this recording
         number: recordingNumber,
@@ -283,7 +285,7 @@ async function handleRecording(event) {
         sent: false,
         duration: duration // Will be updated later
     };
-    
+
     audioBlobList.push(recording);
     // Clear chunks for the next recording
     audioChunks = [];
@@ -315,7 +317,7 @@ if (!('webkitSpeechRecognition' in window)) {
     recognition.interimResults = true; // Show interim results
 
     clearButton.addEventListener('click', async () => {
-        clearButtonPressed=true;
+        clearButtonPressed = true;
         if (mediaRecorder) {
             await mediaRecorder.stop();
         }
@@ -340,7 +342,7 @@ if (!('webkitSpeechRecognition' in window)) {
     }
 
     startBtn.addEventListener('click', async () => {
-        clearButtonPressed=false;
+        clearButtonPressed = false;
         await recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
         sendBtn.disabled = false;
@@ -353,17 +355,17 @@ if (!('webkitSpeechRecognition' in window)) {
             };
             mediaRecorder = new MediaRecorder(stream, options);
             mediaRecorder.ondataavailable = (event) => {
-                if(clearButtonPressed) return;
+                if (clearButtonPressed) return;
                 audioChunks.push(event.data);
             };
             /***  Audio visualization setup  ***/
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        source = audioCtx.createMediaStreamSource(stream);
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 2048;
-        bufferLength = analyser.fftSize;
-        dataArray = new Uint8Array(bufferLength);
-        source.connect(analyser);
+            source = audioCtx.createMediaStreamSource(stream);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 2048;
+            bufferLength = analyser.fftSize;
+            dataArray = new Uint8Array(bufferLength);
+            source.connect(analyser);
             mediaRecorder.onstop = handleRecording;
             await mediaRecorder.start();
             draw();
@@ -374,9 +376,9 @@ if (!('webkitSpeechRecognition' in window)) {
             };
             recognition.onend = async (event) => {
                 console.log("Recognition on end" + JSON.stringify(event));
-                if( sendBtn.disabled === true){
+                if (sendBtn.disabled === true) {
                     await sendMessage();
-                }else {
+                } else {
                     await recognition.start(); // Restart recognition if not sent   
                 }
             };
@@ -393,8 +395,8 @@ if (!('webkitSpeechRecognition' in window)) {
             console.log('Audio recording stopped');
         }
         startBtn.textContent = 'processing...';
-        if(!saveButton.disabled){
-            startBtn.disabled=true
+        if (!saveButton.disabled) {
+            startBtn.disabled = true
         }
         checkInputForKeyWords(topicTranscription);
         await clearWaveform();
