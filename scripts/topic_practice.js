@@ -88,8 +88,8 @@ async function blobToBase64(blob) {
 function checkInputForKeyWords(inputText) {
     keyWords.forEach(word => {
         // Case-insensitive match, whole word
-        const regex = new RegExp(`\\b${word}\\b`, "i");
-        if (regex.test(inputText)) {
+        const regex = new RegExp(`${word}`);
+        if (regex.test(inputText) || inputText.includes(word)) {
             strikeOutWord(word);
         }
     });
