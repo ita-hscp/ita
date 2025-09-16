@@ -6,8 +6,6 @@ title: "தலைப்பு பயிற்சி"
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
-
-
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
     </select>
@@ -27,18 +25,14 @@ title: "தலைப்பு பயிற்சி"
         </div>
         <button id="story-start-btn" disabled>record</button>
         <button id="story-clear-btn" >clear</button>
-        <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>
+        <button id="story-send-btn" disabled>send</button>
         <audio id="audioPlayer" controls></audio>
         <span id="topic-score">Score: 0</span>
     </div>
-    <div id="topic-keywords-container">//in Tamil
+    <div id="topic-keywords-container">
+    <!-- Key words will be dynamically inserted here. Show in a text box -->
         <p>முக்கிய சொற்கள்</p>
         <ul id="topic-keywords-list">
-            <!-- Key words will be dynamically inserted here -->
-            <li>கல்வி</li>
-            <li>பயிற்சி</li>
-            <li>மொழி</li>
-            <li>சொல்</li>
         </ul>
     </div>  
 </div>
