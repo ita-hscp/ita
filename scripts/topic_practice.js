@@ -112,20 +112,6 @@ window.addEventListener("load", async (event) => {
         if (tasks) console.log("Tasks:", tasks);
         if (!tasks || tasks.length === 0) {
             console.log("No tasks found");
-            tasks = [];
-            tasks.push({
-                week: "1", exerciseId: "23", content: {
-                    // Mock content in Tamil , Intro: For the given topic, you have to speak for 3 minutes and try to use the key words effectively.
-                    "intro": [
-                        "வணக்கம். இந்த தலைப்பில், நீங்கள் 5 நிமிடங்கள் பேச வேண்டும். முக்கிய சொற்களை பயன்படுத்த முயற்சிக்கவும்.",
-                        "இன்றைய தலைப்பு தமிழ் மொழி"
-                    ],
-                    // Mock content in Tamil
-                    title: "தமிழ் மொழி",
-                    description: "தமிழ் மொழியின் அடிப்படைகளை கற்றுக்கொள்ளுங்கள்.",
-                    keywords: ["தமிழ்", "மொழி", "அடிப்படைகள்"]
-                }
-            });//mock
         }
         if (tasks && tasks.length > 0) {
             tasks.forEach(task => {
@@ -210,6 +196,7 @@ saveButton.addEventListener("click", async (event) => {
     const filename = `audio.webm`;
     formData.append(`audioFiles[]`, audioBlob, filename);
     formData.append("content", JSON.stringify(topicTranscriptionsList));
+    formData.append("score", score);
     formData.append("work", "தலைப்பு பயிற்சி");
     formData.append("week", workSheet.week);
     const spinner = document.getElementById('story-spinner');
