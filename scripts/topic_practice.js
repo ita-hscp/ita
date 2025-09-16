@@ -66,6 +66,12 @@ function checkInputForKeyWords(inputText) {
 
 
 window.addEventListener("load", async (event) => {
+    sendBtn.disabled = true;
+    startBtn.disabled = true;
+    exerciseStartButton.disabled = true;
+    clearButton.disabled = true
+    saveButton.disabled = true;
+
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
         let tasks = await getAllPendingTasks("தலைப்பு பயிற்சி");
@@ -322,7 +328,7 @@ if (!('webkitSpeechRecognition' in window)) {
         }
     });
     sendBtn.addEventListener('click', async () => {
-        recognition.stop(); // Stop the speech recognition
+        await recognition.stop(); // Stop the speech recognition
         startBtn.disabled = false;
         sendBtn.disabled = true;
         if (mediaRecorder) {

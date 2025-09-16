@@ -22,8 +22,12 @@
 .story-image {
     border-right: 1px solid #ccc;
 }
-
-#exercise-start-btn:disabled {
+/* Add all button disabled in one css filter */
+#exercise-start-btn:disabled,
+#story-clear-btn:disabled,
+#story-send-btn:disabled,
+#story-saveButton:disabled,
+#story-start-btn:disabled {
     background-color: #cccccc;
     /* Grey background */
     color: #666666;
@@ -33,7 +37,6 @@
     opacity: 0.6;
     /* Slightly transparent */
 }
-
 
 .story-image segment-img {
     width: 90%;
