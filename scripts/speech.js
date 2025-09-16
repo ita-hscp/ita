@@ -28,7 +28,7 @@ function playAudio(blob) {
 async function speakApi(text) {
   try {
     // Replace with your API URL that returns audio/mpeg
-    const apiUrl ='https://infinite-sands-52519-06605f47cb30.herokuapp.com/text_to_speech?text='+text
+    const apiUrl ='https://infinite-sands-52519-06605f47cb30.herokuapp.com/text_to_speech_new?text='+text
 
     // Fetch the audio file from the API
     const response = await fetch(apiUrl,{ headers: {
