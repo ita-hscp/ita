@@ -18,6 +18,7 @@ let topicTranscription = "";
 let topicTranscriptionsList = [];
 const canvas = document.getElementById('waveform');
 const ctx = canvas.getContext('2d');
+let requiredDuration = 5 * 60; // 5 minutes in seconds
 
 let audioCtx, analyser, source, stream, recorder;
 let dataArray, bufferLength, rafId;
@@ -70,7 +71,7 @@ function strikeOutWord(word) {
         listItem.style.textDecoration = "line-through";
         listItem.classList.add("struck");
         score++;
-        document.getElementById("topic-score").textContent = `Score: ${score}`;
+        document.getElementById("topic-score").textContent = `Words used: ${score}`;
     }
 }
 
@@ -154,12 +155,12 @@ async function getStoryExercise() {
     sendBtn.disabled = true;
     startBtn.disabled = true;
     saveButton.disabled = true;
+    requiredDuration = workSheet.duration ? workSheet.duration * 60 : 5 * 60; // in seconds
     renderKeyWords();
 }
 
 async function sendMessage() {
     // enable save button if the audioBlobList has items and total duration > 10 seconds
-    const requiredDuration = 5 * 60; // 5 minutes in seconds
     if (audioBlobList.length > 0) {
         let totalDuration = 0;
         for (const item of audioBlobList) {
