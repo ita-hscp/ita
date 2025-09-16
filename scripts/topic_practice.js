@@ -325,23 +325,25 @@ if (!('webkitSpeechRecognition' in window)) {
             recognition.onerror = (event) => {
                 console.error('Speech recognition error detected: ' + event.error);
             };
-            recognition.onend = async () => {
-                console.log("Recognition on end")
-                 await sendMessage();
+            recognition.onend = async (event) => {
+                console.log("Recognition on end" + JSON.stringify(event));
+                if( sendBtn.disabled === true){
+                    await sendMessage();
+                }
             };
         } catch (error) {
             console.error('Error accessing microphone:', error);
         }
     });
     sendBtn.addEventListener('click', async () => {
+        sendBtn.disabled = true;
         await recognition.stop(); // Stop the speech recognition
         // startBtn.disabled = false;
-        sendBtn.disabled = true;
         if (mediaRecorder) {
             await mediaRecorder.stop();
             console.log('Audio recording stopped');
         }
-        startBtn.textContent = 'processing';
+        startBtn.textContent = 'processing...';
         if(!saveButton.disabled){
             startBtn.disabled=true
         }
