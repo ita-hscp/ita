@@ -258,7 +258,7 @@ function displayMessage(message, type) {
 }
 // Optionally, focus the input field on page load
 window.onload = function () {
-    document.getElementById('conversation-start-btn').focus();
+    document.getElementById('exercise-btn').focus();
 };
 // Check if the browser supports the Web Speech API
 if (!('webkitSpeechRecognition' in window)) {
