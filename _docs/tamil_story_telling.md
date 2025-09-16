@@ -24,7 +24,7 @@ title: கதை சொல்லுதல் பயிற்சி
         <div><p type="text" id="userInput"></p> </div>
         <div class="input-area">
             <button id="story-start-btn" disabled>record</button>
-            <button id="story-clear-btn" >clear</button>
+            <button id="story-clear-btn" disabled>clear</button>
             <button id="story-send-btn" onclick="sendMessage()" disabled>send</button>
             <audio id="audioPlayer" controls></audio>
         </div>

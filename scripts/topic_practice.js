@@ -112,6 +112,9 @@ async function getStoryExercise() {
     base64AudioList = [];
     workSheet['week'] = selectedText;
     exerciseStartButton.disabled = false;
+    sendBtn.disabled = true;
+    startBtn.disabled = true;
+    saveButton.disabled = true;
     renderKeyWords();
 }
 
@@ -137,6 +140,9 @@ async function sendMessage() {
       let timeRecorded = document.getElementById('timeRecorded');
         timeRecorded.textContent = `Total recorded duration: ${totalDuration.toFixed(2)} seconds.`;
   }
+  startBtn.textContent = 'record';
+  startBtn.disabled = false;
+  sendBtn.disabled = true;
 }
 
 exerciseStartButton.addEventListener('click', async () => {
@@ -199,20 +205,17 @@ saveButton.addEventListener("click", async (event) => {
 });
 
 
-function handleSpeechRecognition(event) {
-    let interimTranscript = '';
-    let finalTranscript = '';
+async function handleSpeechRecognition(event) {
     for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-        } else {
-            interimTranscript += transcript;
+           topicTranscription += ` ${transcript}`;
+            console.log("Final transcript: ", topicTranscription);
+            await sendMessage();
         }
-        //  transcription.innerHTML = `${transcript}`;
-        topicTranscription += ` ${transcript}`;
     }
     event.results = []
+   
 }
 
 async function handleRecording(event) {
@@ -326,12 +329,11 @@ if (!('webkitSpeechRecognition' in window)) {
             await mediaRecorder.stop();
             console.log('Audio recording stopped');
         }
-        startBtn.textContent = 'record';
+        startBtn.textContent = 'processing';
         if(!saveButton.disabled){
             startBtn.disabled=true
         }
         checkInputForKeyWords(topicTranscription);
-        await sendMessage();
     });
 
 }
