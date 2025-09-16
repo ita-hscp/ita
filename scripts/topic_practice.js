@@ -329,6 +329,8 @@ if (!('webkitSpeechRecognition' in window)) {
                 console.log("Recognition on end" + JSON.stringify(event));
                 if( sendBtn.disabled === true){
                     await sendMessage();
+                }else {
+                    await recognition.start(); // Restart recognition if not sent   
                 }
             };
         } catch (error) {
