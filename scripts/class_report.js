@@ -194,7 +194,7 @@ function showModal(index) {
     chatContainer = document.getElementById('reportChatContainer');
     // show array of chat messages
     // item.content is array of chat messages ["user message", "bot message", ...]
-    chatContainer.innerHTML = item.content.map(msg => `<div>${msg}</div>`).join("");
+    chatContainer.innerHTML = item.content && item.content.length > 0 ? item.content.map(msg => `<div>${msg}</div>`).join("") : "";
     modal.style.display = "block";
 }
 
