@@ -57,7 +57,7 @@ title: Class Report
         <button id="stopBtn-modal" class="bg-red-500 text-white px-4 py-2 rounded" onclick="stopAudio()">Stop</button>
         </div>
         <div class="status" id="status"></div>
-        <div class="chat-container border rounded p-3 max-h-60 overflow-y-auto bg-gray-100" id="reportChatContainer">
+        <div class="reportchat-container border rounded p-3 max-h-60 overflow-y-auto bg-gray-100" id="reportChatContainer">
         <div class="chat-box" id="chatBox">
         </div>
         </div>
