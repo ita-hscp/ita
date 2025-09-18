@@ -189,7 +189,7 @@ async function saveReport() {
 
 // Show Modal
 function showModal(index) {
-    selectedIndex = index;
+    selectedIndex = index
     const item = sampleData[index];
     chatContainer = document.getElementById('reportChatContainer');
     // show array of chat messages
@@ -197,9 +197,13 @@ function showModal(index) {
     // Show bot messages in italic and user messages in normal font. Bot messages align left and user messages align right.
     // There is no "user:" or "bot:" prefix in the messages. They are alternative messages.
     // change colors based on user and bot
-    // make it scroll to bottom
+    // make text scroll to bottom
+    chatContainer.style.maxWidth = "70%";
+    chatContainer.style.height= "400px";
+    chatContainer.style.overflowY = "scroll";
     chatContainer.innerHTML = item.content && item.content.length > 0 ? item.content.map((msg, i) => `<div style="text-align: ${i % 2 === 0 ? 'left' : 'right'}; font-style: ${i % 2 === 0 ? 'normal' : 'italic'}; color: ${i % 2 === 0 ? '#e3102d' : '#0d0de7'};">${msg}</div>`).join("") : "";
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    modalScore.value = item.score || "";
+    modalComments.value = item.comments || "";
     modal.style.display = "block";
 }
 
