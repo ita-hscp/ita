@@ -196,7 +196,8 @@ function showModal(index) {
     // item.content is array of chat messages ["user message", "bot message", ...]
     // Show bot messages in italic and user messages in normal font. Bot messages align left and user messages align right.
     // There is no "user:" or "bot:" prefix in the messages. They are alternative messages.
-    chatContainer.innerHTML = item.content && item.content.length > 0 ? item.content.map((msg, i) => `<div style="text-align: ${i % 2 === 0 ? 'right' : 'left'}; font-style: ${i % 2 === 0 ? 'normal' : 'italic'};">${msg}</div>`).join("") : "";
+    // change colors based on user and bot
+    chatContainer.innerHTML = item.content && item.content.length > 0 ? item.content.map((msg, i) => `<div style="text-align: ${i % 2 === 0 ? 'left' : 'right'}; font-style: ${i % 2 === 0 ? 'normal' : 'italic'}; color: ${i % 2 === 0 ? 'lightblue' : 'lightgreen'};">${msg}</div>`).join("") : "";
     modal.style.display = "block";
 }
 
