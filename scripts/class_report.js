@@ -190,6 +190,9 @@ async function saveReport() {
 // Show Modal
 function showModal(index) {
     selectedIndex = index;
+    const item = sampleData[index];
+    chatContainer = document.getElementById('reportChatContainer');
+    chatContainer.textContent =  item.content
     modal.style.display = "block";
 }
 
