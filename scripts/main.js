@@ -61,40 +61,9 @@ function fetchAssignments(callback) {
                 return [];
             }
             return response.json();
-            /*
-            {
-    "assignments": "<li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 4 : வாஸ்கோடகாமா - Status: Not Completed</li><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 3 : கொல்லாமை - Status: Not Completed</li>",
-    "detailedAssignments": [
-        {
-            "id": "8759feb0-7c4d-4f1f-8796-88079e5668c1",
-            "title": "வாஸ்கோடகாமா",
-            "type": "கேட்டல்‌ கருத்தறிதல் பயிற்சி",
-            "exerciseNumber": "4",
-            "week": "4",
-            "liElement": "<li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 4 : வாஸ்கோடகாமா - Status: Not Completed</li>",
-            "dueDate": "2025-09-21",
-            "status": "Not Completed"
-        },
-        {
-            "id": "97062102-d0f8-4198-b3d1-a0f79bd82200",
-            "title": "கொல்லாமை",
-            "type": "கேட்டல்‌ கருத்தறிதல் பயிற்சி",
-            "exerciseNumber": "3",
-            "week": "3",
-            "liElement": "<li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 3 : கொல்லாமை - Status: Not Completed</li>",
-            "dueDate": "2025-09-21",
-            "status": "Not Completed"
-        }
-    ],
-    "week": "4",
-    "dueDate": "2025-09-21",
-    "currentDate": "Saturday, September 20, 2025"
-}*/
         })
         .then(data => {
             const ul_main_page = document.getElementById("main-page-assignments");
-            ul_main_page.innerHTML = data.assignments;
-            //<ul id="main-page-assignments"><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 4 : வாஸ்கோடகாமா - Status: Not Completed</li><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 3 : கொல்லாமை - Status: Not Completed</li></ul>
             // make the list clickable links to assignment page
             const roles = sessionStorage.getItem("allowedRoles") || [];
             if (roles.includes("Teacher")) {
@@ -102,6 +71,9 @@ function fetchAssignments(callback) {
                 detailedAssignments = data.detailedAssignments || [];
                 let pageName = "";
                 let role = "";
+                // Clear existing list
+                ul_main_page.innerHTML =`<ul id="main-page-assignments"></ul>`;
+
                 detailedAssignments.forEach(assignment => {
                     const mappingItem = mapping.find(m => m.title === assignment.type && m.role === assignment.role);
                     if (mappingItem) {
@@ -117,11 +89,13 @@ function fetchAssignments(callback) {
                     link.href = `https://ita-hscp.github.io/ita/${pageName}?role=${role}&week=${assignment.week}&exerciseId=${assignment.id}`;
                     link.textContent = assignment.liElement.replace("<li>", "").replace("</li>", "");
                     link.style.textDecoration = "none";
-                    link.style.color = "lightblue";
+                    link.style.color = "#1209ee";
                     const li = document.createElement("li");
                     li.appendChild(link);
                     ul_main_page.appendChild(li);
                 }); 
+            }else {
+                ul_main_page.innerHTML = data.assignments || "<li>No assignments available.</li>";
             }
         }
         )
