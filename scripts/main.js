@@ -23,7 +23,7 @@ async function mainContent() {
 }
 // Make this function based on callback  remove await
 function fetchAssignments(callback) {
-    fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignments_by_user', {
+    fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment_by_user', {
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
@@ -53,24 +53,42 @@ function fetchAssignments(callback) {
         });
 }
 
-
-async function get_main_page_content_template() {
-    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/main_page_content_template', {
+// Fetch main page content template for teachers
+function get_main_page_content_template() {
+    const response = fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/main_page_content_template', {
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
             'Content-Type': 'application/json'
         }
-    });
-    if (response.status === 401) {
-        // Redirect to login page if not authenticated
-        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
-        return;
-    }
-    if (!response.ok) {
-        return {}
-    }
-    return response.json();
+    })
+        .then(response => {
+            if (response.status === 401) {
+                // Redirect to login page if not authenticated
+                window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
+                return;
+            }
+            if (!response.ok) {
+                return {}
+            }
+            const mainPage = document.getElementById("mainPage");
+            response.json().then(content => {
+                if (mainPage) {
+                    mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
+                <p>${content.content}</p>`
+                    fetchAssignments();
+                }
+            })
+        })
+        .catch(error => {
+            console.error("Error fetching main page content template:", error);
+            const mainPage = document.getElementById("mainPage");
+            if (mainPage) {
+                mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>
+                <p>இப்போது உள்ளடக்கம் கிடைக்கவில்லை.</p>`
+            }
+        });
+    return response;
 }
 
 window.addEventListener("load", async (event) => {
@@ -79,11 +97,9 @@ window.addEventListener("load", async (event) => {
     if (roles.includes("Teacher")) {
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
-            const content = await get_main_page_content_template();
-            mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
-                <p>${content.content}</p>`
+            mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>`;
+            get_main_page_content_template();
         }
-        fetchAssignments();
         return;
     }
 
@@ -96,5 +112,3 @@ window.addEventListener("load", async (event) => {
         }
     }
 });
-
-
