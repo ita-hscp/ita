@@ -45,16 +45,21 @@ function fetchAssignments(callback) {
             const ul_main_page = document.getElementById("main-page-assignments");
             ul_main_page.innerHTML = data.assignments;
             //<ul id="main-page-assignments"><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 4 : வாஸ்கோடகாமா - Status: Not Completed</li><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 3 : கொல்லாமை - Status: Not Completed</li></ul>
-            // make the list clickable to go to assignment page
+            // make the list clickable links to assignment page
             const roles = sessionStorage.getItem("allowedRoles") || [];
             if (roles.includes("Teacher")) {
                 const assignmentItems = document.querySelectorAll("#main-page-assignments li");
                 assignmentItems.forEach(item => {
-                    item.addEventListener("click", () => {
-                        const assignmentId = item.dataset.assignmentId;
-                        window.location.href = `https://ita-hscp.github.io/ita/tamil_listening_2?id=${assignmentId}`;
-                    });
-                });
+                    const text = item.textContent;
+                    const parts = text.split(" : ");
+                    if (parts.length === 2) {
+                        const link = document.createElement("a");
+                        link.href = "https://ita-hscp.github.io/ita/tamil_listening_2?assignment=" + encodeURIComponent(parts[0]);
+                        link.textContent = parts[0] + " - " + parts[1];
+                        item.innerHTML = '';
+                        item.appendChild(link);
+                    }
+                }); 
             }
         }
         )
