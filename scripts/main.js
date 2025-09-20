@@ -103,20 +103,25 @@ function fetchAssignments(callback) {
                 let pageName = "";
                 let role = "";
                 detailedAssignments.forEach(assignment => {
+                    const mappingItem = mapping.find(m => m.title === assignment.type && m.role === assignment.role);
+                    if (mappingItem) {
+                        pageName = mappingItem.id;
+                        role = mappingItem.role;
+                    } else {
+                        // Default to HSCP 1 if no match found
+                        pageName = "tamil_listening";
+                        role = "HSCP 1";
+                    }
+                    // console.log("Mapping Item:", mappingItem, assignment);
                     const link = document.createElement("a");
-                    pageName = assignment.type;
-                    role = roles.includes("HSCP 4") ? "HSCP 4" : roles.includes("HSCP 3") ? "HSCP 3" : roles.includes("HSCP 2") ? "HSCP 2" : "HSCP 1";
-                    mapping.forEach(item => {
-                        if (item.title === pageName.trim() && item.role === role) {
-                            pageName = item.id;
-                        }
-                    });
-                    link.href = `https://ita-hscp.github.io/ita/${pageName}?assignment=` + encodeURIComponent(assignment.title);
-                    link.textContent = `${assignment.type} ${assignment.exerciseNumber} : ${assignment.title} - Status: ${assignment.status}`;
-                    const liElement = document.createElement("li");
-                    liElement.appendChild(link);
-                    ul_main_page.replaceChild(liElement, ul_main_page.children[0]);
-                });
+                    link.href = `https://ita-hscp.github.io/ita/${pageName}?role=${role}&week=${assignment.week}&exerciseId=${assignment.id}`;
+                    link.textContent = assignment.liElement.replace("<li>", "").replace("</li>", "");
+                    link.style.textDecoration = "none";
+                    link.style.color = "lightblue";
+                    const li = document.createElement("li");
+                    li.appendChild(link);
+                    ul_main_page.appendChild(li);
+                }); 
             }
         }
         )
