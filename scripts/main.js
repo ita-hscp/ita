@@ -43,10 +43,7 @@ function fetchAssignments(callback) {
         })
         .then(data => {
             const ul_main_page = document.getElementById("main-page-assignments");
-            ul_main_page.innerHTML = "";
-            data.assignments.forEach(assignment => {
-                const li = document.createElement("li");
-            });
+            ul_main_page.innerHTML = data.assignments;
         })
         .catch(error => {
             console.error("Error fetching assignments:", error);
