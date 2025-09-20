@@ -44,7 +44,20 @@ function fetchAssignments(callback) {
         .then(data => {
             const ul_main_page = document.getElementById("main-page-assignments");
             ul_main_page.innerHTML = data.assignments;
-        })
+            //<ul id="main-page-assignments"><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 4 : வாஸ்கோடகாமா - Status: Not Completed</li><li>கேட்டல்‌ கருத்தறிதல் பயிற்சி 3 : கொல்லாமை - Status: Not Completed</li></ul>
+            // make the list clickable to go to assignment page
+            const roles = sessionStorage.getItem("allowedRoles") || [];
+            if (roles.includes("Teacher")) {
+                const assignmentItems = document.querySelectorAll("#main-page-assignments li");
+                assignmentItems.forEach(item => {
+                    item.addEventListener("click", () => {
+                        const assignmentId = item.dataset.assignmentId;
+                        window.location.href = `https://ita-hscp.github.io/ita/tamil_listening_2?id=${assignmentId}`;
+                    });
+                });
+            }
+        }
+        )
         .catch(error => {
             console.error("Error fetching assignments:", error);
         });
@@ -90,7 +103,6 @@ function get_main_page_content_template() {
 
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
-    const roles = sessionStorage.getItem("allowedRoles") || [];
     if (tokenValid) {
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
@@ -98,14 +110,5 @@ window.addEventListener("load", async (event) => {
             get_main_page_content_template();
         }
         return;
-    }
-
-    if (roles.includes("teacher")) {
-        const mainPage = document.getElementById("mainPage");
-        if (mainPage) {
-            const content = await mainContent();
-            mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
-                <p>${content.content}</p>`
-        }
     }
 });
