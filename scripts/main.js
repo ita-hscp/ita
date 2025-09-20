@@ -86,7 +86,7 @@ function fetchAssignments(callback) {
                     }
                     // console.log("Mapping Item:", mappingItem, assignment);
                     const link = document.createElement("a");
-                    link.href = `https://ita-hscp.github.io/ita/${pageName}?&exerciseNumber=${assignment.exerciseNumber}`;
+                    link.href = `https://ita-hscp.github.io/ita/${pageName}?exerciseNumber=${assignment.exerciseNumber}`;
                     link.textContent = assignment.liElement.replace("<li>", "").replace("</li>", "");
                     link.style.textDecoration = "none";
                     link.style.color = "#1209ee";
