@@ -66,7 +66,7 @@ function fetchAssignments(callback) {
             const ul_main_page = document.getElementById("main-page-assignments");
             // make the list clickable links to assignment page
             const roles = sessionStorage.getItem("allowedRoles") || [];
-            if (roles.includes("Teacher")) {
+            if (data.detailedAssignments && data.detailedAssignments.length > 0) {
                 const assignmentItems = document.querySelectorAll("#main-page-assignments li");
                 detailedAssignments = data.detailedAssignments || [];
                 let pageName = "";
@@ -86,7 +86,7 @@ function fetchAssignments(callback) {
                     }
                     // console.log("Mapping Item:", mappingItem, assignment);
                     const link = document.createElement("a");
-                    link.href = `https://ita-hscp.github.io/ita/${pageName}?role=${role}&week=${assignment.week}&exerciseId=${assignment.id}`;
+                    link.href = `https://ita-hscp.github.io/ita/${pageName}?&exerciseNumber=${assignment.exerciseNumber}`;
                     link.textContent = assignment.liElement.replace("<li>", "").replace("</li>", "");
                     link.style.textDecoration = "none";
                     link.style.color = "#1209ee";
