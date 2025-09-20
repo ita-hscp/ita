@@ -1,21 +1,21 @@
-const mapping = {
-    "tamil_listening_2": { "role": "HSCP 2", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
-    "tamil_conversation_2": { "role": "HSCP 2", "title": "உரையாடல் பயிற்சி" },
-    "tamil_story_telling_2": { "role": "HSCP 2", "title": "கதை சொல்லுதல் பயிற்சி" },
-    "tamil_topic_2": { "role": "HSCP 2", "title": "தலைப்பு பயிற்சி" },
-    "tamil_listening": { "role": "HSCP 1", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
-    "tamil_conversation": { "role": "HSCP 1", "title": "உரையாடல் பயிற்சி" },
-    "tamil_story_telling": { "role": "HSCP 1", "title": "கதை சொல்லுதல் பயிற்சி" },
-    "tamil_topic": { "role": "HSCP 1", "title": "தலைப்பு பயிற்சி" },
-    "tamil_listening_3": { "role": "HSCP 3", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
-    "tamil_conversation_3": { "role": "HSCP 3", "title": "உரையாடல் பயிற்சி" },
-    "tamil_story_telling_3": { "role": "HSCP 3", "title": "கதை சொல்லுதல் பயிற்சி" },
-    "tamil_topic_3": { "role": "HSCP 3", "title": "தலைப்பு பயிற்சி" },
-    "tamil_listening_4": { "role": "HSCP 4", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
-    "tamil_conversation_4": { "role": "HSCP 4", "title": "உரையாடல் பயிற்சி" },
-    "tamil_story_telling_4": { "role": "HSCP 4", "title": "கதை சொல்லுதல் பயிற்சி" },
-    "tamil_topic_4": { "role": "HSCP 4", "title": "தலைப்பு பயிற்சி" },
-};
+const mapping = [
+    { "id": "tamil_listening_2", "role": "HSCP 2", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
+    { "id": "tamil_conversation_2", "role": "HSCP 2", "title": "உரையாடல் பயிற்சி" },
+    { "id": "tamil_story_telling_2", "role": "HSCP 2", "title": "கதை சொல்லுதல் பயிற்சி" },
+    { "id": "tamil_topic_2", "role": "HSCP 2", "title": "தலைப்பு பயிற்சி" },
+    { "id": "tamil_listening", "role": "HSCP 1", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
+    { "id": "tamil_conversation", "role": "HSCP 1", "title": "உரையாடல் பயிற்சி" },
+    { "id": "tamil_story_telling", "role": "HSCP 1", "title": "கதை சொல்லுதல் பயிற்சி" },
+    { "id": "tamil_topic", "role": "HSCP 1", "title": "தலைப்பு பயிற்சி" },
+    { "id": "tamil_listening_3", "role": "HSCP 3", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
+    { "id": "tamil_conversation_3", "role": "HSCP 3", "title": "உரையாடல் பயிற்சி" },
+    { "id": "tamil_story_telling_3", "role": "HSCP 3", "title": "கதை சொல்லுதல் பயிற்சி" },
+    { "id": "tamil_topic_3", "role": "HSCP 3", "title": "தலைப்பு பயிற்சி" },
+    { "id": "tamil_listening_4", "role": "HSCP 4", "title": "கேட்டல்‌ கருத்தறிதல் பயிற்சி" },
+    { "id": "tamil_conversation_4", "role": "HSCP 4", "title": "உரையாடல் பயிற்சி" },
+    { "id": "tamil_story_telling_4", "role": "HSCP 4", "title": "கதை சொல்லுதல் பயிற்சி" },
+    { "id": "tamil_topic_4", "role": "HSCP 4", "title": "தலைப்பு பயிற்சி" }
+];
 
 
 
@@ -106,9 +106,9 @@ function fetchAssignments(callback) {
                     const link = document.createElement("a");
                     pageName = assignment.type;
                     role = roles.includes("HSCP 4") ? "HSCP 4" : roles.includes("HSCP 3") ? "HSCP 3" : roles.includes("HSCP 2") ? "HSCP 2" : "HSCP 1";
-                    mapping.forEach((value, key) => {
-                        if (value.title === pageName.trim() && value.role === role) {
-                            pageName = key;
+                    mapping.forEach(item => {
+                        if (item.title === pageName.trim() && item.role === role) {
+                            pageName = item.id;
                         }
                     });
                     link.href = `https://ita-hscp.github.io/ita/${pageName}?assignment=` + encodeURIComponent(assignment.title);
