@@ -59,9 +59,10 @@ window.addEventListener("load", async (event) => {
             tasks.forEach(task => {
                 const option = document.createElement("option");
                 option.value = task.exerciseId;
-                option.textContent = task.week;
+                let textContent= task.exerciseNumber ? task.exerciseNumber : task.week;
+                option.textContent = textContent;
                 dropdown.appendChild(option);
-                weekWorkSheet[task.week] = task.content;
+                weekWorkSheet[textContent] = task.content;
             });
         }
     }
