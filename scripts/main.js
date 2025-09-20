@@ -91,7 +91,7 @@ function get_main_page_content_template() {
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     const roles = sessionStorage.getItem("allowedRoles") || [];
-    if (roles.includes("Teacher")) {
+    if (tokenValid) {
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
             mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>`;
@@ -100,7 +100,7 @@ window.addEventListener("load", async (event) => {
         return;
     }
 
-    if (tokenValid) {
+    if (roles.includes("teacher")) {
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
             const content = await mainContent();
