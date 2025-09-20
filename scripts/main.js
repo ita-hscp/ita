@@ -73,7 +73,7 @@ function fetchAssignments(callback) {
                 let role = "";
                 // Clear existing list
                 ul_main_page.innerHTML =`<ul id="main-page-assignments"></ul>`;
-                role = roles.filter(r => r.startsWith("HSCP"))[0]  || "HSCP 1";
+                role = roles.split(",").filter(r => r.startsWith("HSCP"))[0]  || "HSCP 1";
                 detailedAssignments.forEach(assignment => {
                     const mappingItem = mapping.find(m => m.title === assignment.type && m.role === role);
                     if (mappingItem) {
