@@ -15,7 +15,7 @@ async function mainContent() {
         return {}
     }
     const responseData = await response.json();
-   
+
     return {
         "title": responseData.title || "உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்",
         "content": responseData.content || "இப்போது உள்ளடக்கம் கிடைக்கவில்லை."
@@ -30,31 +30,31 @@ function fetchAssignments(callback) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (response.status === 401) {
-            // Redirect to login page if not authenticated
-            window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
-            return;
-        }
-        if (!response.ok) {
-            return [];
-        }
-        return response.json();
-    })
-    .then(data => {
-        const ul_main_page = document.getElementById("main-page-assignments");
-        ul_main_page.innerHTML = "";
-        data.assignments.forEach(assignment => {
-            const li = document.createElement("li");
+        .then(response => {
+            if (response.status === 401) {
+                // Redirect to login page if not authenticated
+                window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
+                return;
+            }
+            if (!response.ok) {
+                return [];
+            }
+            return response.json();
+        })
+        .then(data => {
+            const ul_main_page = document.getElementById("main-page-assignments");
+            ul_main_page.innerHTML = "";
+            data.assignments.forEach(assignment => {
+                const li = document.createElement("li");
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching assignments:", error);
         });
-    })
-    .catch(error => {
-        console.error("Error fetching assignments:", error);
-    });
 }
 
 
-async function  get_main_page_content_template() {
+async function get_main_page_content_template() {
     const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/main_page_content_template', {
         method: 'GET',
         headers: {
@@ -71,20 +71,20 @@ async function  get_main_page_content_template() {
         return {}
     }
     return response.json();
-}   
+}
 
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     const roles = sessionStorage.getItem("allowedRoles") || [];
     if (roles.includes("Teacher")) {
-          const mainPage = document.getElementById("mainPage");
+        const mainPage = document.getElementById("mainPage");
         if (mainPage) {
-        const content = await get_main_page_content_template();
-          mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
+            const content = await get_main_page_content_template();
+            mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
                 <p>${content.content}</p>`
         }
-         fetchAssignments();
-         return;
+        fetchAssignments();
+        return;
     }
 
     if (tokenValid) {
