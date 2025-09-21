@@ -208,6 +208,22 @@ async function previewExercise() {
 async function showCustomExercise() {
     const section = document.getElementById('customExerciseSection');
     section.style.display = 'block';
+    const exerciseType = document.getElementById('customExerciseType').value;
+    // Hide all fields initially
+    document.getElementById('dialogueFields').style.display = 'none';
+    document.getElementById('storyFields').style.display = 'none';
+    document.getElementById('listeningFields').style.display = 'none';
+    document.getElementById('topicFields').style.display = 'none';
+    // Show the relevant fields based on the selected exercise type
+    if (exerciseType === 'உரையாடல் பயிற்சி') {
+        document.getElementById('dialogueFields').style.display = 'block';
+    } else if (exerciseType === 'கதை சொல்லுதல் பயிற்சி') {
+        document.getElementById('storyFields').style.display = 'block';
+    } else if (exerciseType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
+        document.getElementById('listeningFields').style.display = 'block';
+    } else if (exerciseType === 'தலைப்பு பயிற்சி') {
+        document.getElementById('topicFields').style.display = 'block';
+    }
 }
 
 
