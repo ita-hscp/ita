@@ -1,12 +1,14 @@
 
 async function createAssignment() {
+    const formData = new FormData(document.getElementById('assignmentForm'));
     const assignment={
-        title: document.getElementById('assignment_title').value,
-        description: document.getElementById('assignment_description').value,
-        type: document.getElementById('assignment_type').value,
-        week: document.getElementById('assignment_week').value,
-        dueDate: document.getElementById('assignment_due_date').value,
-        exerciseId: document.getElementById('exercise').value
+        title: formData.get('title'),
+        description: formData.get('description'),
+        type: formData.get('assignmentType'),
+        week: formData.get('week'),
+        dueDate: formData.get('dueDate'),
+        status: 'assigned',
+        exerciseId: formData.get('exerciseId')
     };
     const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_assignment_test', {
         method: 'POST',
@@ -27,7 +29,7 @@ async function createAssignment() {
     return responseData;
 }
 
-let selectAssigmentType= document.getElementById('assignment_type');
+let selectAssignmentType = document.getElementById('assignmentType');
 //     <select id="assignmentType" name="assignmentType"> if assignment_type is selected, call getExercisesForAssignmentType in the backend
 selectAssigmentType.addEventListener('change', async function() {
     const selectedType = this.value;

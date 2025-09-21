@@ -48,7 +48,4 @@ title: Assignment Handling
         </select><br><br>
         <button type="button" onclick="createAssignment()">Create Assignment</button>
     </form>
-    <div id="AssignmentList">
-        <!-- List of assignments will be dynamically inserted here -->
-    </div>
 </div>
