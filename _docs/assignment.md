@@ -1,56 +1,63 @@
 ---
 category: Teacher
 order: 3
-title: Assignment Handling
+title: Assignment 
 ---
 
 <script src="{{ site.baseurl }}/scripts/track.js">tracker();</script>
 
-<h1>Assignment Handling</h1>
-<p>This section is under development. Please check back later for updates.</p>
-<div id="tracker"></div>
+<h1>Assignment </h1>
+  <p>This section is under development. Please check back later for updates.</p>
 
-<div id="assignmentSection">
+  <div id="tracker"></div>
+
+  <div id="assignmentSection">
     <!-- Assignment form and list will be dynamically inserted here -->
     <form id="assignmentForm">
-        <label for="week">Week:</label>
-        <select id="week" name="week">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select><br><br>
-        <label for="assignmentType">Assignment Type:</label>
-        <select id="assignmentType" name="assignmentType">
-            <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
-            <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
-            <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
-            <option value="தலைப்பு பயிற்சி">தலைப்பு பயிற்சி</option>
-        </select><br><br>
-        <label for="exercise">exercise:</label>
-        <select id="exercise" name="exercise">
-            <!-- Options will be dynamically populated based on assignment type -->
-        </select><br><br>
-        <button type="button" onclick="loadExercises()">Load Exercises</button><br><br>
-        <button type="button" onclick="previewExercise()">Preview Exercise</button><br><br>
-        <button type="button" onclick="createCustomExercise()">Create Custom Exercise</button><br><br>
-        <div id="exercisePreview"></div><br>
-        <div id="customExerciseSection" style="display:none;">
-            <label for="customExerciseText">Custom Exercise Text:</label><br>
-            <textarea id="customExerciseText" name="customExerciseText" rows="4" cols="50"></textarea><br><br>
-        </div>
-        <label for="dueDate">Due Date:</label>
-        <input type="date" id="dueDate" name="dueDate"><br><br>
-        <label for="instructions">Instructions:</label><br>
-        <textarea id="instructions" name="instructions" rows="4" cols="50"></textarea><br><br>
-        <label for="status">Status:</label>
-        <select id="status" name="status">
-            <option value="assigned">assigned</option>
-        </select><br><br>
-        <button type="button" onclick="createAssignment()">Create Assignment</button>
+      <label for="week">Week:</label>
+      <select id="week" name="week">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <label for="assignmentType">Assignment Type:</label>
+      <select id="assignmentType" name="assignmentType">
+        <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
+        <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
+        <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
+        <option value="தலைப்பு பயிற்சி">தலைப்பு பயிற்சி</option>
+      </select>
+      <label for="exercise">Exercise:</label>
+      <select id="exercise" name="exercise">
+        <!-- Options will be dynamically populated based on assignment type -->
+      </select>
+      <button type="button" onclick="loadExercises()">Load Exercises</button>
+      <button type="button" onclick="previewExercise()">Preview Exercise</button>
+      <button type="button" onclick="createCustomExercise()">Create Custom Exercise</button>
+
+      <div id="exercisePreview"></div>
+
+      <div id="customExerciseSection" style="display:none;">
+        <label for="customExerciseText">Custom Exercise Text:</label>
+        <textarea id="customExerciseText" name="customExerciseText" rows="4"></textarea>
+      </div>
+
+      <label for="dueDate">Due Date:</label>
+      <input type="date" id="dueDate" name="dueDate">
+
+      <label for="instructions">Instructions:</label>
+      <textarea id="instructions" name="instructions" rows="4"></textarea>
+
+      <label for="status">Status:</label>
+      <select id="status" name="status">
+        <option value="assigned">assigned</option>
+      </select>
+
+      <button type="button" onclick="createAssignment()">Create Assignment</button>
     </form>
-</div>
+  </div>
 
 <script src="{{ site.baseurl }}/scripts/assignment.js"></script>
 <div id="tracker"></div>

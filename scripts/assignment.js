@@ -8,7 +8,7 @@ async function createAssignment() {
         week: formData.get('week'),
         dueDate: formData.get('dueDate'),
         status: 'assigned',
-        exerciseId: formData.get('exerciseId')
+        exerciseId: formData.get('exercise')
     };
     const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_assignment_test', {
         method: 'POST',
