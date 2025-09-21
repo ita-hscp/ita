@@ -8,13 +8,7 @@ title: Assignment Handling
 
 <h1>Assignment Handling</h1>
 <p>This section is under development. Please check back later for updates.</p>
-
-/* Show a Form to create and assign assignments to students */
-/* Show a list of assignments with options to edit, delete, and view submissions */
-/* Allow filtering assignments by week, type, and status */
-<!-- Future implementation will go here -->
 <div id="tracker"></div>
-<script src="{{ site.baseurl }}/scripts/assignment.js"></script>
 
 <div id="AssignmentSection">
     <!-- Assignment form and list will be dynamically inserted here -->
@@ -49,3 +43,6 @@ title: Assignment Handling
         <button type="button" onclick="createAssignment()">Create Assignment</button>
     </form>
 </div>
+
+<script src="{{ site.baseurl }}/scripts/assignment.js"></script>
+<div id="tracker"></div>
