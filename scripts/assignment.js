@@ -165,3 +165,53 @@ async function previewExercise() {
         }
     }
 }
+
+
+async function createCustomExercise() {
+    const exerciseType = document.getElementById('customExerciseType').value;
+    const userId = localStorage.getItem('userId'); // Retrieve userId from local
+    console.log('Creating custom exercise for userId:', userId);
+    const exerciseData = {};
+    if (exerciseType === 'உரையாடல் பயிற்சி') {
+        exerciseData.title = document.getElementById('title').value;
+        const questionInputs = document.querySelectorAll('#dialogueFields input[name="questions"]');
+        exerciseData.questions = Array.from(questionInputs).map(input => input.value);
+    } else if (exerciseType === 'கதை சொல்லுதல் பயிற்சி') {
+        exerciseData.storyTitle = document.getElementById('storyTitle').value;
+        exerciseData.storyPrompt = document.getElementById('storyPrompt').value;
+    } else if (exerciseType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
+        exerciseData.listeningTitle = document.getElementById('listeningTitle').value;
+        exerciseData.listeningAudioURL = document.getElementById('listeningAudioURL').value;
+        const listeningQuestionInputs = document.querySelectorAll('#listeningFields input[name="listeningQuestions"]');
+        exerciseData.listeningQuestions = Array.from(listeningQuestionInputs).map(input => input.value);
+    } else if (exerciseType === 'தலைப்பு பயிற்சி') {
+        exerciseData.topicTitle = document.getElementById('topicTitle').value;
+        const topicKeywordInputs = document.querySelectorAll('#topicFields input[name="topicKeywords"]');
+        exerciseData.topicKeywords = Array.from(topicKeywordInputs).map(input => input.value);
+    }
+    console.log('Exercise Data:', exerciseData);
+    // Send the data to the backend
+    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_custom_exercise', {
+        method: 'POST',
+        headers: {
+            'Authorization': sessionStorage.getItem('sessionToken'),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId: userId,
+            exerciseType: exerciseType,
+            exerciseData: exerciseData
+            // Include other necessary fiel ds from the form
+        })
+    });
+    if (response.status === 401) {
+        // Redirect to login page if not authenticated
+        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
+        return;
+    }
+    if (!response.ok) {
+        return {};
+    }
+    const responseData = await response.json();
+    return responseData;
+}
