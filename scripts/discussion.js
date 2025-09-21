@@ -1,5 +1,27 @@
 let msgId = 0;
 let user = "You";
+let counter = 0;
+let workSheet = {};
+let weekWorkSheet = {};
+let mediaRecorder;
+let audioChunks = [];
+let audioBlob;
+let audioBlobList = [];
+let botAudioBlobList= [];
+let recordingNumber = 0;
+let exerciseId = null;
+let clearButtonPressed=false;
+const saveButton = document.getElementById("conversation-saveButton");
+const clearButton = document.getElementById("conversation-clear-btn");
+const startBtn = document.getElementById('conversation-start-btn');
+const sendBtn = document.getElementById('conversation-send-btn');
+const transcription = document.getElementById('userInput');
+const previewButton = document.getElementById('conversation-preview-btn');
+let isPlaying = false;
+let audioContext = null;
+let playButton = null;
+let audioQueue = [];
+let audioData = null;
 
 async function createMessageElement(text,type) {
     const msgDiv = document.createElement("div");
@@ -38,29 +60,6 @@ async function createMessageElement(text,type) {
     msgId++;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-let counter = 0;
-let workSheet = {};
-let weekWorkSheet = {};
-let mediaRecorder;
-let audioChunks = [];
-let audioBlob;
-let audioBlobList = [];
-let botAudioBlobList= [];
-let recordingNumber = 0;
-let exerciseId = null;
-let clearButtonPressed=false;
-const saveButton = document.getElementById("conversation-saveButton");
-const clearButton = document.getElementById("conversation-clear-btn");
-const startBtn = document.getElementById('conversation-start-btn');
-const sendBtn = document.getElementById('conversation-send-btn');
-const transcription = document.getElementById('userInput');
-const previewButton = document.getElementById('conversation-preview-btn');
-let isPlaying = false;
-let audioContext = null;
-let playButton = null;
-let audioQueue = [];
-let audioData = null;
 
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
@@ -236,17 +235,17 @@ saveButton.addEventListener("click", async (event) => {
     //     formData.append(`recordingNumber_${index}`, recording.number);
     //     formData.append(`timestamp_${index}`, recording.timestamp);
     // });
-    const combinedBlobs = await combineAudioBlobs();
+    // const combinedBlobs = await combineAudioBlobs();
     //convert json to blob
-    const jsonBlob = new Blob([JSON.stringify(combinedBlobs)], { type: 'application/json' });
-    formData.append(`audioFiles[]`, jsonBlob, `recording.webm`);
+    // const jsonBlob = new Blob([JSON.stringify(combinedBlobs)], { type: 'application/json' });
+    // formData.append(`audioFiles[]`, jsonBlob, `recording.webm`);
     // Add total number of recordings
-    formData.append('totalRecordings', audioBlobList.length);
+    // formData.append('totalRecordings', audioBlobList.length);
     // Add recording IDs for reference
-    formData.append('recordingIds', JSON.stringify(audioBlobList.map(r => r.id)));
+    // formData.append('recordingIds', JSON.stringify(audioBlobList.map(r => r.id)));
     const messageArray = Array.from(messages).map(message => message.textContent.trim());
     formData.append("content", JSON.stringify(messageArray));
-    formData.append("work", "conversation");
+    formData.append("work", "discussion");
     formData.append("week", workSheet.week ? workSheet.week : "18");
     formData.append("exerciseId", exerciseId);
     const spinner = document.getElementById('conversation-spinner');
