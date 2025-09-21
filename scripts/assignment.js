@@ -205,8 +205,13 @@ async function previewExercise() {
     previewDiv.innerHTML = contentHtml; 
 }
 
+async function showCustomExercise() {
+    const section = document.getElementById('customExerciseSection');
+    section.style.display = 'block';
+}
 
-async function createCustomExercise() {
+
+async function addCustomExercise() {
     const exerciseType = document.getElementById('assignmentType').value;
     const userId = localStorage.getItem('userId'); // Retrieve userId from local
     console.log('Creating custom exercise for userId:', userId);

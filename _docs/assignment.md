@@ -29,7 +29,7 @@ title: Assignment
         </select>
         <button type="button" onclick="loadExercises()">Load Exercises</button>
         <button type="button" onclick="previewExercise()">Preview Exercise</button>
-        <button type="button" onclick="createCustomExercise()">Create Custom Exercise</button>
+        <button type="button" onclick="showCustomExercise()">Create Custom Exercise</button>
         <div id="exercisePreview">
             <div id="customExerciseSection" style="display:none;">
                 <h2>Create Custom Exercise</h2>
@@ -65,7 +65,7 @@ title: Assignment
                     <input type="text" id="topicKeywords" name="topicKeywords"><br><br>
                     <button type="button" onclick="addTopicKeywordField()">Add Keyword</button><br><br>
                 </div>
-                <button type="button" onclick="createCustomExercise()">Create Custom Exercise</button>
+                <button type="button" onclick="saveCustomExercise()">Create Custom Exercise</button>
             </div>
         </div>
         <label for="dueDate">Due Date:</label>
