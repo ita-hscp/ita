@@ -28,12 +28,12 @@ async function createAssignment() {
     const responseData = await response.json();
     return responseData;
 }
-
-let selectAssignmentType = document.getElementById('assignmentType');
-//     <select id="assignmentType" name="assignmentType"> if assignment_type is selected, call getExercisesForAssignmentType in the backend
-selectAssigmentType.addEventListener('change', async function() {
-    const selectedType = this.value;
-    const exercises = await getExercisesForAssignmentType(selectedType);
+window.onload = function() {
+    let selectAssignmentType = document.getElementById('assignmentType');
+    //     <select id="assignmentType" name="assignmentType"> if assignment_type is selected, call getExercisesForAssignmentType in the backend
+    selectAssignmentType.addEventListener('change', async function() {
+        const selectedType = this.value;
+        const exercises = await getExercisesForAssignmentType(selectedType);
     const exerciseSelect = document.getElementById('exercise');
     exerciseSelect.innerHTML = ''; // Clear previous options
     exercises.forEach(exercise => {
@@ -43,6 +43,7 @@ selectAssigmentType.addEventListener('change', async function() {
         exerciseSelect.appendChild(option);
     });
 });
+};
 
 async function getExercisesForAssignmentType(assignmentType) {
     const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercises_by_type?type=${assignmentType}`, {
