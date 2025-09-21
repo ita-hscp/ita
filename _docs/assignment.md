@@ -53,9 +53,6 @@ title: Assignment
     </form>
   </div>
 
-<script src="{{ site.baseurl }}/scripts/assignment.js"></script>
-<div id="tracker"></div>
-
 <div id="customExerciseSection" style="display:none;">
     <h2>Create Custom Exercise</h2
     <select id="customExerciseType" name="customExerciseType">
@@ -98,3 +95,5 @@ title: Assignment
     </div>
     <button type="button" onclick="createCustomExercise()">Create Custom Exercise</button>
 </div>
+<div id="tracker"></div>
+<script src="{{ site.baseurl }}/scripts/assignment.js"></script>
