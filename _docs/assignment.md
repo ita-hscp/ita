@@ -5,12 +5,6 @@ title: Assignment
 ---
 
 <script src="{{ site.baseurl }}/scripts/track.js">tracker();</script>
-
-<h1>Assignment </h1>
-  <p>This section is under development. Please check back later for updates.</p>
-
-  <div id="tracker"></div>
-
   <div id="assignmentSection">
     <!-- Assignment form and list will be dynamically inserted here -->
     <form id="assignmentForm">
