@@ -1,14 +1,13 @@
 /* Styles for the Assignment Page */
-    #assignmentSection {
+#assignmentSection {
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       padding: 25px;
       max-width: 600px;
       margin: 0 auto;
-    }
 
-    form label {
+     form label {
       font-weight: bold;
       display: block;
       margin-top: 15px;
@@ -46,7 +45,7 @@
     button:hover {
       background: #2980b9;
     }
-
+   }
     #exercisePreview, 
     #customExerciseSection {
       margin-top: 20px;
