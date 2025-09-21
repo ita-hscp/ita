@@ -33,12 +33,6 @@ title: Assignment
       <div id="exercisePreview">
             <div id="customExerciseSection" style="display:none;">
             <h2>Create Custom Exercise</h2
-            <select id="customExerciseType" name="customExerciseType">
-                <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
-                <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
-                <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
-                <option value="தலைப்பு பயிற்சி">தலைப்பு பயிற்சி</option>
-            </select><br><br>
             <!-- if custom exercise type is dialogue practice, show these fields -->
             <div id="dialogueFields" style="display:none;">
             <label for="title">Title:</label><br>
