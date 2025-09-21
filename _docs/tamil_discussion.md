@@ -7,6 +7,7 @@ title: கலந்துரையாடல்
 <script src="{{ site.baseurl }}/scripts/speech_new.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
+<div class="discussion-container">
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
     </select>
@@ -37,6 +38,7 @@ title: கலந்துரையாடல்
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
 </div> -->
+</div>
 <script src="{{ site.baseurl }}/scripts/discussion.js"></script>
 <script>
 tracker();

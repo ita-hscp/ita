@@ -31,20 +31,20 @@ async function createMessageElement(text,type) {
 
     const textSpan = document.createElement("span");
     textSpan.innerHTML = `<span class="user">${user}:</span> ${text}`;
-
-    const controls = document.createElement("div");
-    controls.classList.add("controls");
-
+    const controls = document.createElement("span");
+    controls.classList.add("audio-controls");
     // audio element (sample mp3)
     const audio = document.createElement("audio");
     audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     audio.id = "audio-" + msgId;
 
     const playBtn = document.createElement("button");
+    playBtn.classList.add("play-button");
     playBtn.textContent = "▶️";
     playBtn.onclick = () => audio.play();
 
     const pauseBtn = document.createElement("button");
+    pauseBtn.classList.add("pause-button");
     pauseBtn.textContent = "⏸️";
     pauseBtn.onclick = () => audio.pause();
 
