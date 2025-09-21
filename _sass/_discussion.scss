@@ -1,24 +1,29 @@
-#discussion-container{
-    display: flex;   
-    .message {
-        margin-top: 10px;
-        font-size: 1em;
-    }
-    .sent {
-        background-color: #dcf8c6;
-        align-self: flex-start;
-    }
-    .play-button, .pause-button {
-        background-color:inherit; /* Green */
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 0.75em;
-        margin: 2px 1px;
-        cursor: pointer;
-        border-radius: 50%;
-    }
+#discussion-container {
+    display: flex;
+}
+
+.discussion-message {
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+.discussion-sent {
+    background-color: #dcf8c6;
+    align-self: flex-start;
+}
+
+.discussion-play-button,
+.discussion-pause-button {
+    background-color: inherit;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.75em;
+    margin: 2px 1px;
+    cursor: pointer;
+    border-radius: 50%;
 }

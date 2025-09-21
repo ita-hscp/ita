@@ -25,26 +25,27 @@ let audioData = null;
 
 async function createMessageElement(text,type) {
     const msgDiv = document.createElement("div");
-    msgDiv.classList.add("message");
+    msgDiv.classList.add("discussion-message");
     msgDiv.classList.add(type); 
     msgDiv.id = "msg-" + msgId;
 
     const textSpan = document.createElement("span");
     textSpan.innerHTML = `<span class="user">${user}:</span> ${text}`;
     const controls = document.createElement("span");
-    controls.classList.add("audio-controls");
+    controls.classList.add("discussion-audio-controls");
     // audio element (sample mp3)
     const audio = document.createElement("audio");
     audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
     audio.id = "audio-" + msgId;
 
     const playBtn = document.createElement("button");
-    playBtn.classList.add("play-button");
+    playBtn.classList.add("discussion-play-button");
+
     playBtn.textContent = "▶️";
     playBtn.onclick = () => audio.play();
 
     const pauseBtn = document.createElement("button");
-    pauseBtn.classList.add("pause-button");
+    pauseBtn.classList.add("discussion-pause-button");
     pauseBtn.textContent = "⏸️";
     pauseBtn.onclick = () => audio.pause();
 
