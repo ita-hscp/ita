@@ -93,7 +93,13 @@ async function getExercise() {
 window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
-        const tasks = await getAllPendingTasks("உரையாடல் பயிற்சி");
+        let tasks = await getAllPendingTasks("கலந்துரையாடல்");
+        //Mock data for testing
+        tasks = [
+            { week: "1", content: { intro: ["வணக்கம்! இந்த வாரம் நாம் குடும்பத்தைப் பற்றி பேசப்போகிறோம்.", "உங்கள் குடும்பத்தில் யார் யார் இருக்கிறார்கள்?"] }, exerciseId: "listen-1" },
+            { week: "2", content: { intro: ["வணக்கம்! இந்த வாரம் நாம் நண்பர்களைப் பற்றி பேசப்போகிறோம்.", "உங்கள் சிறந்த நண்பர் யார்?"] }, exerciseId: "listen-2" },
+            { week: "3", content: { intro: ["வணக்கம்! இந்த வாரம் நாம் பள்ளியைப் பற்றி பேசப்போகிறோம்.", "நீங்கள் எந்த வகுப்பில் படிக்கிறீர்கள்?"] }, exerciseId: "listen-3" }
+        ];
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
         if (tasks && tasks.length > 0) {
@@ -105,6 +111,9 @@ window.addEventListener("load", async (event) => {
                 dropdown.appendChild(option);
                 weekWorkSheet[textContent] = task.content;
             });
+            // Enable the exercise button
+            const exerciseStartBtn = document.getElementById("conversation-start-btn");
+            exerciseStartBtn.disabled = false;
         }
     }
 });
