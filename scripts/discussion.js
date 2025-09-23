@@ -28,37 +28,37 @@ let socket;
 async function createMessageElement(text,type) {
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("discussion-message");
-    msgDiv.classList.add(type); 
+    msgDiv.classList.add("discussion-" + type); 
     msgDiv.id = "msg-" + msgId;
 
     const textSpan = document.createElement("span");
     textSpan.innerHTML = `<span class="user">${user}:</span> ${text}`;
-    const controls = document.createElement("span");
-    controls.classList.add("discussion-audio-controls");
-    // audio element (sample mp3)
-    const audio = document.createElement("audio");
-    audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-    audio.id = "audio-" + msgId;
+    // const controls = document.createElement("span");
+    // controls.classList.add("discussion-audio-controls");
+    // // audio element (sample mp3)
+    // const audio = document.createElement("audio");
+    // audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+    // audio.id = "audio-" + msgId;
 
-    const playBtn = document.createElement("button");
-    playBtn.classList.add("discussion-play-button");
+    // const playBtn = document.createElement("button");
+    // playBtn.classList.add("discussion-play-button");
 
-    playBtn.textContent = "▶️";
-    playBtn.onclick = () => audio.play();
+    // playBtn.textContent = "▶️";
+    // playBtn.onclick = () => audio.play();
 
-    const pauseBtn = document.createElement("button");
-    pauseBtn.classList.add("discussion-pause-button");
-    pauseBtn.textContent = "⏸️";
-    pauseBtn.onclick = () => audio.pause();
+    // const pauseBtn = document.createElement("button");
+    // pauseBtn.classList.add("discussion-pause-button");
+    // pauseBtn.textContent = "⏸️";
+    // pauseBtn.onclick = () => audio.pause();
 
-    controls.appendChild(playBtn);
-    controls.appendChild(pauseBtn);
+    // controls.appendChild(playBtn);
+    // controls.appendChild(pauseBtn);
 
     msgDiv.appendChild(textSpan);
-    msgDiv.appendChild(controls);
+    // msgDiv.appendChild(controls);
     const chatBox = document.getElementById("chatBox");
     chatBox.appendChild(msgDiv);
-    chatBox.appendChild(audio);
+    // chatBox.appendChild(audio);
     input.value = "";
     msgId++;
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -127,7 +127,9 @@ window.addEventListener("load", async (event) => {
       socket.addEventListener("message", (event) => {
         const messageData = JSON.parse(event.data);
         if (messageData.type === "message") {
-            createMessageElement(messageData.payload, 'received');
+            content = messageData.payload.userId ? (messageData.payload.userId + ":" + messageData.payload.content) : messageData.payload.content;
+            user = content === "System" ? "System" : "Bot"
+            createMessageElement(content, 'received');
         } else if (messageData.type === "error") {
             alert("Error from server: " + messageData.payload);
         } else {
