@@ -119,13 +119,32 @@ window.addEventListener("load", async (event) => {
             header = { Authorization: sessionStorage.getItem('sessionToken') };
             token = sessionStorage.getItem('sessionToken');
             socket = new WebSocket(wsUrl+`?auth=${encodeURIComponent(token)}`);
-            socket.on("message", function(event) {
-            const data = JSON.parse(event.data);
-            if (data.type === "message") {
-                // Handle incoming messagecreateMessageElement
-                createMessageElement(data.payload, 'received');
-            }
-        });
+        
+      socket.addEventListener("open", () => {
+        log("✅ Connected to server");
+        sendBtn.disabled = false;
+      });
+
+      socket.addEventListener("message", (event) => {
+        log("📩 Received: " + event.data);
+        const messageData = JSON.parse(event.data);
+        if (messageData.type === "message") {
+            createMessageElement(messageData.payload, 'received');
+        } else if (messageData.type === "error") {
+            alert("Error from server: " + messageData.payload);
+        } else {
+            console.log("Unknown message type:", messageData);
+        }
+      });
+
+      socket.addEventListener("error", (event) => {
+        log("❌ Error: " + JSON.stringify(event));
+      });
+
+      socket.addEventListener("close", () => {
+        log("🔌 Connection closed");
+        sendBtn.disabled = true;
+      });
         }
     }
 });
