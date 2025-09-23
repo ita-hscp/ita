@@ -121,6 +121,12 @@ window.addEventListener("load", async (event) => {
             socket = new WebSocket(wsUrl+`?auth=${encodeURIComponent(token)}`);
         
       socket.addEventListener("open", () => {
+            setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "ping" })); // keep-alive
+                console.log("Sent keep-alive ping");
+            }
+            }, 30000);
         sendBtn.disabled = false;
       });
 
