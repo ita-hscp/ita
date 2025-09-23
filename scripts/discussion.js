@@ -22,6 +22,8 @@ let audioContext = null;
 let playButton = null;
 let audioQueue = [];
 let audioData = null;
+const wsUrl = "wss://infinite-sands-52519-06605f47cb30.herokuapp.com";
+let socket;
 
 async function createMessageElement(text,type) {
     const msgDiv = document.createElement("div");
@@ -114,6 +116,16 @@ window.addEventListener("load", async (event) => {
             // Enable the exercise button
             const exerciseStartBtn = document.getElementById("conversation-start-btn");
             exerciseStartBtn.disabled = false;
+            header = { Authorization: sessionStorage.getItem('sessionToken') };
+            token = sessionStorage.getItem('sessionToken');
+            socket = new WebSocket(wsUrl+`?auth=${encodeURIComponent(token)}`);
+            socket.on("message", function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === "message") {
+                // Handle incoming messagecreateMessageElement
+                createMessageElement(data.payload, 'received');
+            }
+        });
         }
     }
 });
@@ -171,6 +183,10 @@ async function sendMessage() {
             // Clear input field
             userInput.textContent = "";
             transcription.innerHTML = "";
+            //{"type":"message","payload":"Hello from client","sessionToken":json.loads(resp.text)['sessionToken'],"topic":"week1"}
+            if(socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: workSheet.week ? workSheet.week : "1", exerciseId: exerciseId }));
+            }
     }
     startBtn.disabled = false;
 }
@@ -521,3 +537,4 @@ function playNextInQueue() {
 }
 previewButton.addEventListener('click', playButtonListener);
 }
+
