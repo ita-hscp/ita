@@ -121,12 +121,10 @@ window.addEventListener("load", async (event) => {
             socket = new WebSocket(wsUrl+`?auth=${encodeURIComponent(token)}`);
         
       socket.addEventListener("open", () => {
-        log("✅ Connected to server");
         sendBtn.disabled = false;
       });
 
       socket.addEventListener("message", (event) => {
-        log("📩 Received: " + event.data);
         const messageData = JSON.parse(event.data);
         if (messageData.type === "message") {
             createMessageElement(messageData.payload, 'received');
@@ -138,11 +136,9 @@ window.addEventListener("load", async (event) => {
       });
 
       socket.addEventListener("error", (event) => {
-        log("❌ Error: " + JSON.stringify(event));
       });
 
       socket.addEventListener("close", () => {
-        log("🔌 Connection closed");
         sendBtn.disabled = true;
       });
         }

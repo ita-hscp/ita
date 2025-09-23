@@ -44,7 +44,8 @@
         return;
       }
 
-      const wsUrl = `wss://infinite-sands-52519-06605f47cb30.herokuapp.com?auth=${token}`;
+    //   const wsUrl = `wss://infinite-sands-52519-06605f47cb30.herokuapp.com?auth=${token}`;
+      const wsUrl = `ws://localhost:5006/?sessionToken=${token}`; // For local testing
       log(`🔌 Connecting to: ${wsUrl}`);
       socket = new WebSocket(wsUrl);
 
