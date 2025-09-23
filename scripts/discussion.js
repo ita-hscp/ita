@@ -134,10 +134,9 @@ window.addEventListener("load", async (event) => {
         const messageData = JSON.parse(event.data);
         if (messageData.type === "message") {
             content = messageData.payload.userId ? (messageData.payload.userId + ":" + messageData.payload.content) : messageData.payload.content;
-            user = content === "System" ? "System" : "Bot"
             createMessageElement(content, 'received');
         } else if (messageData.type === "error") {
-            alert("Error from server: " + messageData.payload);
+            console.log("Error from server: " + messageData.payload);
         } else {
             console.log("Unknown message type:", messageData);
         }
@@ -199,7 +198,7 @@ async function speak(audioBlob) {
 
 async function sendMessage() {
     const userInput = document.getElementById('userInput');
-    const message = userInput.textContent.trim();
+    const message = userInput.textContent ? userInput.textContent.trim() : userInput.value.trim();
     audioBlobList.forEach(item => item.sent = true)
      if (message) {
             createMessageElement(message, 'sent');
@@ -336,9 +335,10 @@ function handleSpeechRecognition(event) {
         } else {
             interimTranscript += transcript;
         }
-        transcription.innerHTML = `${transcript}`;
+        // transcription.innerHTML = `${transcript}`;
     }
-    transcription.innerHTML = `${finalTranscript}`;
+    // transcription.innerHTML = `${finalTranscript}`;
+    transcription.value = `${finalTranscript}`;
     event.results = []
 }
 
