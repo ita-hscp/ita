@@ -40,8 +40,6 @@ async function createMessageElement(userId, text, type) {
     msgDiv.appendChild(textSpan);
     const chatBox = document.getElementById("chatBox");
     chatBox.appendChild(msgDiv);
-    input.value  ? input.value = "" : null;
-    input.textContent ? input.textContent = "" : null;
     msgId++;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
