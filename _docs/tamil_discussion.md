@@ -14,7 +14,7 @@ title: கலந்துரையாடல்
 <div>
     <p type="text" id="topicSelected"></p>
 </div>
-  <div class="chat-container">
+  <div class="chat-container discussion-chat-container">
     <div class="chat-box" id="chatBox">
     </div>
     <div><input type="text" id="userInput"></div>

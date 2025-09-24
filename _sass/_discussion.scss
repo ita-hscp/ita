@@ -1,22 +1,27 @@
 #discussion-container {
     display: flex;
 }
+.discussion-chat-container {
+   width: 80%;
+}
 .discussion-message {
   max-width: 70%;
-  padding: 8px 12px;
   border-radius: 12px;
   font-size: 1em;
+  margin-top: 5px;
 }
 
 .discussion-sent {
-  align-self: flex-end;      /* Push user messages to the right */
-  background-color: #d1f1ff; /* Light blue for user */
+  background-color: #fff9e9; /* Light peach for user */
   text-align: right;
+  color: blue;
+  margin-left: auto; /* Push user messages to the right */
 }
 
 .discussion-received {
-  align-self: flex-start;    /* Push bot messages to the left */
-  background-color: #f1f1f1; /* Light gray for bot */
+   /* Push bot messages to the left */
+    background-color: #f1f0f0; /* Light gray for bot */
+    color: black;
   text-align: left;
 }
 
