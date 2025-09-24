@@ -189,7 +189,7 @@ async function getTopics(topicName) {
         }
 
         const data = await response.json();
-        return data.topics;
+        return data;
     } catch (error) {
         console.error('Error fetching topics:', error);
     }   
