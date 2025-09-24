@@ -50,18 +50,20 @@ async function getExercise() {
     if (dropdown.options[dropdown.selectedIndex].value?.includes("listen")) {
         selectedText = dropdown.options[dropdown.selectedIndex].value
     }
-    const header = await getWorkSheet(null, "header")
-    // workSheet = await getWorkSheet(selectedText === "" ? "1" : selectedText, null);
-    workSheet = weekWorkSheet[selectedText] ? weekWorkSheet[selectedText] : await getWorkSheet(selectedText, null);
-    workSheet['week'] = selectedText;
+    const topics = await getTopics(selectedText);
+    if (topics && topics.length > 0) {
+        topics.forEach(topic => {
+            createMessageElement(topic.userId + ":" + topic.content, topic.type);
+        });
+    }
     exerciseId = dropdown.options[dropdown.selectedIndex].value
     const startBtn = document.getElementById('conversation-start-btn');
     const topicSelected = document.getElementById('topicSelected');
     const exerciseStartBtn = document.getElementById("exercise-btn");
     exerciseStartBtn.disabled = true
-    topicSelected.textContent = workSheet.intro[1]
-    await speakApi(workSheet.intro[0])
-    await speakApi(workSheet.intro[1])
+    // topicSelected.textContent = workSheet.intro[1]
+    // await speakApi(workSheet.intro[0])
+    // await speakApi(workSheet.intro[1])
     base64AudioList = [];
     startBtn.disabled = false;
     clearButton.disabled = false;
@@ -163,6 +165,32 @@ async function getAudio(text) {
     } catch (error) {
         console.error('Error fetching audio:', error);
     }
+}
+
+async function getTopics(topicName) {
+    try {
+        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/discussion_topics?topicName=' + topicName, {
+            headers: {
+                Authorization: sessionStorage.getItem('sessionToken')
+            }
+        });
+
+        if (response.status === 401) {
+            // Redirect to login page if not authenticated
+            window.location.href = "https://ita-hscp.github.io/ita/Login";
+            return;
+        }
+
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.topics;
+    } catch (error) {
+        console.error('Error fetching topics:', error);
+    }   
 }
 
 async function speak(audioBlob) {
