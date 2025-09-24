@@ -24,7 +24,7 @@ let audioQueue = [];
 let audioData = null;
 const wsUrl = "wss://infinite-sands-52519-06605f47cb30.herokuapp.com";
 let socket;
-
+let topicSelected = null;
 async function createMessageElement(userId, text, type) {
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("discussion-message");
@@ -47,6 +47,7 @@ async function createMessageElement(userId, text, type) {
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
     let selectedText = dropdown.options[dropdown.selectedIndex].text;
+    topicSelected = selectedText;
     const topics = await getTopics(selectedText);
     if (topics && topics.length > 0) {
         topics.forEach(topic => {
@@ -215,7 +216,7 @@ async function sendMessage() {
             userInput.value ? userInput.value = "" : userInput.textContent = "";
             //{"type":"message","payload":"Hello from client","sessionToken":json.loads(resp.text)['sessionToken'],"topic":"week1"}
             if(socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: workSheet.week ? workSheet.week : "1", exerciseId: exerciseId }));
+                socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: topicSelected, exerciseId: exerciseId }));
             }
     }
     startBtn.disabled = false;
