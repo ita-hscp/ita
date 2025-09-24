@@ -30,36 +30,16 @@ async function createMessageElement(text,type) {
     msgDiv.classList.add("discussion-message");
     msgDiv.classList.add("discussion-" + type); 
     msgDiv.id = "msg-" + msgId;
-
-    const textSpan = document.createElement("span");
-    textSpan.innerHTML = `<span class="user">${user}:</span> ${text}`;
-    // const controls = document.createElement("span");
-    // controls.classList.add("discussion-audio-controls");
-    // // audio element (sample mp3)
-    // const audio = document.createElement("audio");
-    // audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-    // audio.id = "audio-" + msgId;
-
-    // const playBtn = document.createElement("button");
-    // playBtn.classList.add("discussion-play-button");
-
-    // playBtn.textContent = "▶️";
-    // playBtn.onclick = () => audio.play();
-
-    // const pauseBtn = document.createElement("button");
-    // pauseBtn.classList.add("discussion-pause-button");
-    // pauseBtn.textContent = "⏸️";
-    // pauseBtn.onclick = () => audio.pause();
-
-    // controls.appendChild(playBtn);
-    // controls.appendChild(pauseBtn);
-
+    let textSpan = document.createElement("span");
+    textSpan.innerHTML = text;
+    if (type === 'sent') {
+        textSpan.innerHTML = "You: " + text;
+    } 
     msgDiv.appendChild(textSpan);
-    // msgDiv.appendChild(controls);
     const chatBox = document.getElementById("chatBox");
     chatBox.appendChild(msgDiv);
-    // chatBox.appendChild(audio);
-    input.value = "";
+    input.value  ? input.value = "" : null;
+    input.textContent ? input.textContent = "" : null;
     msgId++;
     chatBox.scrollTop = chatBox.scrollHeight;
 }

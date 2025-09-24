@@ -1,20 +1,23 @@
 #discussion-container {
     display: flex;
 }
-
 .discussion-message {
-    margin-top: 10px;
-    font-size: 1em;
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 1em;
 }
 
 .discussion-sent {
-    background-color: #dcf8c6;
-    align-self: flex-start;
+  align-self: flex-end;      /* Push user messages to the right */
+  background-color: #d1f1ff; /* Light blue for user */
+  text-align: right;
 }
 
 .discussion-received {
-    background-color: #f1f0f0;
-    align-self: flex-end;
+  align-self: flex-start;    /* Push bot messages to the left */
+  background-color: #f1f1f1; /* Light gray for bot */
+  text-align: left;
 }
 
 .discussion-play-button,
