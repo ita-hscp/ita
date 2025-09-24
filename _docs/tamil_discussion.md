@@ -11,6 +11,7 @@ title: கலந்துரையாடல்
  <label for="weeks">Choose a week:</label>
     <select id="weeks">
     </select>
+<button id="exercise-btn" onclick="getExercise()">start exercise</button>
 <div>
     <p type="text" id="topicSelected"></p>
 </div>

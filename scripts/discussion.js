@@ -25,7 +25,7 @@ let audioData = null;
 const wsUrl = "wss://infinite-sands-52519-06605f47cb30.herokuapp.com";
 let socket;
 
-async function createMessageElement(text,type) {
+async function createMessageElement(userId, text, type) {
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("discussion-message");
     msgDiv.classList.add("discussion-" + type); 
@@ -34,7 +34,9 @@ async function createMessageElement(text,type) {
     textSpan.innerHTML = text;
     if (type === 'sent') {
         textSpan.innerHTML = "You: " + text;
-    } 
+    } else {
+        textSpan.innerHTML = userId + ": " + text;
+    }
     msgDiv.appendChild(textSpan);
     const chatBox = document.getElementById("chatBox");
     chatBox.appendChild(msgDiv);
@@ -53,7 +55,7 @@ async function getExercise() {
     const topics = await getTopics(selectedText);
     if (topics && topics.length > 0) {
         topics.forEach(topic => {
-            createMessageElement(topic.userId + ":" + topic.content, topic.type);
+            createMessageElement(topic.userId, topic.content, topic.type);
         });
     }
     exerciseId = dropdown.options[dropdown.selectedIndex].value
@@ -115,8 +117,7 @@ window.addEventListener("load", async (event) => {
       socket.addEventListener("message", (event) => {
         const messageData = JSON.parse(event.data);
         if (messageData.type === "message") {
-            content = messageData.payload.userId ? (messageData.payload.userId + ":" + messageData.payload.content) : messageData.payload.content;
-            createMessageElement(content, 'received');
+            createMessageElement(messageData.payload.userId, messageData.payload.content, 'received');
         } else if (messageData.type === "error") {
             console.log("Error from server: " + messageData.payload);
         } else {
@@ -209,10 +210,9 @@ async function sendMessage() {
     const message = userInput.textContent ? userInput.textContent.trim() : userInput.value.trim();
     audioBlobList.forEach(item => item.sent = true)
      if (message) {
-            createMessageElement(message, 'sent');
+            createMessageElement(null, message, 'sent');
             // Clear input field
-            userInput.textContent = "";
-            transcription.innerHTML = "";
+            userInput.value ? userInput.value = "" : userInput.textContent = "";
             //{"type":"message","payload":"Hello from client","sessionToken":json.loads(resp.text)['sessionToken'],"topic":"week1"}
             if(socket && socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: workSheet.week ? workSheet.week : "1", exerciseId: exerciseId }));
