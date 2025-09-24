@@ -47,7 +47,6 @@ async function createMessageElement(userId, text, type) {
 async function getExercise() {
     const dropdown = document.getElementById("weeks");
     let selectedText = dropdown.options[dropdown.selectedIndex].text;
-    topicSelected = selectedText;
     const topics = await getTopics(selectedText);
     if (topics && topics.length > 0) {
         topics.forEach(topic => {
@@ -215,8 +214,10 @@ async function sendMessage() {
             // Clear input field
             userInput.value ? userInput.value = "" : userInput.textContent = "";
             //{"type":"message","payload":"Hello from client","sessionToken":json.loads(resp.text)['sessionToken'],"topic":"week1"}
+                const dropdown = document.getElementById("weeks");
+                let selectedText = dropdown.options[dropdown.selectedIndex].text;
             if(socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: topicSelected, exerciseId: exerciseId }));
+                socket.send(JSON.stringify({ type: "message", payload: message, sessionToken: sessionStorage.getItem('sessionToken'), topic: selectedText, exerciseId: exerciseId }));
             }
     }
     startBtn.disabled = false;
