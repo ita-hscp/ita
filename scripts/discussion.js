@@ -24,7 +24,7 @@ let audioQueue = [];
 let audioData = null;
 const wsUrl = "wss://infinite-sands-52519-06605f47cb30.herokuapp.com";
 let socket;
-let topicSelected = null;
+let topicSelected = "";
 async function createMessageElement(userId, text, type) {
     const msgDiv = document.createElement("div");
     msgDiv.classList.add("discussion-message");
