@@ -10,25 +10,25 @@ title: Assignment
     <form id="assignmentForm">
         <label for="week">Week:</label>
         <select id="week" name="week">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
         </select>
         <label for="class">Class:</label>
         <select id="class" name="class">
-        <option value="HSCP1">HSCP1</option>
-        <option value="HSCP2">HSCP2</option>
-        <option value="HSCP3">HSCP3</option>
-        <option value="HSCP4">HSCP4</option
-        </select>
+            <option value="HSCP1">HSCP1</option>
+            <option value="HSCP2">HSCP2</option>
+            <option value="HSCP3">HSCP3</option>
+            <option value="HSCP4">HSCP4</option>
+        </select>   
         <label for="assignmentType">Assignment Type:</label>
         <select id="assignmentType" name="assignmentType">
-        <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
-        <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
-        <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
-        <option value="தலைப்பு பயிற்சி">தலைப்பு பயிற்சி</option>
+            <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
+            <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
+            <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
+            <option value="தலைப்பு பயிற்சி">தலைப்பு பயிற்சி</option>
         </select>
         <label for="exercise">Exercise:</label>
         <select id="exercise" name="exercise">
