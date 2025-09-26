@@ -48,7 +48,7 @@ title: Assignment
                 <div id="dialogueFields" style="display:none;">
                     <label for="intro">Introduction (optional):</label><br>
                     <textarea id="intro" name="intro" rows="4" cols="50"></textarea><br><br>
-                    <input type=text id="questions" name="questions" placeholder="Enter a question"><button type="button" onclick="addDialogueField()">+</button><br><br>
+                    <input type=text id="questions" name="questions" placeholder="Enter a question"><button type="button" onclick="addQuestionField()">+</button><br><br>
                 </div>
                 <!-- Storytelling practice fields -->
                 <div id="storyFields" style="display:none;">

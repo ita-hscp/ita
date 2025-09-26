@@ -78,12 +78,35 @@ async function getExercisesForAssignmentType(assignmentType) {
     return responseData.exercises || [];
 }
 async function addQuestionField() {
-    const container = document.getElementById('dialogueFields');
-    const input = document.createElement('input');
+    const container = document.getElementById('dialogueFields');//<div id="dialogueFields" style="display:none;"><input type="text" id="intro" name="intro" placeholder="Introduction (optional)"><br><br>
+    const input = document.createElement('input');//<input type=text id="questions" name="questions" placeholder="Enter a question"><button type="button" onclick="addDialogueField()">+</button><br><br> next to questions
     input.type = 'text';
     input.name = 'questions';
+    const lastInput = container.querySelector('input[name="questions"]:last-of-type');
+    if (lastInput && lastInput.value.trim() === '') {
+        lastInput.focus();
+        return;
+    }
+    // add input box next to last input box
     container.appendChild(input);
     container.appendChild(document.createElement('br'));
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.textContent = '+';
+    addButton.onclick = addQuestionField;
+    container.appendChild(addButton);
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = '-';
+    removeButton.onclick = removeQuestionField;
+    container.appendChild(removeButton);
+}
+
+function removeQuestionField(event) {
+    const container = document.getElementById('dialogueFields');
+    event.target.previousSibling.remove(); // Remove the input field    
+    container.querySelector('br:last-of-type').remove();
+    container.querySelector('button:last-of-type').remove(); // Remove the remove button
 }
 async function addListeningQuestionField() {
     const container = document.getElementById('listeningFields');
@@ -91,7 +114,11 @@ async function addListeningQuestionField() {
     input.type = 'text';
     input.name = 'listeningQuestions';
     container.appendChild(input);
-    container.appendChild(document.createElement('br'));
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '+';
+    button.onclick = addListeningQuestionField;
+    container.appendChild(button);
 }
 async function addTopicKeywordField() {
     const container = document.getElementById('topicFields');
@@ -99,7 +126,11 @@ async function addTopicKeywordField() {
     input.type = 'text';
     input.name = 'topicKeywords';
     container.appendChild(input);
-    container.appendChild(document.createElement('br'));
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '+';
+    button.onclick = addTopicKeywordField;
+    container.appendChild(button);
 }
 async function loadExercises() {
     const assignmentType = document.getElementById('assignmentType').value;
