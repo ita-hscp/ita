@@ -1,5 +1,15 @@
 let exercises= [];
 let detailedAssignments = [];
+/*assignment_data = {
+  "type": "கேட்டல்‌ கருத்தறிதல் பயிற்சி",
+  "week": "5",
+  "exerciseId": json.loads(resp_ex.text)['exerciseId'],
+  "title": "மக்கட்பேறு",
+  'exerciseNumber':5,
+  "startDate": "2025-09-22",
+  "dueDate": "2025-09-29"
+}*/
+
 async function createAssignment() {
     const formData = new FormData(document.getElementById('assignmentForm'));
     const assignment = {
@@ -7,11 +17,12 @@ async function createAssignment() {
         description: formData.get('description'),
         type: formData.get('assignmentType'),
         week: formData.get('week'),
+        startDate: formData.get('startDate'),
         dueDate: formData.get('dueDate'),
         status: 'assigned',
         exerciseId: formData.get('exercise')
     };
-    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_assignment_test', {
+    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_assignment', {
         method: 'POST',
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
@@ -144,7 +155,7 @@ async function loadExercises() {
     const assignmentType = document.getElementById('assignmentType').value;
     const exerciseSelect = document.getElementById('exercise');
     exerciseSelect.innerHTML = ''; // Clear existing options
-    const exercises = await fetchExercises(assignmentType);
+    exercises = await fetchExercises(assignmentType);
     exercises.forEach(exercise => {
         const option = document.createElement('option');
         option.value = exercise.id;
@@ -155,7 +166,8 @@ async function loadExercises() {
 
 async function fetchExercises() {
     const assignmentType = document.getElementById('assignmentType').value;
-    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercises_by_type?type=${assignmentType}`, {
+    const classId = document.getElementById('class').value;
+    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercises?type=${assignmentType}&class=${classId}`, {
         method: 'GET',
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
@@ -167,10 +179,13 @@ async function fetchExercises() {
         window.location.href = '/login';
         return;
         }
+
+        //[{"id":"bd721022-7253-4831-9736-1c76bbe6700e","content":{"intro":["தமிழ் உரையாடல் தலைப்பு பயிற்சி?","தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["நீ எந்த பள்ளியில் படிக்கிறாய்","ஓலைச் சுவடினா?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]},"title":"ஓலைச்சுவடிகள்‌","type":"உரையாடல் பயிற்சி","class":"HSCP1","description":"உரையாடல்","status":"created","updatedAt":"2025-08-22T16:09:23.935Z","createdAt":"2025-08-22T16:09:23.935Z"},{"_id":"68d610167479c02e05d0a6c2","id":"e295292c-3b34-4ec1-a5f2-d5c5c2471056","userId":null,"content":{"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"tes1\""],"conversations":["ques1","ques2","ques3","ques4"],"url":"","keywords":[],"questions":[]},"title":"tes1","type":"உரையாடல் பயிற்சி","class":"HSCP1","description":"description1","status":"created","number":1,"updatedAt":"2025-09-26T04:01:26.641Z","createdAt":"2025-09-26T04:01:26.641Z"}]
+
     if (!response.ok) {
-        //mock response for testing
+        //mock response  for testing
          return [
-        { id: 1, title: 'வாஸ்கோடகாமா', description: 'வாஸ்கோடகாமா ', exerciseId: 101, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
+        { id: 1, title: 'வாஸ்கோடகாமா', description: 'வாஸ்கோடகாமா ', exerciseId: 101, content: {"intro":["தமிழ் உரையாடல் தலைப்பு பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
         { id: 2, title: 'கொல்லாமை', description: 'கொல்லாமை” என்ற திருக்குறள்‌ கதையைக்‌ கேட்டு, அதைப்‌ பற்றி‌ உங்கள்‌ கருத்துக்களைப்‌ பகிரவும்.', exerciseId: 102, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
         { id: 3, title: 'பொங்கல்', description: 'பொங்கல்', exerciseId: 103, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
         { id: 4, title: 'தமிழ் மொழி', description: 'தமிழ் மொழி', exerciseId: 104, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} }
@@ -190,36 +205,52 @@ async function previewExercise() {
     if (exercises.length > 0) {
         exercise = exercises.find(ex => ex.id == exerciseId);
     } else {
-        const allExercises = await fetchExercises(assignmentType);
+        const allExercises = await fetchExercises();
         exercise = allExercises.find(ex => ex.id == exerciseId);
     }
     if (!exercise) {
         previewDiv.textContent = 'No exercise selected or exercise not found.';
         return;
     }
-    let contentHtml = `<h3>${exercise.title || 'Exercise Preview'}</h3>`;
-    if (assignmentType === 'உரையாடல் பயிற்சி') {
-        contentHtml += '<h4>Intro:</h4><ul>';
-        (exercise.content.intro || []).forEach(line => {
-            contentHtml += `<li>${line}</li>`;
-        });
-        contentHtml += '</ul><h4>Conversations:</h4><ul>';
-        (exercise.content.conversations || []).forEach(line => {
-            contentHtml += `<li>${line}</li>`;
-        });
-        contentHtml += '</ul>';
-    } else if (assignmentType === 'கதை சொல்லுதல் பயிற்சி') {
-        contentHtml += `<p><strong>Prompt:</strong> ${exercise.prompt || ''}</p>`;
-    } else if (assignmentType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
-        contentHtml += `<p><strong>Audio URL:</strong> <a href="${exercise.url}" target="_blank">${exercise.url}</a></p>`;
-        contentHtml += '<h4>Questions:</h4><ul>';
-        (exercise.keywords || []).forEach(keyword => {
-            contentHtml += `<li>${keyword}</li>`;
-        });
-        contentHtml += '</ul>';
-    } else if (assignmentType === 'தலைப்பு பயிற்சி') {
-        contentHtml += `<p><strong>Keywords:</strong> ${ (exercise.keywords || []).join(', ') }</p>`;
+    let contentHtml = `<h3>${exercise.title}</h3>`;
+    if (exercise.description) {
+        contentHtml += `<p><strong>Description:</strong> ${exercise.description}</p>`;
     }
+    if (exercise.content) {
+        if (exercise.content.intro && exercise.content.intro.length > 0) {
+            contentHtml += '<h4>Introduction:</h4><ul>';
+            exercise.content.intro.forEach(intro => {
+                contentHtml += `<li>${intro}</li>`;
+            });
+            contentHtml += '</ul>';
+        }
+        if (assignmentType === 'உரையாடல் பயிற்சி' && exercise.content.conversations && exercise.content.conversations.length > 0) {
+            contentHtml += '<h4>Questions:</h4><ul>';
+            exercise.content.conversations.forEach(question => {
+                contentHtml += `<li>${question}</li>`;
+            });
+            contentHtml += '</ul>';
+        } else if (assignmentType === 'கதை சொல்லுதல் பயிற்சி' && exercise.content.storyPrompt) {
+            contentHtml += `<h4>Story Prompt:</h4><p>${exercise.content.storyPrompt}</p>`;
+        } else if (assignmentType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
+            if (exercise.content.url) {
+                contentHtml += `<h4>Listening Material:</h4><iframe width="560" height="315" src="${exercise.content.url}" frameborder="0" allowfullscreen></iframe>`;
+            }
+            if (exercise.content.conversations && exercise.content.conversations.length > 0) {
+                contentHtml += '<h4>Questions:</h4><ul>';
+                exercise.content.conversations.forEach(question => {
+                    contentHtml += `<li>${question}</li>`;
+                });
+                contentHtml += '</ul>';
+            }
+        } else if (assignmentType === 'தலைப்பு பயிற்சி' && exercise.content.keywords && exercise.content.keywords.length > 0) {
+            contentHtml += '<h4>Topic Keywords:</h4><ul>';
+            exercise.content.keywords.forEach(keyword => {
+                contentHtml += `<li>${keyword}</li>`;
+            });
+            contentHtml += '</ul>';
+        }
+    }   
     previewDiv.innerHTML = contentHtml; 
 }
 
@@ -275,7 +306,7 @@ async function saveCustomExercise() {
     } else if (exerciseType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
         exerciseData.listeningAudioURL = document.getElementById('listeningAudioURL').value;
         const listeningQuestionInputs = document.querySelectorAll('#listeningFields input[name="listeningQuestions"]');
-        exerciseData.listeningQuestions = Array.from(listeningQuestionInputs).map(input => input.value);
+        exerciseData.questions = Array.from(listeningQuestionInputs).map(input => input.value);
     } else if (exerciseType === 'தலைப்பு பயிற்சி') {
         const topicKeywordInputs = document.querySelectorAll('#topicFields input[name="keywords"]');
         exerciseData.topicKeywords = Array.from(topicKeywordInputs).map(input => input.value);
@@ -297,8 +328,7 @@ async function saveCustomExercise() {
                 "intro": exerciseData.intro || [],  
                 "conversations": exerciseData.questions || [],
                 "url": exerciseData.listeningAudioURL || '',
-                "keywords": exerciseData.topicKeywords || [],
-                "questions": exerciseData.listeningQuestions || []
+                "keywords": exerciseData.topicKeywords || []
             }
             // Include other necessary fields from the form
         })
@@ -312,11 +342,11 @@ async function saveCustomExercise() {
         return {};
     }
     const responseData = await response.json();
-    return responseData;//{"message":"Form saved successfully","exerciseId":"ec88eba4-8dbf-49e3-80a9-0fe846df6b10"}
     // add the exerciseId to the exercise dropdown and value should be the exerciseId, text should be the title or prompt
     const exerciseDropdown = document.getElementById('exercise');
     const newOption = document.createElement('option');
     newOption.value = responseData.exerciseId;
     newOption.textContent = exerciseData.title || exerciseData.storyTitle || exerciseData.listeningTitle || exerciseData.topicTitle;
     exerciseDropdown.appendChild(newOption);
+    return responseData;
 }

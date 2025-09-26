@@ -70,6 +70,8 @@ title: Assignment
                 <button type="button" onclick="saveCustomExercise()">Create Custom Exercise</button>
             </div>
         </div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate">
         <label for="dueDate">Due Date:</label>
         <input type="date" id="dueDate" name="dueDate">
         <label for="instructions">Instructions:</label>
