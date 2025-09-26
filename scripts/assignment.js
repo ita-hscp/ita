@@ -136,7 +136,7 @@ async function fetchExercises() {
         { id: 3, title: 'பொங்கல்', description: 'பொங்கல்', exerciseId: 103, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
         { id: 4, title: 'தமிழ் மொழி', description: 'தமிழ் மொழி', exerciseId: 104, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} }
     ];
-       
+       //{"content":{"intro":["கேட்டல்‌ கருத்தறிதல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","வெகுளாமை' என்ற திருக்குறள்‌ கதையைக்‌ கீழே உள்ள லிங்க்கில்‌ பார்க்கவும்‌."],"conversations":["நடுவர் என்ன தீர்ப்பு வழங்கினார் ?","வெகுளாமை என்றால் என்ன ?","இந்த கதையில் இருந்து நீ என்ன தெரிந்து கொண்டாய் ?"],"words":["வெகுளாமை"],"test":[],"week":{"$numberInt":"2"},"class":"HSCP2","link":"https://www.youtube.com/embed/4j1kypXSaew?si=0utNCHP4zPlAW-uB"},"title":"வெகுளாமை","type":"கேட்டல்‌ கருத்தறிதல் பயிற்சி","class":"HSCP2","description":"கேட்டல்‌ கருத்தறிதல்","status":"created","updatedAt":{"$date":{"$numberLong":"1756185966887"}},"createdAt":{"$date":{"$numberLong":"1756185966887"}},"number":"2"}  
     }
     const data = await response.json();
     return data.exercises;
@@ -206,41 +206,62 @@ async function showCustomExercise() {
 }
 
 
-async function addCustomExercise() {
+async function saveCustomExercise() {
     const exerciseType = document.getElementById('assignmentType').value;
-    const userId = localStorage.getItem('userId'); // Retrieve userId from local
-    console.log('Creating custom exercise for userId:', userId);
+    const classId = document.getElementById('class').value;
+    console.log('Creating custom exercise for classId:', classId);
     const exerciseData = {};
+    const intro=[];
+    if(exerciseType === 'உரையாடல் பயிற்சி'){
+        intro.push("தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்");
+        intro.push(`இன்றைய தலைப்பு "${document.getElementById('title').value}"`);
+    } else if(exerciseType === 'கதை சொல்லுதல் பயிற்சி'){
+        intro.push("கதை சொல்லுதல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்");
+        intro.push(`இன்றைய தலைப்பு "${document.getElementById('title').value}"`);
+    } else if(exerciseType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி'){
+        intro.push("கேட்டல்‌ கருத்தறிதல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்");
+        intro.push(`"${document.getElementById('title').value}"  கீழே உள்ள லிங்க்கில்‌ பார்க்கவும்‌.`);
+    } else if(exerciseType === 'தலைப்பு பயிற்சி'){
+        intro.push("தலைப்பு பயிற்சி . முக்கிய சொற்களை பயன்படுத்தி உரையாடவும்");
+        intro.push(`இன்றைய தலைப்பு "${document.getElementById('title').value}"`);
+    }
+    exerciseData.title = document.getElementById('title').value;
+    exerciseData.description = document.getElementById('description').value;
+    exerciseData.intro = intro;
     if (exerciseType === 'உரையாடல் பயிற்சி') {
-        exerciseData.title = document.getElementById('title').value;
         const questionInputs = document.querySelectorAll('#dialogueFields input[name="questions"]');
         exerciseData.questions = Array.from(questionInputs).map(input => input.value);
     } else if (exerciseType === 'கதை சொல்லுதல் பயிற்சி') {
-        exerciseData.storyTitle = document.getElementById('storyTitle').value;
         exerciseData.storyPrompt = document.getElementById('storyPrompt').value;
     } else if (exerciseType === 'கேட்டல்‌ கருத்தறிதல் பயிற்சி') {
-        exerciseData.listeningTitle = document.getElementById('listeningTitle').value;
         exerciseData.listeningAudioURL = document.getElementById('listeningAudioURL').value;
         const listeningQuestionInputs = document.querySelectorAll('#listeningFields input[name="listeningQuestions"]');
         exerciseData.listeningQuestions = Array.from(listeningQuestionInputs).map(input => input.value);
     } else if (exerciseType === 'தலைப்பு பயிற்சி') {
-        exerciseData.topicTitle = document.getElementById('topicTitle').value;
-        const topicKeywordInputs = document.querySelectorAll('#topicFields input[name="topicKeywords"]');
+        const topicKeywordInputs = document.querySelectorAll('#topicFields input[name="keywords"]');
         exerciseData.topicKeywords = Array.from(topicKeywordInputs).map(input => input.value);
     }
     console.log('Exercise Data:', exerciseData);
     // Send the data to the backend
-    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_custom_exercise', {
+    const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/create_exercise', {
         method: 'POST',
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            userId: userId,
-            exerciseType: exerciseType,
-            exerciseData: exerciseData
-            // Include other necessary fiel ds from the form
+            "class": classId,
+            "type": exerciseType,
+            'title': exerciseData.title ,
+            'description': exerciseData.description || '',
+            'content': {
+                "intro": exerciseData.intro || [],  
+                "conversations": exerciseData.questions || [],
+                "url": exerciseData.listeningAudioURL || '',
+                "keywords": exerciseData.topicKeywords || [],
+                "questions": exerciseData.listeningQuestions || []
+            }
+            // Include other necessary fields from the form
         })
     });
     if (response.status === 401) {
@@ -252,5 +273,11 @@ async function addCustomExercise() {
         return {};
     }
     const responseData = await response.json();
-    return responseData;
+    return responseData;//{"message":"Form saved successfully","exerciseId":"ec88eba4-8dbf-49e3-80a9-0fe846df6b10"}
+    // add the exerciseId to the exercise dropdown and value should be the exerciseId, text should be the title or prompt
+    const exerciseDropdown = document.getElementById('exercise');
+    const newOption = document.createElement('option');
+    newOption.value = responseData.exerciseId;
+    newOption.textContent = exerciseData.title || exerciseData.storyTitle || exerciseData.listeningTitle || exerciseData.topicTitle;
+    exerciseDropdown.appendChild(newOption);
 }

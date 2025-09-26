@@ -16,6 +16,13 @@ title: Assignment
         <option value="4">4</option>
         <option value="5">5</option>
         </select>
+        <label for="class">Class:</label>
+        <select id="class" name="class">
+        <option value="HSCP1">HSCP1</option>
+        <option value="HSCP2">HSCP2</option>
+        <option value="HSCP3">HSCP3</option>
+        <option value="HSCP4">HSCP4</option
+        </select>
         <label for="assignmentType">Assignment Type:</label>
         <select id="assignmentType" name="assignmentType">
         <option value="உரையாடல் பயிற்சி">உரையாடல் பயிற்சி</option>
@@ -33,13 +40,15 @@ title: Assignment
         <div id="exercisePreview">
             <div id="customExerciseSection" style="display:none;">
                 <h2>Create Custom Exercise</h2>
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title"><br><br>
+                <label for="description">Description:</label><br>
+                <textarea id="description" name="description" rows="4" cols="50"></
             <!-- Dialogue practice fields -->
                 <div id="dialogueFields" style="display:none;">
-                    <label for="title">Title:</label><br>
-                    <input type="text" id="title" name="title"><br><br>
-                    <label for="questions">Questions (press button to add more):</label><br>
-                    <input type="text" id="questions" name="questions"><br><br>
-                    <button type="button" onclick="addQuestionField()">Add Question</button><br><br>
+                    <label for="intro">Introduction (optional):</label><br>
+                    <textarea id="intro" name="intro" rows="4" cols="50"></textarea><br><br>
+                    <input type=text id="questions" name="questions" placeholder="Enter a question"><button type="button" onclick="addDialogueField()">+</button><br><br>
                 </div>
                 <!-- Storytelling practice fields -->
                 <div id="storyFields" style="display:none;">
@@ -50,20 +59,13 @@ title: Assignment
                 </div>
                 <!-- Listening comprehension practice fields -->
                 <div id="listeningFields" style="display:none;">
-                    <label for="listeningTitle">Listening Title:</label><br>
-                    <input type="text" id="listeningTitle" name="listeningTitle"><br><br>
                     <label for="listeningAudioURL">YouTube Embed URL:</label><br>
                     <input type="text" id="listeningAudioURL" name="listeningAudioURL"><br><br>
-                    <label for="listeningQuestions">Questions (press button to add more):</label><br>
-                    <button type="button" onclick="addListeningQuestionField()">Add Question</button><br><br>
+                    <input type=text id="questions" name="listeningQuestions" placeholder="Enter a question"><button type="button" onclick="addListeningQuestionField()">+</button><br><br>
                 </div>
                 <!-- Topic practice fields -->
                 <div id="topicFields" style="display:none;">
-                    <label for="topicTitle">Topic Title:</label><br>
-                    <input type="text" id="topicTitle" name="topicTitle"><br><br>
-                    <label for="topicKeywords">Keywords (press button to add more):</label><br>
-                    <input type="text" id="topicKeywords" name="topicKeywords"><br><br>
-                    <button type="button" onclick="addTopicKeywordField()">Add Keyword</button><br><br>
+                    <input type=text id="keyword" name="keywords" placeholder="Enter keyword"><button type="button" onclick="addTopicQuestionField()">+</button><br><br>
                 </div>
                 <button type="button" onclick="saveCustomExercise()">Create Custom Exercise</button>
             </div>
