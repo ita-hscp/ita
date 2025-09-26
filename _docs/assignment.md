@@ -65,7 +65,7 @@ title: Assignment
                 </div>
                 <!-- Topic practice fields -->
                 <div id="topicFields" style="display:none;">
-                    <input type=text id="keyword" name="keywords" placeholder="Enter keyword"><button type="button" onclick="addTopicQuestionField()">+</button><br><br>
+                    <input type=text id="keyword" name="keywords" placeholder="Enter keyword"><button type="button" onclick="addTopicKeywordField()">+</button><br><br>
                 </div>
                 <button type="button" onclick="saveCustomExercise()">Create Custom Exercise</button>
             </div>
