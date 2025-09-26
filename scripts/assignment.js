@@ -19,6 +19,7 @@ async function createAssignment() {
         description: formData.get('description'),
         type: formData.get('assignmentType'),
         week: formData.get('week'),
+        startDate: formData.get('startDate'),
         dueDate: formData.get('dueDate'),
         status: 'assigned',
         exerciseId: formData.get('exercise')
