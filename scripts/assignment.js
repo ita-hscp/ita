@@ -127,7 +127,7 @@ async function addTopicKeywordField() {
     const container = document.getElementById('topicFields');
     const input = document.createElement('input');
     input.type = 'text';
-    input.name = 'topicKeywords';
+    input.name = 'keywords';
     container.appendChild(input);
     const button = document.createElement('button');
     button.type = 'button';
