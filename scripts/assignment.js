@@ -1,15 +1,5 @@
 let exercises= [];
 let detailedAssignments = [];
-/*assignment_data = {
-  "type": "கேட்டல்‌ கருத்தறிதல் பயிற்சி",
-  "week": "5",
-  "exerciseId": json.loads(resp_ex.text)['exerciseId'],
-  "title": "மக்கட்பேறு",
-  'exerciseNumber':5,
-  "startDate": "2025-09-22",
-  "dueDate": "2025-09-29"
-}*/
-
 async function createAssignment() {
     const formData = new FormData(document.getElementById('assignmentForm'));
     const assignment = {
@@ -17,7 +7,6 @@ async function createAssignment() {
         description: formData.get('description'),
         type: formData.get('assignmentType'),
         week: formData.get('week'),
-        startDate: formData.get('startDate'),
         dueDate: formData.get('dueDate'),
         status: 'assigned',
         exerciseId: formData.get('exercise')
@@ -27,7 +16,8 @@ async function createAssignment() {
         headers: {
             'Authorization': sessionStorage.getItem('sessionToken'),
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(assignment)
     });
     if (response.status === 401) {
         // Redirect to login page if not authenticated
@@ -40,57 +30,10 @@ async function createAssignment() {
     const responseData = await response.json();
     return responseData;
 }
-window.onload = function () {
-    let selectAssignmentType = document.getElementById('assignmentType');
-    //     <select id="assignmentType" name="assignmentType"> if assignment_type is selected, call getExercisesForAssignmentType in the backend
-    selectAssignmentType.addEventListener('change', async function () {
-        const selectedType = this.value;
-        exercises = await getExercisesForAssignmentType(selectedType);
-        const exerciseSelect = document.getElementById('exercise');
-        exerciseSelect.innerHTML = ''; // Clear previous options
-        exercises.forEach(exercise => {
-            const option = document.createElement('option');
-            option.value = exercise.id;
-            option.textContent = exercise.title;
-            exerciseSelect.appendChild(option);
-        });
-    });
-};
-/**
- *  sample exercise response
- *  {{"content":{"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]},"title":"ஓலைச்சுவடிகள்‌","type":"உரையாடல் பயிற்சி","class":"HSCP2","description":"உரையாடல்","status":"created","updatedAt":{"$date":{"$numberLong":"1755737465762"}},"createdAt":{"$date":{"$numberLong":"1755737465762"}}}} assignmentType 
- * @param {*} assignmentType
- * @returns array of exercises for that assignment type
- */
-async function getExercisesForAssignmentType(assignmentType) {
-    const response = await fetch(`https://infinite-sands-52519-06605f47cb30.herokuapp.com/exercises_by_type?type=${assignmentType}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': sessionStorage.getItem('sessionToken'),
-            'Content-Type': 'application/json'
-        }
-    });
-    if (response.status === 401) {
-        // Redirect to login page if not authenticated
-        window.location.href = "https://ita-hscp.github.io/ita/Login"; // Replace with your actual login URL
-        return;
-    }
-    //Mock response for testing
-    return [
-        { id: 1, title: 'வாஸ்கோடகாமா', description: 'வாஸ்கோடகாமா ', exerciseId: 101, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 2, title: 'கொல்லாமை', description: 'கொல்லாமை” என்ற திருக்குறள்‌ கதையைக்‌ கேட்டு, அதைப்‌ பற்றி‌ உங்கள்‌ கருத்துக்களைப்‌ பகிரவும்.', exerciseId: 102, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 3, title: 'பொங்கல்', description: 'பொங்கல்', exerciseId: 103, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 4, title: 'தமிழ் மொழி', description: 'தமிழ் மொழி', exerciseId: 104, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} }
-    ];
-    if (!response.ok) {
-        return [];
-    }
-    const responseData = await response.json();
-    return responseData.exercises || [];
-}
+
 async function addQuestionField() {
-    const container = document.getElementById('dialogueFields');//<div id="dialogueFields" style="display:none;"><input type="text" id="intro" name="intro" placeholder="Introduction (optional)"><br><br>
-    const input = document.createElement('input');//<input type=text id="questions" name="questions" placeholder="Enter a question"><button type="button" onclick="addDialogueField()">+</button><br><br> next to questions
+    const container = document.getElementById('dialogueFields');
+    const input = document.createElement('input');
     input.type = 'text';
     input.name = 'questions';
     const lastInput = container.querySelector('input[name="questions"]:last-of-type');
@@ -180,20 +123,13 @@ async function fetchExercises() {
         return;
         }
 
-        //[{"id":"bd721022-7253-4831-9736-1c76bbe6700e","content":{"intro":["தமிழ் உரையாடல் தலைப்பு பயிற்சி?","தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["நீ எந்த பள்ளியில் படிக்கிறாய்","ஓலைச் சுவடினா?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]},"title":"ஓலைச்சுவடிகள்‌","type":"உரையாடல் பயிற்சி","class":"HSCP1","description":"உரையாடல்","status":"created","updatedAt":"2025-08-22T16:09:23.935Z","createdAt":"2025-08-22T16:09:23.935Z"},{"_id":"68d610167479c02e05d0a6c2","id":"e295292c-3b34-4ec1-a5f2-d5c5c2471056","userId":null,"content":{"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"tes1\""],"conversations":["ques1","ques2","ques3","ques4"],"url":"","keywords":[],"questions":[]},"title":"tes1","type":"உரையாடல் பயிற்சி","class":"HSCP1","description":"description1","status":"created","number":1,"updatedAt":"2025-09-26T04:01:26.641Z","createdAt":"2025-09-26T04:01:26.641Z"}]
-
     if (!response.ok) {
         //mock response  for testing
          return [
-        { id: 1, title: 'வாஸ்கோடகாமா', description: 'வாஸ்கோடகாமா ', exerciseId: 101, content: {"intro":["தமிழ் உரையாடல் தலைப்பு பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 2, title: 'கொல்லாமை', description: 'கொல்லாமை” என்ற திருக்குறள்‌ கதையைக்‌ கேட்டு, அதைப்‌ பற்றி‌ உங்கள்‌ கருத்துக்களைப்‌ பகிரவும்.', exerciseId: 102, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 3, title: 'பொங்கல்', description: 'பொங்கல்', exerciseId: 103, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} },
-        { id: 4, title: 'தமிழ் மொழி', description: 'தமிழ் மொழி', exerciseId: 104, content: {"intro":["தமிழ் உரையாடல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","இன்றைய தலைப்பு \"ஓலைச்சுவடிகள்‌\""],"conversations":["உன் பெயர் என்ன ?","ஓலைச்சுவடிகள்‌ என்றால்‌ என்ன?","ஓலைச்சுவடிகள்‌ எந்த காலத்தில்‌ வந்தது?","ஓலைச்சுவடிகள்‌ எவற்றையெல்லாம்‌ உள்ளடக்கியுள்ளன?","ஓலைச்சுவடிகளில்‌ உள்ள எழுத்துக்களின்‌ பெயர்‌ என்ன? ","பனையோலைச்‌ சுவடிகளில்‌ எப்படி எழுத்துகளை எழுதுவார்கள்‌ என்று உனக்குத்‌ தெரியுமா?","ஓலைச்சுவடிகளை எப்படிப்‌ பாதுகாத்தார்கள்‌?","அந்தக்‌ காலத்தில்‌ மக்கள்‌ குறிப்புகளை எதில்‌ எழுதினார்கள்‌? "," எந்த மரத்தின்‌ இலையை எழுதப்‌ பயன்படுத்தினார்கள்‌?","அந்தகாலத்தில்‌ ஏன்‌ பனை ஓலைகளில்‌ மையால்‌ எழுதவில்லை ?"],"words":["ஓலைச்சுவடிகள்‌"],"test":[]} }
-    ];
-       //{"content":{"intro":["கேட்டல்‌ கருத்தறிதல் பயிற்சி . முழு வாக்கியங்களாக பேசவும்","வெகுளாமை' என்ற திருக்குறள்‌ கதையைக்‌ கீழே உள்ள லிங்க்கில்‌ பார்க்கவும்‌."],"conversations":["நடுவர் என்ன தீர்ப்பு வழங்கினார் ?","வெகுளாமை என்றால் என்ன ?","இந்த கதையில் இருந்து நீ என்ன தெரிந்து கொண்டாய் ?"],"words":["வெகுளாமை"],"test":[],"week":{"$numberInt":"2"},"class":"HSCP2","link":"https://www.youtube.com/embed/4j1kypXSaew?si=0utNCHP4zPlAW-uB"},"title":"வெகுளாமை","type":"கேட்டல்‌ கருத்தறிதல் பயிற்சி","class":"HSCP2","description":"கேட்டல்‌ கருத்தறிதல்","status":"created","updatedAt":{"$date":{"$numberLong":"1756185966887"}},"createdAt":{"$date":{"$numberLong":"1756185966887"}},"number":"2"}  
+         ];
     }
     const data = await response.json();
-    return data.exercises;
+    return data;
 }
 
 async function previewExercise() {
