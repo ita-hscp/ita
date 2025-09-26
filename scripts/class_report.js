@@ -12,6 +12,17 @@ const audioMap = new Map();
 let selectedIndex = null;
 let assignmentType =null
 const tableBody = document.querySelector("#jsonTable tbody");
+window.onload = function () {
+    const weekFilter = document.getElementById("weekFilter");
+    // Populate week filter options dynamically
+    for (let i = 1; i <= 40; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        weekFilter.appendChild(option);
+    }
+}
+
 async function getClassReport(reportQuery) {
     const apiUrl = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/report';
     // Fetch the json
