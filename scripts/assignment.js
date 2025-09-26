@@ -1,5 +1,17 @@
 let exercises= [];
 let detailedAssignments = [];
+window.onload = function() {
+    // Get week 1 to 40 
+    const weeks = Array.from({ length: 40 }, (_, i) => i + 1);
+    // Populate the week dropdown
+    const weekSelect = document.getElementById('week');
+    weeks.forEach(week => {
+        const option = document.createElement('option');
+        option.value = week;
+        option.textContent = week;
+        weekSelect.appendChild(option);
+    });
+}
 async function createAssignment() {
     const formData = new FormData(document.getElementById('assignmentForm'));
     const assignment = {
