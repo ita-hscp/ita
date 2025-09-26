@@ -75,17 +75,10 @@ window.addEventListener("load", async (event) => {
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
         let tasks = await getAllPendingTasks("கலந்துரையாடல்");
-        //Mock data for testing
-        tasks = [
-            { week: "5", exerciseId: "5" },
-            { week: "6", exerciseId: "6" },
-            { week: "7", exerciseId: "7" },
-            { week: "8", exerciseId: "8" },
-            { week: "9", exerciseId: "9" },
-            { week: "10", exerciseId: "10" },
-            { week: "11", exerciseId: "11" },
-            { week: "12", exerciseId: "12" }
-        ];
+        //Mock data for testing range 1 to 40
+            if (!tasks || tasks.length === 0)
+                tasks = Array.from({ length: 40 }, (_, i) => ({ week: (i + 1).toString(), exerciseId: (i + 1).toString() }));
+        
         const dropdown = document.getElementById("weeks");
         // Add week numbers to the dropdown from tasks week
         if (tasks && tasks.length > 0) {
