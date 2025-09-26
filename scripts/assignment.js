@@ -89,7 +89,6 @@ async function addQuestionField() {
     }
     // add input box next to last input box
     container.appendChild(input);
-    container.appendChild(document.createElement('br'));
     const addButton = document.createElement('button');
     addButton.type = 'button';
     addButton.textContent = '+';
@@ -103,10 +102,9 @@ async function addQuestionField() {
 }
 
 function removeQuestionField(event) {
-    const container = document.getElementById('dialogueFields');
-    event.target.previousSibling.remove(); // Remove the input field    
-    container.querySelector('br:last-of-type').remove();
-    container.querySelector('button:last-of-type').remove(); // Remove the remove button
+    event.target.previousSibling.remove();// remove the add button
+    event.target.previousSibling.remove();// remove the input box
+    event.target.remove(); // remove the remove button
 }
 async function addListeningQuestionField() {
     const container = document.getElementById('listeningFields');
@@ -119,6 +117,11 @@ async function addListeningQuestionField() {
     button.textContent = '+';
     button.onclick = addListeningQuestionField;
     container.appendChild(button);
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = '-';
+    removeButton.onclick = removeQuestionField;
+    container.appendChild(removeButton);
 }
 async function addTopicKeywordField() {
     const container = document.getElementById('topicFields');
@@ -131,6 +134,11 @@ async function addTopicKeywordField() {
     button.textContent = '+';
     button.onclick = addTopicKeywordField;
     container.appendChild(button);
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = '-';
+    removeButton.onclick = removeQuestionField;
+    container.appendChild(removeButton);
 }
 async function loadExercises() {
     const assignmentType = document.getElementById('assignmentType').value;
