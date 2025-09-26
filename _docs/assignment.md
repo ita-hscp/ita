@@ -43,7 +43,7 @@ title: Assignment
                 <label for="title">Title:</label><br>
                 <input type="text" id="title" name="title"><br><br>
                 <label for="description">Description:</label><br>
-                <textarea id="description" name="description" rows="4" cols="50"></
+                <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
             <!-- Dialogue practice fields -->
                 <div id="dialogueFields" style="display:none;">
                     <label for="intro">Introduction (optional):</label><br>
