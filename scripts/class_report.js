@@ -302,9 +302,9 @@ function prepareAndPlayAudio() {
                 type: 'bot'
             });
         }
-        if (segment.userBlob) {
+        if (segment.userBlob || segment.blob) {
             audioQueue.push({
-                blob: segment.userBlob,
+                blob: segment.userBlob || segment.blob,
                 type: 'user'
             });
         }
