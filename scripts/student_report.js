@@ -70,12 +70,13 @@ async function loadReport() {
             const row = document.createElement("tr");
             row.innerHTML = `
             <td>${item.week}</td>
+            <td>${item.assignmentType}</td>
             <td>${item.status}</td>
             <td>${item.score}</td>
             <td>${item.comments}</td>
             <td>${item.completionDate}</td>
             <td>${item.dueDate}</td>
-            <td><button class="play-btn" id="${item.assignmentId}" data-id="${item.fileId}">▶ Play</button></td>
+            <td><button class="play-btn" id="${item.exerciseId}" data-id="${item.fileId}">▶ Play</button></td>
         `;
             tableBody.appendChild(row);
         });

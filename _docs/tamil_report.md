@@ -11,7 +11,7 @@ title: Student Report
 In Progress
 <br>
 
- <label for="weekFilter">Filter by Week:</label>
+ <!-- <label for="weekFilter">Filter by Week:</label>
     <select id="weekFilter">
         <option>1</option>
         <option>2</option>
@@ -26,7 +26,7 @@ In Progress
         <option value="கதை சொல்லுதல் பயிற்சி">கதை சொல்லுதல் பயிற்சி</option>
         <option value="கேட்டல்‌ கருத்தறிதல் பயிற்சி">கேட்டல்‌ கருத்தறிதல் பயிற்சி</option>
         <option value="அனைத்து">அனைத்து</option>
-    </select>
+    </select> -->
     
 <button id="loadReport" onclick="loadReport()">Load Report</button>
 
@@ -35,7 +35,8 @@ In Progress
         <thead>
             <tr>
                 <th>Week</th>
-                 <th>Status</th>
+                <th>Assignment Type</th>
+                <th>Status</th>
                 <th>Score</th>
                 <th>Comments</th>
                 <th>Completion Date</th>
