@@ -91,7 +91,7 @@ async function addAudio(reportData, query) {
             let audioListJson = audioMap.get(audioId);
             if (!audioListJson) {
                 const item = reportData.filter(item => item.fileId == audioId)[0]
-                item['assignmentType'] = assignmentType;
+                item['assignmentType'] = item['assignmentType'] || assignmentType;
                 const response = await getAudioFromBackEnd(item);
                 if (response.redirect) {
                     window.location.href = response.url;
