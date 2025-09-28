@@ -93,7 +93,11 @@ function fetchAssignments(callback) {
                     const li = document.createElement("li");
                     li.appendChild(link);
                     ul_main_page.appendChild(li);
-                }); 
+                });
+                // For any queries/discussion, please use chat in <a href="https://ita-hscp.github.io/ita/tamil_discussion_2/">this link</a> in Tamil.
+                const queryInfo = document.createElement("li");
+                queryInfo.innerHTML = `ஏதேனும் சந்தேகம்/விவாதங்களுக்கு, தயவுசெய்து இந்த <a style="color: #1209ee;" href="https://ita-hscp.github.io/ita/tamil_discussion_2/">இணைப்பை பயன்படுத்தவும்.</a>`;
+                ul_main_page.appendChild(queryInfo);
             }else {
                 ul_main_page.innerHTML = data.assignments || "<li>No assignments available.</li>";
             }
