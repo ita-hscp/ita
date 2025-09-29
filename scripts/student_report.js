@@ -62,7 +62,7 @@ async function loadReport() {
     }
     const tableBody = document.querySelector("#jsonTable tbody");
     const assignmentType = document.getElementById("assignmentTypeFilter")
-    query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
+    // query['assignmentType'] = assignmentType.options[assignmentType.selectedIndex].value;
     const jsonData = await getClassReport(query);
     if (jsonData?.report) {
         tableBody.innerHTML = "";
