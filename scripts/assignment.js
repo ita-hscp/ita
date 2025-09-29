@@ -276,7 +276,7 @@ async function saveCustomExercise() {
             'content': {
                 "intro": exerciseData.intro || [],  
                 "conversations": exerciseData.questions || [],
-                "url": exerciseData.listeningAudioURL || '',
+                "link": exerciseData.listeningAudioURL || '',
                 "keywords": exerciseData.topicKeywords || []
             }
             // Include other necessary fields from the form
