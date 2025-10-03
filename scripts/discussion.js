@@ -126,6 +126,17 @@ window.addEventListener("load", async (event) => {
       });
         }
     }
+  const input = document.getElementById("userInput");
+  input.addEventListener("beforeinput", function (e) {
+    // Allow only deletion-related input
+    if (e.inputType !== "deleteContentBackward" && 
+        e.inputType !== "deleteContentForward") {
+      e.preventDefault();
+    }
+  });
+  // Also prevent pasting or drag-drop
+  input.addEventListener("paste", e => e.preventDefault());
+  input.addEventListener("drop", e => e.preventDefault());
 });
 
 async function getAudio(text) {
