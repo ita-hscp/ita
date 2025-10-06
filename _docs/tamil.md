@@ -5,13 +5,38 @@ title: தமிழ் பேச்சு
 
 ---
 <script src="{{ site.baseurl }}/scripts/track.js">tracker();</script>
-
+<!-- Transliteration and Speech Synthesis Section  using https://inputtools.google.com/request?text=vanakkam&itc=ta-t-i0-und&oe=utf-8   -->
 <h1>உரை ->  பேச்சு</h1>
+ <label for="text-to-speak">உரை (தமிழில்):</label><br>
 <textarea id="text-to-speak" rows="10" cols="50" placeholder="இது ஒரு தமிழ் உரைநடை மாற்றி. உதாரணம்: நான் இன்னைக்கு தமிழ் ஸ்கூலுக்கு போனேன். உங்கள் உரையை இங்கு பதிவு செய்யவும்..  neengal ipppadiuym tamizhai type seiyalaam  "></textarea><br>
 <!-- <button onclick="speakText()">Speak</button> -->
 <button id="playAudioBtn">Fetch and Play Audio</button>
 <audio id="audioPlayer" controls></audio>
 
+<script>
+    // on enter in textarea, convert the word if it is in english to tamil using google input tools api
+    document.getElementById('text-to-speak').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent newline insertion
+            word = this.value.trim();
+            if(word.length === 0){
+                return;
+            }
+            const url = `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=ta-t-i0-und&oe=utf-8`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data[0] === 'SUCCESS') {
+                        const tamilText = data[1][0][1][0];
+                        this.value = tamilText; // Replace the textarea content with Tamil text
+                    } else {
+                        console.error('Error fetching transliteration:', data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
 
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
 <h1>தமிழ் பேச்சு -> உரைநடை மாற்றி</h1>
