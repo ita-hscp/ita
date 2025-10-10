@@ -24,7 +24,14 @@ title: "தலைப்பு பயிற்சி"
             <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
             <p type="text" id="topic-score"> Words used: 0</p>
         </div>
+        <div id="recordingIndicator" style="display: none;">
+            <p style="color: red; font-weight: bold;" id="recordingStatus"> Recording</p>
+            <p> Time Elapsed: <span id="elapsedTime">0</span> seconds</p>
+        </div>
+        <div id="audioPreview" style="display: none;">
+        </div>
         <button id="story-start-btn" disabled>record</button>
+        <button id="story-pause-btn" disabled>pause</button>
         <button id="story-clear-btn" >clear</button>
         <button id="story-send-btn" disabled>save</button>
         <audio id="audioPlayer" controls></audio>

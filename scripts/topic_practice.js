@@ -10,8 +10,12 @@ let recordingNumber = 0;
 let base64AudioList = [];
 const saveButton = document.getElementById("story-saveButton");
 const clearButton = document.getElementById("story-clear-btn");
+const pauseButton = document.getElementById("story-pause-btn");
 const startBtn = document.getElementById('story-start-btn');
 const sendBtn = document.getElementById('story-send-btn');
+const recordingIndicator = document.getElementById('recordingIndicator');
+const recordingStatus = document.getElementById('recordingStatus');
+const elapsedTime = document.getElementById('elapsedTime');
 const exerciseStartButton = document.getElementById('exercise-start-btn');
 let clearButtonPressed = false;
 let topicTranscription = "";
@@ -143,7 +147,7 @@ async function getStoryExercise() {
     sendBtn.disabled = true;
     startBtn.disabled = true;
     saveButton.disabled = true;
-    requiredDuration = workSheet.duration ? workSheet.duration * 60 : 5 * 60; // in seconds
+    requiredDuration = workSheet.duration ? (workSheet.duration * 60) : (5 * 60); // in seconds
     renderKeyWords();
 }
 
@@ -185,6 +189,8 @@ exerciseStartButton.addEventListener('click', async () => {
     sendBtn.disabled = true;
     startBtn.textContent = 'record';
     this.style.display = 'none';
+    recordingIndicator.style.display = 'block';
+    recordingStatus.textContent = "Press record to start";
 });
 
 saveButton.addEventListener("click", async (event) => {
@@ -339,6 +345,30 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
+        recordingIndicator.style.display = 'block';
+        recordingStatus.textContent = "Recording";
+        let secondsElapsed = 0;
+        elapsedTime.textContent = secondsElapsed;
+        const timer = setInterval(() => {
+            if (clearButtonPressed) {
+                clearInterval(timer);
+                elapsedTime.textContent = '0';
+                return;
+            }
+            secondsElapsed++;
+            elapsedTime.textContent = secondsElapsed;
+            if (secondsElapsed >= requiredDuration) {
+                clearInterval(timer);
+                if (!sendBtn.disabled) {
+                    sendBtn.click();
+                }
+                startBtn.disabled = true;
+                sendBtn.disabled = true;
+                startBtn.textContent = 'record';
+                recordingStatus.textContent = "Recording complete";
+                recordingIndicator.style.display = 'none';
+            }
+        }, 1000);
         try {
             stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const options = {
@@ -392,6 +422,28 @@ if (!('webkitSpeechRecognition' in window)) {
         }
         checkInputForKeyWords(topicTranscription);
         await clearWaveform();
+    });
+
+    pauseButton.addEventListener('click', async () => {
+        if (recording) {
+            // Pause recording
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.pause();
+                recognition.stop();
+                pauseButton.textContent = "Resume";
+                recordingStatus.textContent = "Paused";
+                recording = false;
+            }
+        } else {
+            // Resume recording
+            if (mediaRecorder && mediaRecorder.state === "paused") {
+                mediaRecorder.resume();
+                await recognition.start();
+                pauseButton.textContent = "Pause";
+                recordingStatus.textContent = "Recording";
+                recording = true;
+            }
+        }
     });
 
 }
