@@ -8,11 +8,10 @@ let audioBlob;
 let audioBlobList = [];
 let recordingNumber = 0;
 let base64AudioList = [];
-const saveButton = document.getElementById("story-saveButton");
 const clearButton = document.getElementById("story-clear-btn");
 const pauseButton = document.getElementById("story-pause-btn");
 const startBtn = document.getElementById('story-start-btn');
-const sendBtn = document.getElementById('story-send-btn');
+const saveButton = document.getElementById('story-saveButton');
 const recordingIndicator = document.getElementById('recordingIndicator');
 const recordingStatus = document.getElementById('recordingStatus');
 const elapsedTime = document.getElementById('elapsedTime');
@@ -22,7 +21,7 @@ let topicTranscription = "";
 let topicTranscriptionsList = [];
 const canvas = document.getElementById('waveform');
 const ctx = canvas.getContext('2d');
-let requiredDuration = 5 * 60; // 5 minutes in seconds
+let requiredDuration = 1 * 60; // 1 minute in seconds
 let exerciseId = null;
 let audioCtx, analyser, source, stream, recorder;
 let dataArray, bufferLength, rafId;
@@ -103,12 +102,11 @@ function checkInputForKeyWords(inputText) {
 
 
 window.addEventListener("load", async (event) => {
-    sendBtn.disabled = true;
+    saveButton.disabled = true;
     startBtn.disabled = true;
     exerciseStartButton.disabled = true;
     clearButton.disabled = true
-    saveButton.disabled = true;
-
+    pauseButton.disabled = true;
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
         let tasks = await getAllPendingTasks("தலைப்பு பயிற்சி");
@@ -145,9 +143,8 @@ async function getStoryExercise() {
     base64AudioList = [];
     workSheet['week'] = selectedText;
     exerciseStartButton.disabled = false;
-    sendBtn.disabled = true;
-    startBtn.disabled = true;
     saveButton.disabled = true;
+    startBtn.disabled = true;
     requiredDuration = workSheet.duration ? (workSheet.duration * 60) : (5 * 60); // in seconds
     renderKeyWords();
 }
@@ -176,7 +173,7 @@ async function sendMessage() {
     }
     startBtn.textContent = 'record';
     startBtn.disabled = false;
-    sendBtn.disabled = true;
+    saveButton.disabled = true;
     if (topicTranscription && topicTranscription.length > 0) {
         checkInputForKeyWords(topicTranscription);
         topicTranscriptionsList.push(topicTranscription);
@@ -187,7 +184,7 @@ async function sendMessage() {
 exerciseStartButton.addEventListener('click', async () => {
     exerciseStartButton.disabled = true;
     startBtn.disabled = false;
-    sendBtn.disabled = true;
+    saveButton.disabled = true;
     startBtn.textContent = 'record';
     this.style.display = 'none';
     recordingIndicator.style.display = 'block';
@@ -327,8 +324,7 @@ if (!('webkitSpeechRecognition' in window)) {
         audioChunks = []
         // Start the speech recognition
         startBtn.disabled = false;
-        sendBtn.disabled = true;
-        startBtn.textContent = 'record';
+        saveButton.disabled = true;
         await clearWaveform();
     });
 
@@ -344,7 +340,6 @@ if (!('webkitSpeechRecognition' in window)) {
         clearButtonPressed = false;
         await recognition.start(); // Start the speech recognition
         startBtn.disabled = true;
-        sendBtn.disabled = false;
         startBtn.textContent = 'listening';
         pauseButton.disabled = false;
         recording = true;
@@ -363,11 +358,15 @@ if (!('webkitSpeechRecognition' in window)) {
             elapsedTime.textContent = secondsElapsed;
             if (secondsElapsed >= requiredDuration) {
                 clearInterval(timer);
-                if (!sendBtn.disabled) {
-                    sendBtn.click();
+                elapsedTime.textContent = requiredDuration;
+                recognition.stop();
+                if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                    mediaRecorder.stop();
+                    console.log('Audio recording stopped automatically after reaching required duration');
                 }
+                saveButton.disabled = false;
+                saveButton.textContent = 'Ready to Upload';
                 startBtn.disabled = true;
-                sendBtn.disabled = true;
                 startBtn.textContent = 'record';
                 recordingStatus.textContent = "Recording complete";
                 recordingIndicator.style.display = 'none';
@@ -412,21 +411,26 @@ if (!('webkitSpeechRecognition' in window)) {
             console.error('Error accessing microphone:', error);
         }
     });
-    sendBtn.addEventListener('click', async () => {
-        sendBtn.disabled = true;
-        await recognition.stop(); // Stop the speech recognition
-        // startBtn.disabled = false;
-        if (mediaRecorder) {
-            await mediaRecorder.stop();
-            console.log('Audio recording stopped');
-        }
-        startBtn.textContent = 'processing...';
-        if (!saveButton.disabled) {
-            startBtn.disabled = true
-        }
-        checkInputForKeyWords(topicTranscription);
-        await clearWaveform();
-    });
+    
+    // /**
+    //  * Handle send button click - stop recording and recognition
+    //  * and process the recorded audio and transcription
+    //  */
+    // sendBtn.addEventListener('click', async () => {
+    //     sendBtn.disabled = true;
+    //     await recognition.stop(); // Stop the speech recognition
+    //     // startBtn.disabled = false;
+    //     if (mediaRecorder) {
+    //         await mediaRecorder.stop();
+    //         console.log('Audio recording stopped');
+    //     }
+    //     startBtn.textContent = 'processing...';
+    //     if (!saveButton.disabled) {
+    //         startBtn.disabled = true
+    //     }
+    //     checkInputForKeyWords(topicTranscription);
+    //     await clearWaveform();
+    // });
 
     pauseButton.addEventListener('click', async () => {
         if (recording) {
