@@ -27,6 +27,7 @@ let exerciseId = null;
 let audioCtx, analyser, source, stream, recorder;
 let dataArray, bufferLength, rafId;
 let recording = false;
+let timer = null;
 
 function draw() {
     rafId = requestAnimationFrame(draw);
@@ -345,16 +346,19 @@ if (!('webkitSpeechRecognition' in window)) {
         startBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.textContent = 'listening';
+        pauseButton.disabled = false;
+        recording = true;
         recordingIndicator.style.display = 'block';
         recordingStatus.textContent = "Recording";
         let secondsElapsed = 0;
         elapsedTime.textContent = secondsElapsed;
-        const timer = setInterval(() => {
+        timer = setInterval(() => {
             if (clearButtonPressed) {
                 clearInterval(timer);
                 elapsedTime.textContent = '0';
                 return;
             }
+            if (!recording) return; // Do not count time if paused
             secondsElapsed++;
             elapsedTime.textContent = secondsElapsed;
             if (secondsElapsed >= requiredDuration) {
