@@ -142,9 +142,9 @@ async function getStoryExercise() {
     keyWords = workSheet.keywords;
     base64AudioList = [];
     workSheet['week'] = selectedText;
-    exerciseStartButton.disabled = false;
-    saveButton.disabled = true;
-    startBtn.disabled = true;
+    exerciseStartButton.disabled = true;
+    startBtn.disabled = false;
+    clearButton.disabled = false;
     requiredDuration = workSheet.duration ? (workSheet.duration * 60) : (5 * 60); // in seconds
     renderKeyWords();
 }
@@ -336,34 +336,121 @@ if (!('webkitSpeechRecognition' in window)) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    startBtn.addEventListener('click', async () => {
-        clearButtonPressed = false;
-        await recognition.start(); // Start the speech recognition
-        startBtn.disabled = true;
-        startBtn.textContent = 'listening';
-        pauseButton.disabled = false;
-        recording = true;
-        recordingIndicator.style.display = 'block';
-        recordingStatus.textContent = "Recording";
+    /**
+     * Initialize MediaRecorder and set up audio visualization
+     * 1. Get user media stream
+     * 2. Create MediaRecorder with audio options
+     * 3. Set up audio visualization with Web Audio API
+     * 4. Start recording and visualization
+     */
+    async function setupAudioRecording() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            // Configure MediaRecorder with optimal settings
+            const options = {
+                mimeType: 'audio/webm;codecs=opus',
+                audioBitsPerSecond: 128000
+            };
+            mediaRecorder = new MediaRecorder(stream, options);
+            
+            // Handle audio data collection
+            mediaRecorder.ondataavailable = (event) => {
+                if (clearButtonPressed) return;
+                audioChunks.push(event.data);
+            };
+            
+            // Set up audio visualization
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            source = audioCtx.createMediaStreamSource(stream);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 2048;
+            bufferLength = analyser.fftSize;
+            dataArray = new Uint8Array(bufferLength);
+            source.connect(analyser);
+            
+            // Handle recording completion
+            mediaRecorder.onstop = handleRecording;
+            
+            // Start recording and visualization
+            await mediaRecorder.start();
+            draw();
+            
+            console.log('Audio recording started');
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Start speech recognition and set up event handlers
+     * 1. Start continuous speech recognition
+     * 2. Handle speech results for transcription
+     * 3. Handle recognition errors
+     * 4. Auto-restart recognition when it ends
+     */
+    async function setupSpeechRecognition() {
+        await recognition.start();
+        
+        // Handle speech recognition results
+        recognition.onresult = handleSpeechRecognition;
+        
+        // Handle recognition errors
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error detected: ' + event.error);
+        };
+        
+        // Auto-restart recognition when it ends (unless intentionally stopped)
+        recognition.onend = async (event) => {
+            console.log("Recognition on end" + JSON.stringify(event));
+            if (sendBtn.disabled === true) {
+                await sendMessage();
+            } else {
+                await recognition.start(); // Restart recognition if not sent   
+            }
+        };
+    }
+
+    /**
+     * Start recording timer and handle auto-stop functionality
+     * 1. Initialize timer variables
+     * 2. Update elapsed time display every second
+     * 3. Check for required duration completion
+     * 4. Auto-stop recording and recognition when time limit reached
+     * 5. Update UI to show completion status
+     */
+    function startRecordingTimer() {
         let secondsElapsed = 0;
         elapsedTime.textContent = secondsElapsed;
+        
         timer = setInterval(() => {
+            // Stop timer if recording was manually cleared
             if (clearButtonPressed) {
                 clearInterval(timer);
                 elapsedTime.textContent = '0';
                 return;
             }
-            if (!recording) return; // Do not count time if paused
+            
+            // Don't count time if recording is paused
+            if (!recording) return;
+            
             secondsElapsed++;
             elapsedTime.textContent = secondsElapsed;
+            
+            // Auto-stop when required duration is reached
             if (secondsElapsed >= requiredDuration) {
                 clearInterval(timer);
                 elapsedTime.textContent = requiredDuration;
+                
+                // Stop recognition and recording
                 recognition.stop();
                 if (mediaRecorder && mediaRecorder.state !== "inactive") {
                     mediaRecorder.stop();
                     console.log('Audio recording stopped automatically after reaching required duration');
                 }
+                
+                // Update UI to show completion
                 saveButton.disabled = false;
                 saveButton.textContent = 'Ready to Upload';
                 startBtn.disabled = true;
@@ -372,43 +459,56 @@ if (!('webkitSpeechRecognition' in window)) {
                 recordingIndicator.style.display = 'none';
             }
         }, 1000);
+    }
+
+    /**
+     * Update UI state when recording starts
+     * 1. Disable/enable appropriate buttons
+     * 2. Update button text to show current state
+     * 3. Show recording indicators
+     * 4. Set recording flag
+     */
+    function updateUIForRecordingStart() {
+        // Update button states
+        startBtn.disabled = true;
+        startBtn.textContent = 'listening';
+        pauseButton.disabled = false;
+        
+        // Show recording indicators
+        recording = true;
+        recordingIndicator.style.display = 'block';
+        recordingStatus.textContent = "Recording";
+    }
+
+    /**
+     * Handle start button click - orchestrate recording start process
+     * Simplified main function that calls specialized helper functions
+     */
+    startBtn.addEventListener('click', async () => {
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const options = {
-                mimeType: 'audio/webm;codecs=opus',
-                audioBitsPerSecond: 128000
-            };
-            mediaRecorder = new MediaRecorder(stream, options);
-            mediaRecorder.ondataavailable = (event) => {
-                if (clearButtonPressed) return;
-                audioChunks.push(event.data);
-            };
-            /***  Audio visualization setup  ***/
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            source = audioCtx.createMediaStreamSource(stream);
-            analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 2048;
-            bufferLength = analyser.fftSize;
-            dataArray = new Uint8Array(bufferLength);
-            source.connect(analyser);
-            mediaRecorder.onstop = handleRecording;
-            await mediaRecorder.start();
-            draw();
-            console.log('Audio recording started');
-            recognition.onresult = handleSpeechRecognition;
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error detected: ' + event.error);
-            };
-            recognition.onend = async (event) => {
-                console.log("Recognition on end" + JSON.stringify(event));
-                if (sendBtn.disabled === true) {
-                    await sendMessage();
-                } else {
-                    await recognition.start(); // Restart recognition if not sent   
-                }
-            };
+            // Reset clear flag
+            clearButtonPressed = false;
+            
+            // Update UI to show recording has started
+            updateUIForRecordingStart();
+            
+            // Start recording timer with auto-stop functionality
+            startRecordingTimer();
+            
+            // Set up audio recording and visualization
+            await setupAudioRecording();
+            
+            // Set up speech recognition
+            await setupSpeechRecognition();
+            
         } catch (error) {
-            console.error('Error accessing microphone:', error);
+            console.error('Error starting recording:', error);
+            // Reset UI on error
+            startBtn.disabled = false;
+            startBtn.textContent = 'record';
+            recording = false;
+            recordingIndicator.style.display = 'none';
+            recordingStatus.textContent = "Error - Ready to record";
         }
     });
     

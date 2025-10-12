@@ -30,33 +30,6 @@ async function getClassReport(reportQuery) {
 }
 
 
-// window.addEventListener("load", async (event) => {
-//     const tableBody = document.querySelector("#jsonTable tbody");
-//     const query = {
-//         "className": "HSCP1E",
-//         "week": "ALL",
-//         "assignmentType": "conversation"
-//     }
-//     const jsonData = await getClassReport(query);
-//     if (jsonData?.report) {
-//         jsonData.report.forEach(item => {
-//             const row = document.createElement("tr");
-//             row.innerHTML = `
-//             <td>${item.id}</td>
-//             <td>${item.week}</td>
-//             <td>${item.assignmentType}</td>
-//             <td>${item.status}</td>
-//             <td>${item.score}</td>
-//             <td>${item.comments}</td>
-//             <td>${item.completionDate}</td>
-//             <td>${item.dueDate}</td>
-//         `;
-//             tableBody.appendChild(row);
-//         });
-//     }
-// });
-
-
 async function loadReport() {
     const query = {
     }
