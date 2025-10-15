@@ -16,7 +16,6 @@ title: "தலைப்பு பயிற்சி"
         <div>
             <p type="text" id="topicSelected"></p>
         </div>
-        <button id="exercise-start-btn" disabled>start exercise</button>
         <div id="chatBox"></div>
         <div id="userInputTopic">
             <canvas id="waveform" width="400" height="100"></canvas>
