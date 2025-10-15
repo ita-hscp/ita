@@ -9,7 +9,7 @@ let audioBlobList = [];
 let recordingNumber = 0;
 let base64AudioList = [];
 const clearButton = document.getElementById("story-clear-btn");
-const pauseButton = document.getElementById("story-pause-btn");
+const pauseButton = document.getElementById("topic-pause-btn");
 const startBtn = document.getElementById('story-start-btn');
 const saveButton = document.getElementById('story-saveButton');
 const recordingIndicator = document.getElementById('recordingIndicator');
@@ -115,6 +115,7 @@ window.addEventListener("load", async (event) => {
     startBtn.disabled = true;
     clearButton.disabled = true
     pauseButton.disabled = true;
+    topicPreviewButton.disabled = true;
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
         let tasks = await getAllPendingTasks("தலைப்பு பயிற்சி");
