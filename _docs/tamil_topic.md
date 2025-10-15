@@ -29,9 +29,9 @@ title: "தலைப்பு பயிற்சி"
         </div>
         <div id="audioPreview" style="display: none;">
         </div>
-        <button id="story-start-btn" disabled>record</button>
-        <button id="story-pause-btn" disabled>pause</button>
-        <button id="story-clear-btn" >clear</button>
+        <button id="topic-start-btn" disabled>record</button>
+        <button id="topic-pause-btn" disabled>pause</button>
+        <button id="topic-clear-btn" >clear</button>
         <audio id="audioPlayer" controls></audio>
     </div>
     <div id="topic-keywords-container">
@@ -46,7 +46,7 @@ title: "தலைப்பு பயிற்சி"
 <div class="status" id="topic-preview-status">
 <audio id="audio-player" controls style="width: 100%; margin-top: 20px; display: none;"></audio>
 </div>
-<button id="story-saveButton" disabled>Finish Conversation</button>
+<button id="topic-save-btn" disabled>Finish Conversation</button>
 <div class="story-spinner" id="story-spinner"></div>
 <script>
 tracker();

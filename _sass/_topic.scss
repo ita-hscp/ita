@@ -1,0 +1,15 @@
+
+#topic-preview-btn:disabled,
+#topic-save-btn:disabled,
+#topic-clear-btn:disabled,
+#topic-pause-btn:disabled,
+#topic-start-btn:disabled {
+    background-color: #cccccc;
+    /* Grey background */
+    color: #666666;
+    /* Dimmed text color */
+    cursor: not-allowed;
+    /* Show 'not allowed' cursor */
+    opacity: 0.6;
+    /* Slightly transparent */
+}
