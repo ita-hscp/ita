@@ -453,7 +453,10 @@ function startRecordingTimer() {
         if (secondsElapsed >= requiredDuration) {
             clearInterval(timer);
             elapsedTime.textContent = requiredDuration;
-
+            if (topicTranscription && topicTranscription.length > 0) {
+                    checkInputForKeyWords(topicTranscription);
+                    topicTranscriptionsList.push(topicTranscription);
+                }
             // Stop recognition and recording
             recognition.stop();
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
@@ -571,8 +574,6 @@ topicPreviewButton.addEventListener('click', async () => {
             };
         });
         isPlaying = false;
-        let audioPreviewDiv = document.getElementById('audioPreview');
-        audioPreviewDiv.style.display = 'block';
         playButton.disabled = false;
         playButtonListener();
         topicPreviewButton.disabled = false;
