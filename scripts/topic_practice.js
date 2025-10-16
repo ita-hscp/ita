@@ -158,6 +158,7 @@ async function getStoryExercise() {
 }
 
 async function sendMessage() {
+    requiredDuration= 30; // Set required duration to 30 seconds
     // enable save button if the audioBlobList has items and total duration > 10 seconds
     if (audioBlobList.length > 0) {
         let totalDuration = 0;
@@ -167,6 +168,7 @@ async function sendMessage() {
         if (totalDuration >= requiredDuration) {
             saveButton.disabled = false;
             saveButton.textContent = 'Ready to Upload';
+            topicPreviewButton.disabled = false;
         }
         // Show duration pending to be sent
         console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
@@ -253,6 +255,7 @@ async function handleSpeechRecognition(event) {
     }
     event.results = []
     topicTranscription = interimTranscript;
+    console.log("Transcription: ", topicTranscription);
 }
 
 async function handleRecording(event) {
@@ -399,10 +402,12 @@ async function setupSpeechRecognition() {
     // Auto-restart recognition when it ends (unless intentionally stopped)
     recognition.onend = async (event) => {
         console.log("Recognition on end" + JSON.stringify(event));
-        if (sendBtn.disabled === true) {
-            await sendMessage();
-        } else {
-            await recognition.start(); // Restart recognition if not sent   
+        if (!clearButtonPressed && recording) {
+            try {
+                await recognition.start();
+            } catch (error) {
+                console.error('Error restarting recognition:', error);
+            }
         }
     };
 }
