@@ -154,6 +154,7 @@ async function getStoryExercise() {
     startBtn.disabled = false;
     clearButton.disabled = false;
     requiredDuration = workSheet.duration ? (workSheet.duration * 60) : (5 * 60); // in seconds
+    requiredDuration= 30; // Set required duration to 30 seconds
     renderKeyWords();
 }
 
@@ -463,6 +464,16 @@ function startRecordingTimer() {
             startBtn.textContent = 'record';
             recordingStatus.textContent = "Recording complete";
             recordingIndicator.style.display = 'none';
+            topicPreviewButton.disabled = false;
+            recording = false;
+            clearButtonPressed = true; // Prevent further recording until cleared
+            // Clear audio visualization
+            clearWaveform();
+            mediaRecorder = null;
+            stream = null;
+            audioCtx = null;
+            cancelAnimationFrame(rafId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
     }, 1000);
 }
