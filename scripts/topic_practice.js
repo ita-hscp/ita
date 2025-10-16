@@ -30,7 +30,13 @@ let timer = null;
 let audioData = []; // Array to hold audio segments for playback
 let audioQueue = []; // Queue for sequential playback
 let isPlaying = false;
-let playButton = document.getElementById('audioPlayer');
+/**
+ *     <div id="audioPreview" style="display: none;">
+            <h3>Audio Preview:</h3>
+            <audio id="audioPreviewPlayer" controls></audio>
+        </div>
+ */
+let playButton = document.getElementById('audioPreviewPlayer');
 let playButtonText = "▶ Play";
 let audioContext; // Audio context for playback
 playButton.textContent = playButtonText;
@@ -567,6 +573,8 @@ topicPreviewButton.addEventListener('click', async () => {
             };
         });
         isPlaying = false;
+        let audioPreviewDiv = document.getElementById('audioPreview');
+        audioPreviewDiv.style.display = 'block';
         playButtonListener();
         topicPreviewButton.disabled = false;
         return;

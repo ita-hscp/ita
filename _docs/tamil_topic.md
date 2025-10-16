@@ -28,6 +28,8 @@ title: "தலைப்பு பயிற்சி"
             <p> Time Elapsed: <span id="elapsedTime">0</span> seconds</p>
         </div>
         <div id="audioPreview" style="display: none;">
+            <h3>Audio Preview:</h3>
+            <audio id="audioPreviewPlayer" controls></audio>
         </div>
         <button id="topic-start-btn" disabled>record</button>
         <button id="topic-pause-btn" disabled>pause</button>
