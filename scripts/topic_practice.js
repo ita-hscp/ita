@@ -34,7 +34,7 @@ let playButton = document.getElementById('audioPlayer');
 let playButtonText = "▶ Play";
 let audioContext; // Audio context for playback
 playButton.textContent = playButtonText;
-
+let recognition=null
 
 function draw() {
     rafId = requestAnimationFrame(draw);
@@ -301,7 +301,7 @@ if (!('webkitSpeechRecognition' in window)) {
 } else {
     window.SpeechRecognition = window.SpeechRecognition
         || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    recognition = new SpeechRecognition();
     let mediaRecorder;
     recognition.lang = 'ta';
     recognition.continuous = true; // Keep recognizing speech continuously
