@@ -31,12 +31,9 @@ let audioData = []; // Array to hold audio segments for playback
 let audioQueue = []; // Queue for sequential playback
 let isPlaying = false;
 /**
- *     <div id="audioPreview" style="display: none;">
-            <h3>Audio Preview:</h3>
-            <audio id="audioPreviewPlayer" controls></audio>
-        </div>
+<button id="audio-play-btn" disabled>Play Audio</button>
  */
-let playButton = document.getElementById('audioPreviewPlayer');
+let playButton = document.getElementById('audio-play-btn');
 let playButtonText = "▶ Play";
 let audioContext; // Audio context for playback
 playButton.textContent = playButtonText;
@@ -581,16 +578,28 @@ topicPreviewButton.addEventListener('click', async () => {
     }
 
 });
+// Play button click handler
+playButton.addEventListener('click', playButtonListener);
 
+// Play button click logic  
+// toggle between play and pause
 function playButtonListener() {
     if (!audioData || isPlaying) return;
 
+    // Initialize AudioContext if not already done
     if (!audioContext) {
-        // Create audio context on first play (to handle autoplay restrictions)
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    prepareAndPlayAudio();
+    if (!isPlaying) {
+        prepareAndPlayAudio();
+    } else {
+        // Pause playback
+        audioContext.close();
+        audioContext = null;
+        isPlaying = false;
+        playButton.textContent = "▶ Play";
+    }
 }
 
 // Prepare audio data and start playback

@@ -34,7 +34,6 @@ title: "தலைப்பு பயிற்சி"
         <button id="topic-start-btn" disabled>record</button>
         <button id="topic-pause-btn" disabled>pause</button>
         <button id="topic-clear-btn" >clear</button>
-        <audio id="audioPlayer" controls></audio>
     </div>
     <div id="topic-keywords-container">
     <!-- Key words will be dynamically inserted here. Show in a text box -->
@@ -46,7 +45,7 @@ title: "தலைப்பு பயிற்சி"
 
 <button id="topic-preview-btn" disabled>Preview Before upload</button>
 <div class="status" id="topic-preview-status">
-<audio id="audio-player" controls style="width: 100%; margin-top: 20px; display: none;"></audio>
+<button id="audio-play-btn" disabled>Play Audio</button>
 </div>
 <button id="topic-save-btn" disabled>Finish Conversation</button>
 <div class="story-spinner" id="story-spinner"></div>
