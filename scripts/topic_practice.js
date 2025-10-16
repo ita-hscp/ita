@@ -466,11 +466,9 @@ function startRecordingTimer() {
             recordingIndicator.style.display = 'none';
             topicPreviewButton.disabled = false;
             recording = false;
-            clearButtonPressed = true; // Prevent further recording until cleared
             // Clear audio visualization
             clearWaveform();
             mediaRecorder.stop();
-            mediaRecorder = null;
             stream = null;
             audioCtx = null;
             cancelAnimationFrame(rafId);
