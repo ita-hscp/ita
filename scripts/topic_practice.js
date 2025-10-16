@@ -119,6 +119,7 @@ window.addEventListener("load", async (event) => {
     clearButton.disabled = true
     pauseButton.disabled = true;
     topicPreviewButton.disabled = true;
+    playButton.disabled = true;
     const tokenValid = sessionStorage.getItem("sessionToken");
     if (tokenValid) {
         let tasks = await getAllPendingTasks("தலைப்பு பயிற்சி");
@@ -572,6 +573,7 @@ topicPreviewButton.addEventListener('click', async () => {
         isPlaying = false;
         let audioPreviewDiv = document.getElementById('audioPreview');
         audioPreviewDiv.style.display = 'block';
+        playButton.disabled = false;
         playButtonListener();
         topicPreviewButton.disabled = false;
         return;

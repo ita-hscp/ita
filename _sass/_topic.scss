@@ -3,7 +3,8 @@
 #topic-save-btn:disabled,
 #topic-clear-btn:disabled,
 #topic-pause-btn:disabled,
-#topic-start-btn:disabled {
+#topic-start-btn:disabled
+#audio-play-btn:disabled {
     background-color: #cccccc;
     /* Grey background */
     color: #666666;
@@ -17,7 +18,7 @@
 #topic-start-btn,
 #topic-pause-btn,
 #topic-clear-btn,#topic-preview-btn,
-#topic-save-btn
+#topic-save-btn,#audio-play-btn
 {
     margin-bottom: 10px;
     margin-right: 5px; 
