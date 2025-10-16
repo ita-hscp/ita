@@ -169,6 +169,12 @@ async function sendMessage() {
             saveButton.disabled = false;
             saveButton.textContent = 'Ready to Upload';
             topicPreviewButton.disabled = false;
+            clearWaveform();
+            mediaRecorder = null;
+            stream = null;
+            audioCtx = null;
+            cancelAnimationFrame(rafId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);   
         }
         // Show duration pending to be sent
         console.log(`Total recorded duration: ${totalDuration.toFixed(2)} seconds`);
