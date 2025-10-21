@@ -6,7 +6,7 @@ title: "தலைப்பு பயிற்சி"
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
- <label for="weeks">Choose a week:</label>
+ <label for="weeks">Choose a exercise:</label>
     <select id="weeks">
     </select>
 <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
