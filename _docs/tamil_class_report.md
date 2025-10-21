@@ -63,7 +63,7 @@ title: Class Report
     <label>Score:</label>
     <input type="text" id="modalScore"><br><br>
     <label>Feedback:</label>
-    <textarea id="modalComments"></textarea><br><br>
+    <textarea id="modalComments" class="transliterate"></textarea><br><br>
     <button id="submitFeedback">Submit</button>
     <button id="closeModal">Cancel</button>
     </div>

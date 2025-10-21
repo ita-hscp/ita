@@ -18,7 +18,7 @@ title: கலந்துரையாடல்
   <div class="chat-container discussion-chat-container">
     <div class="chat-box" id="chatBox">
     </div>
-    <div><input type="text" id="userInput"></div>
+    <div><input type="text" id="userInput" class="transliterate"></div>
     <div class="input-area">
         <button id="conversation-start-btn" disabled>record</button>
         <button id="conversation-clear-btn" disabled>clear</button>
