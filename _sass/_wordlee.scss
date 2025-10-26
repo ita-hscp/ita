@@ -1,11 +1,5 @@
 
     .controls{display:flex; gap:8px; align-items:center}
-    button,.btn{
-      background:var(--key); color:var(--text); border:none; border-radius:12px; padding:10px 14px;
-      font-weight:600; cursor:pointer; transition:transform .03s ease, background .2s ease, opacity .2s ease;
-    }
-    button:hover{transform:translateY(-1px)}
-    button:disabled{opacity:.55; cursor:not-allowed}
     .mic{display:inline-flex;gap:8px;align-items:center}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--muted)}
     .dot.live{background:#19d37e; box-shadow:0 0 0 6px rgba(25,211,126,.12)}
@@ -38,12 +32,9 @@
       display:flex; gap:10px; align-items:center; justify-content:space-between; background:var(--card);
       padding:12px; border-radius:16px; margin:10px 0 14px 0; border:1px solid #232a40;
     }
-    input[type="text"]{
-      flex:1; background:#0f1425; color:var(--text); border:1px solid #2a3046; border-radius:12px; padding:12px 14px; font-size:16px;
-    }
+ 
     .msg{font-size:14px; color:var(--muted)}
     details{margin-top:12px}
-    textarea{width:100%;min-height:120px;background:#0f1425;color:var(--text);border:1px solid #2a3046;border-radius:12px;padding:10px}
     .pill{background:#0f1425;border:1px solid #2a3046;border-radius:999px;padding:6px 10px;color:#cfd6f2;font-size:12px}
     .toast{
       position:fixed; left:50%; transform:translateX(-50%); bottom:22px; background:#1b2032; border:1px solid #2a3046;
