@@ -138,17 +138,6 @@
       }
     }
 
-    function buildKeyboard(){
-      keyboardEl.innerHTML = "";
-      TAMIL_KEYS.forEach(k=>{
-        const b = document.createElement('button');
-        b.className = 'key';
-        b.textContent = k;
-        b.onclick = ()=>onKey(k);
-        keyboardEl.appendChild(b);
-      });
-    }
-
     function colorKeyboard(resultMap){
       // resultMap: { grapheme: 'good'|'place'|'bad' }
       [...keyboardEl.querySelectorAll('.key')].forEach(k=>{
@@ -181,7 +170,6 @@
       board = Array.from({length:MAX_TRIES}, ()=>Array(N).fill(""));
       setMsg(`இன்றைய சொல்: ${N} எழுத்துக்கள். முயற்சிகள்: ${MAX_TRIES}.`);
       inputEl.value = "";
-      buildKeyboard();
     }
 
     function commitGuess(guessStr){
