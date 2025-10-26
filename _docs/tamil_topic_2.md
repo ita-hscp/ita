@@ -6,7 +6,7 @@ title: "தலைப்பு பயிற்சி"
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
- <label for="weeks">Choose a exercise:</label>
+ <label for="weeks">Choose a week:</label>
     <select id="weeks">
     </select>
 <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
@@ -23,10 +23,13 @@ title: "தலைப்பு பயிற்சி"
             <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
             <p type="text" id="topic-score"> Words used: 0</p>
         </div>
-        <button id="story-start-btn" disabled>record</button>
-        <button id="story-clear-btn" >clear</button>
-        <button id="story-send-btn" disabled>save</button>
-        <audio id="audioPlayer" controls></audio>
+        <div id="recordingIndicator" style="display: none;">
+            <p style="color: red; font-weight: bold;" id="recordingStatus"> Recording</p>
+            <p> Time Elapsed: <span id="elapsedTime">0</span> seconds</p>
+        </div>
+        <button id="topic-start-btn" disabled>record</button>
+        <button id="topic-pause-btn" disabled>pause</button>
+        <button id="topic-clear-btn" >clear</button>
     </div>
     <div id="topic-keywords-container">
     <!-- Key words will be dynamically inserted here. Show in a text box -->
@@ -36,7 +39,11 @@ title: "தலைப்பு பயிற்சி"
     </div>  
 </div>
 
-<button id="story-saveButton" disabled>Finish Conversation</button>
+<button id="topic-preview-btn" disabled>Preview Before upload</button>
+<div class="status" id="topic-preview-status">
+<button id="audio-play-btn" disabled>Play Audio</button>
+</div>
+<button id="topic-save-btn" disabled>Finish Conversation</button>
 <div class="story-spinner" id="story-spinner"></div>
 <script>
 tracker();
