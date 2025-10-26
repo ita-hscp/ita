@@ -1,0 +1,65 @@
+:root{
+      --bg:#0f1115; --card:#151823; --muted:#8b93a7; --text:#e8ebf5;
+      --key:#24293a; --key-2:#303651; --good:#4caf50; --place:#c8a200; --bad:#3a415d;
+      --accent:#7c5cff; --danger:#e05d66;
+      --tile-size:56px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Hind Madurai", system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Tamil", sans-serif;
+      background:linear-gradient(180deg,#0e1017 0%, #0f1320 60%, #121a2d 100%); color:var(--text);
+      display:flex; min-height:100dvh; align-items:center; justify-content:center; padding:20px;
+    }
+    .app{width:min(720px,95vw)}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:22px;margin:0;font-weight:600;letter-spacing:.5px}
+    .controls{display:flex; gap:8px; align-items:center}
+    button,.btn{
+      background:var(--key); color:var(--text); border:none; border-radius:12px; padding:10px 14px;
+      font-weight:600; cursor:pointer; transition:transform .03s ease, background .2s ease, opacity .2s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.55; cursor:not-allowed}
+    .mic{display:inline-flex;gap:8px;align-items:center}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--muted)}
+    .dot.live{background:#19d37e; box-shadow:0 0 0 6px rgba(25,211,126,.12)}
+    .grid{
+      display:grid; gap:8px; background:transparent; justify-content:center; padding:16px; border-radius:16px;
+      grid-template-columns:repeat(var(--cols), var(--tile-size));
+    }
+    .tile{
+      width:var(--tile-size); height:var(--tile-size);
+      border:2px solid #2a3046; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.25);
+      user-select:none; background:#131728;
+      transition:transform .1s ease, background .2s ease, border-color .2s ease;
+    }
+    .tile.filled{border-color:#5b6384}
+    .tile.reveal{transform:scale(1.05)}
+    .tile.good{background:var(--good); border-color:var(--good); color:white}
+    .tile.place{background:var(--place); border-color:var(--place); color:#1c1400}
+    .tile.bad{background:var(--bad); border-color:var(--bad)}
+    .row{display:contents}
+    .kbd{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:10px}
+    .key{
+      background:var(--key-2); border:none; padding:10px 0; border-radius:12px; font-weight:700; cursor:pointer
+    }
+    .key.good{background:var(--good); color:white}
+    .key.place{background:var(--place); color:#1c1400}
+    .key.bad{background:var(--bad)}
+    .bar{
+      display:flex; gap:10px; align-items:center; justify-content:space-between; background:var(--card);
+      padding:12px; border-radius:16px; margin:10px 0 14px 0; border:1px solid #232a40;
+    }
+    input[type="text"]{
+      flex:1; background:#0f1425; color:var(--text); border:1px solid #2a3046; border-radius:12px; padding:12px 14px; font-size:16px;
+    }
+    .msg{font-size:14px; color:var(--muted)}
+    details{margin-top:12px}
+    textarea{width:100%;min-height:120px;background:#0f1425;color:var(--text);border:1px solid #2a3046;border-radius:12px;padding:10px}
+    .pill{background:#0f1425;border:1px solid #2a3046;border-radius:999px;padding:6px 10px;color:#cfd6f2;font-size:12px}
+    .toast{
+      position:fixed; left:50%; transform:translateX(-50%); bottom:22px; background:#1b2032; border:1px solid #2a3046;
+      color:#e8ebf5; padding:10px 14px; border-radius:12px; font-weight:600; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    }
