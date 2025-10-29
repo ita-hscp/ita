@@ -12,7 +12,7 @@ title: கதை சொல்லுதல் பயிற்சி
  }
 </script>
 
- <label for="weeks">Choose a week:</label>
+ <label for="weeks">Choose a exercise:</label>
     <select id="weeks">
     </select>
 <button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>

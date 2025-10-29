@@ -7,7 +7,7 @@ title: உரையாடல் பயிற்சி
 <script src="{{ site.baseurl }}/scripts/speech_new.js"></script>
 <script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
- <label for="weeks">Choose a week:</label>
+ <label for="weeks">Choose a exercise:</label>
     <select id="weeks">
     </select>
 <button id="exercise-btn" onclick="getExercise()">start exercise</button>
