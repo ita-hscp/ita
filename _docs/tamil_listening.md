@@ -5,6 +5,7 @@ title: கேட்டல்‌ கருத்தறிதல் பயிற�
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
 
  <label for="weeks">Choose a exercise:</label>
     <select id="weeks">
