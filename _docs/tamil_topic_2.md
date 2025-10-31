@@ -19,7 +19,7 @@ title: "தலைப்பு பயிற்சி"
         <div id="chatBox"></div>
         <div id="userInputTopic">
             <canvas id="waveform" width="400" height="100"></canvas>
-            <p type="text" id="timeRemaining"> Total Time Remaining: 5 minutes </p>
+            <p type="text" id="timeRemaining"> Total Time Remaining: 2 minutes </p>
             <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
             <p type="text" id="topic-score"> Words used: 0</p>
         </div>

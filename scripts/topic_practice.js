@@ -158,12 +158,12 @@ async function getStoryExercise() {
     startBtn.disabled = false;
     clearButton.disabled = false;
     requiredDuration = workSheet.duration ? (workSheet.duration * 60) : (5 * 60); // in seconds
-    requiredDuration= 30; // Set required duration to 30 seconds
+    requiredDuration= 120; // Set required duration to 120 seconds
     renderKeyWords();
 }
 
 async function sendMessage() {
-    requiredDuration= 30; // Set required duration to 30 seconds
+    requiredDuration= 120; // Set required duration to 120 seconds
     // enable save button if the audioBlobList has items and total duration > 10 seconds
     if (audioBlobList.length > 0) {
         let totalDuration = 0;
