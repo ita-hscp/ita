@@ -1,0 +1,52 @@
+---
+category: HSCP 3
+order: 2
+title: "தலைப்பு பயிற்சி"
+---
+<script src="{{ site.baseurl }}/scripts/track.js"></script>
+<script src="{{ site.baseurl }}/scripts/speech.js"></script>
+<script src="{{ site.baseurl }}/scripts/taskHandler.js"></script>
+ <label for="weeks">Choose a week:</label>
+    <select id="weeks">
+    </select>
+<button id="exercise-btn" onclick="getStoryExercise()">get exercise</button>
+
+<div class="story-container">
+    <div id="topic-chat-container">
+        <div>
+            <p type="text" id="topicSelected"></p>
+        </div>
+        <div id="chatBox"></div>
+        <div id="userInputTopic">
+            <canvas id="waveform" width="400" height="100"></canvas>
+            <p type="text" id="timeRemaining"> Total Time Remaining: 2 minutes </p>
+            <p type="text" id="timeRecorded"> Total Time Recorded: 0 seconds </p>
+            <p type="text" id="topic-score"> Words used: 0</p>
+        </div>
+        <div id="recordingIndicator" style="display: none;">
+            <p style="color: red; font-weight: bold;" id="recordingStatus"> Recording</p>
+            <p> Time Elapsed: <span id="elapsedTime">0</span> seconds</p>
+        </div>
+        <button id="topic-start-btn" disabled>record</button>
+        <button id="topic-pause-btn" disabled>pause</button>
+        <button id="topic-clear-btn" >clear</button>
+    </div>
+    <div id="topic-keywords-container">
+    <!-- Key words will be dynamically inserted here. Show in a text box -->
+        <p>முக்கிய சொற்கள்</p>
+        <ul id="topic-keywords-list">
+        </ul>
+    </div>  
+</div>
+
+<button id="topic-preview-btn" disabled>Preview Before upload</button>
+<div class="status" id="topic-preview-status">
+<button id="audio-play-btn" disabled>Play Audio</button>
+</div>
+<button id="topic-save-btn" disabled>Finish Conversation</button>
+<div class="story-spinner" id="story-spinner"></div>
+<script>
+tracker();
+</script>
+<div id="tracker"></div>
+<script src="{{ site.baseurl }}/scripts/topic_practice.js"></script>
