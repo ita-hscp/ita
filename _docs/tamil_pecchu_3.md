@@ -133,7 +133,7 @@ title: தமிழ் பேச்சு
     }
 </script>
 
-####பேச்சைப் பதிவுசெய்து பதிவிறக்கவும்
+<!-- ####பேச்சைப் பதிவுசெய்து பதிவிறக்கவும் -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 <!-- <button id="speechStartButton">பதிவைத் தொடங்கவும்</button>
 <button id="speechStopButton" disabled>பதிவு செய்வதை நிறுத்து</button>
