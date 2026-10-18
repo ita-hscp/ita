@@ -39,10 +39,11 @@ title: தமிழ் பேச்சு
 </script>
 
 <script src="{{ site.baseurl }}/scripts/speech.js"></script>
-<h1>தமிழ் பேச்சு -> உரைநடை மாற்றி</h1>
-<button id="start-btn">கேட்கத் தொடங்குங்கள்</button>
-<button id="stop-btn" disabled>கேட்பதை நிறுத்து</button>
-<button id="play-btn" disabled>கேள்</button>
+<h2>தமிழ் பேச்சு -> உரைநடை மாற்றி</h2>
+<h3> Tamil Speech to Text</h3>
+<button id="start-btn">பேசசதொடங்குங்கள்(start)</button>
+<button id="stop-btn" disabled> நிறுத்து(stop)</button>
+<button id="play-btn" disabled>கேள்(listen)</button>
 <div id="audio-link"></div>
 <p id="transcription"></p>
 
