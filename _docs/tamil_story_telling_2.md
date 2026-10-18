@@ -1,5 +1,5 @@
 ---
-category: HSCP 3
+category: HSCP 2
 order: 2
 title: கதை சொல்லுதல் பயிற்சி 
 ---

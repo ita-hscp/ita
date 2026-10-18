@@ -1,5 +1,5 @@
 ---
-category: HSCP 3
+category: HSCP 1
 order: 1
 title: தமிழ் quiz
 ---
