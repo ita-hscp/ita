@@ -1,5 +1,5 @@
 ---
-category: HSCP 4
+category: Teacher
 order: 2
 title: "தமிழ் சொல்லாற்றல்"
 ---
