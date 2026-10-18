@@ -135,9 +135,9 @@ title: தமிழ் பேச்சு
 
 ####பேச்சைப் பதிவுசெய்து பதிவிறக்கவும்
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-<button id="speechStartButton">பதிவைத் தொடங்கவும்</button>
+<!-- <button id="speechStartButton">பதிவைத் தொடங்கவும்</button>
 <button id="speechStopButton" disabled>பதிவு செய்வதை நிறுத்து</button>
-<a id="speechDownloadLink" style="display:none;">பதிவிறக்கவும்</a>
+<a id="speechDownloadLink" style="display:none;">பதிவிறக்கவும்</a> -->
 <div id="tracker"></div>
 <script src="{{ site.baseurl }}/scripts/recorder.js"></script>
 
