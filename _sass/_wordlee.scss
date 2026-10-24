@@ -7,6 +7,28 @@
 
   .msg { font-size: 14px; color: var(--muted); }
 
+  .wordlee-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .wordlee-main { flex: 1 1 560px; min-width: 0; }
+
+  .leaderboard-panel {
+    flex: 1 1 260px;
+    max-width: 360px;
+    padding: 8px 14px;
+    border: 1px solid #d3d6da;
+    border-radius: 8px;
+    background: #f7f9fb;
+
+    h3 { margin: 4px 0 8px; font-size: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #e3e5e8; }
+    tr.me { background: #fff9e9; font-weight: 700; }
+  }
+
   .levels { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
   .level-btn {
     &.active { outline: 2px solid var(--good); }

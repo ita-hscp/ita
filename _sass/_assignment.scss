@@ -52,3 +52,51 @@
       border-radius: 6px;
       background: #fafafa;
     }
+
+#wordleeSection {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 25px;
+  max-width: 600px;
+  margin: 24px auto 0;
+
+  .wordlee-note { font-size: 14px; color: #666; }
+
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input[type="week"],
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+
+  fieldset {
+    margin: 12px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px 4px;
+  }
+
+  legend { font-weight: bold; padding: 0 6px; }
+
+  button {
+    margin: 8px 5px 0 0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #3498db;
+    color: #fff;
+    &:hover { background: #2980b9; }
+    &:disabled { opacity: .6; cursor: default; }
+  }
+}

@@ -8,17 +8,6 @@ const LOGIN_URL = 'https://ita-hscp.github.io/ita/Login';
 // picked by ISO week number so every learner gets the same words that week.
 const LEVELS = ['easy', 'medium', 'hard'];
 const LEVEL_LABELS = { easy: 'எளிது', medium: 'நடுத்தரம்', hard: 'கடினம்' };
-const CHALLENGES = {
-    easy: [
-        { word: "தமிழ்", hints: ["நம் தாய்மொழி", "திருக்குறள் எழுதப்பட்ட மொழி", "நாம் கற்கும் மொழி"] }
-    ],
-    medium: [
-        { word: "நூலகம்", hints: ["புத்தகங்கள் நிறைந்த இடம்", "அமைதியாக இருக்க வேண்டிய இடம்", "இரவல் வாங்கிப் படிக்கலாம்"] }
-    ],
-    hard: [
-        { word: "கதிரவன்", hints: ["காலையில் கிழக்கில் தோன்றும்", "ஒளியும் வெப்பமும் தருவது", "சூரியன் என்றும் அழைக்கப்படும்"] }
-    ]
-};
 
 // ISO week, e.g. { id: "2026-W43", number: 43 }
 function getWeek(date = new Date()) {
@@ -55,8 +44,8 @@ async function fetchChallenge(week, level) {
     if (!remoteConfig) remoteConfig = await loadRemoteConfig(week.id);
     const remote = remoteConfig[level];
     if (remote && remote.word) return remote;
-    const pool = CHALLENGES[level];
-    return pool[week.number % pool.length];
+    // const pool = CHALLENGES[level];
+    // return pool[week.number % pool.length];
 }
 
 // ---------- Progress storage ----------
@@ -87,6 +76,77 @@ async function saveResult(weekId, level, result) {
     }
 }
 
+// ---------- Scoring & leaderboard ----------
+// The score is calculated by the back end from attempts and time (POST /wordlee/results),
+// and the weekly ranking is read from GET /wordlee/ranking.
+const leaderboardBody = document.getElementById('leaderboardBody');
+const leaderboardNote = document.getElementById('leaderboardNote');
+
+function formatTime(seconds) {
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+// Sends a finished level to the back end; returns the score breakdown or null.
+async function submitResult(level) {
+    const result = progress[level];
+    try {
+        const response = await fetch(`${API_BASE_URL}/wordlee/results`, {
+            method: 'POST',
+            headers: {
+                Authorization: sessionStorage.getItem('sessionToken') || '',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ weekId: week.id, level, won: result.won, tries: result.tries, seconds: result.seconds })
+        });
+        if (response.status === 401) {
+            window.location.href = LOGIN_URL;
+            return null;
+        }
+        if (!response.ok) return null;
+        const saved = await response.json();
+        progress[level] = { ...result, score: saved.score, submitted: true };
+        await saveResult(week.id, level, progress[level]);
+        return saved;
+    } catch (e) {
+        console.error('Unable to submit wordlee result', e);
+        return null;
+    }
+}
+
+function renderLeaderboard(data) {
+    leaderboardBody.innerHTML = "";
+    const rows = [...(data.leaderboard || [])];
+    if (data.me) rows.push(data.me);
+    rows.forEach(entry => {
+        const tr = document.createElement('tr');
+        if (entry.isMe) tr.className = 'me';
+        [entry.rank, entry.name, `${entry.solved}/${LEVELS.length}`, entry.score, formatTime(entry.seconds)].forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+        });
+        leaderboardBody.appendChild(tr);
+    });
+    leaderboardNote.textContent = rows.length ? "" : "இன்னும் யாரும் முடிக்கவில்லை.";
+}
+
+async function loadLeaderboard() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/wordlee/ranking?week=${encodeURIComponent(week.id)}`, {
+            headers: { Authorization: sessionStorage.getItem('sessionToken') || '' }
+        });
+        if (response.status === 401) {
+            window.location.href = LOGIN_URL;
+            return;
+        }
+        if (!response.ok) throw new Error(`Ranking error: ${response.status}`);
+        renderLeaderboard(await response.json());
+    } catch (e) {
+        console.error('Unable to read wordlee ranking', e);
+        leaderboardNote.textContent = "தரவரிசையை ஏற்ற முடியவில்லை.";
+    }
+}
+
 // ---------- Utilities ----------
 const segmenter = ('Intl' in window && Intl.Segmenter) ? new Intl.Segmenter('ta', { granularity: 'grapheme' }) : null;
 const toNFC = (s) => (s || '').normalize('NFC').trim();
@@ -104,6 +164,7 @@ let row = 0;
 let locked = true;
 let animating = false;
 let currentLevel = null;
+let levelStartedAt = 0;
 const week = getWeek();
 let progress = {};
 
@@ -169,10 +230,10 @@ function renderLevels() {
     });
 }
 
-function showAllDone() {
+function showAllDone(prefix = '') {
     locked = true;
     micBtn.disabled = true;
-    setMsg('இந்த வாரச் சவால்கள் அனைத்தும் முடிந்தன. அடுத்த வாரம் மீண்டும் வாருங்கள்!');
+    setMsg(`${prefix} இந்த வாரச் சவால்கள் அனைத்தும் முடிந்தன. அடுத்த வாரம் மீண்டும் வாருங்கள்!`.trim());
 }
 
 async function startLevel(level) {
@@ -188,21 +249,35 @@ async function startLevel(level) {
     renderLevels();
     setMsg(`${LEVEL_LABELS[level]}: சொல்லில் ${N} எழுத்துக்கள் உள்ளன. முயற்சிகள்: ${MAX_TRIES}. மைக்கை அழுத்திச் சொல்லைப் பேசுங்கள்.`);
     locked = false;
+    levelStartedAt = Date.now();
 }
 
 async function finishLevel(won, tries) {
     const level = currentLevel;
-    progress[level] = { won, tries, word: answer.join(''), completedAt: new Date().toISOString() };
+    const seconds = Math.max(0, Math.round((Date.now() - levelStartedAt) / 1000));
+    progress[level] = { won, tries, seconds, word: answer.join(''), completedAt: new Date().toISOString(), submitted: false };
     await saveResult(week.id, level, progress[level]);
     renderLevels();
+    let summary;
     if (won) {
-        setMsg(`சரி! நீங்கள் கண்டுபிடித்தீர்கள்: "${answer.join('')}"`);
+        summary = `சரி! நீங்கள் கண்டுபிடித்தீர்கள்: "${answer.join('')}"`;
         toast("அற்புதம்!", 1800);
     } else {
-        setMsg(`முடிந்தது. சரியான சொல்: "${answer.join('')}"`);
+        summary = `முடிந்தது. சரியான சொல்: "${answer.join('')}"`;
         toast("அடுத்த முறை நிச்சயம்!", 1800);
     }
-    if (LEVELS.every(l => progress[l])) showAllDone();
+    setMsg(summary);
+
+    const saved = await submitResult(level);
+    if (saved) {
+        summary += ` மதிப்பெண்: ${saved.score} (முயற்சிகள் ${saved.attemptPoints} + நேரம் ${saved.timePoints}, ${formatTime(seconds)})`;
+        loadLeaderboard();
+    }
+    if (LEVELS.every(l => progress[l])) {
+        showAllDone(summary);
+    } else if (currentLevel === level) {
+        setMsg(summary);
+    }
 }
 
 function evaluate(guess) {
@@ -298,4 +373,11 @@ micBtn.addEventListener('click', () => {
     } else {
         showAllDone();
     }
+    // Send results that could not be submitted earlier (e.g. no network), then show the ranking.
+    for (const level of LEVELS) {
+        if (progress[level] && progress[level].submitted === false) {
+            await submitResult(level);
+        }
+    }
+    loadLeaderboard();
 })();
