@@ -79,6 +79,38 @@ title: Assignment
     </form>
 </div>
 
+<div id="wordleeSection">
+  <h2>Create Wordlee</h2>
+  <p class="wordlee-note">Enter the easy, medium and hard word with 3 hints each, then create all three at once. Type in English and press Enter to convert to Tamil.</p>
+  <form id="wordleeForm" onsubmit="return false;">
+    <label for="wordleeWeek">Week (e.g. 2026-W43):</label>
+    <input type="week" id="wordleeWeek" name="wordleeWeek" pattern="\d{4}-W\d{2}" placeholder="2026-W43">
+    <fieldset data-level="easy">
+      <legend>எளிது (Easy)</legend>
+      <input type="text" name="word" class="transliterate" placeholder="Word">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 1">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 2">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 3">
+    </fieldset>
+    <fieldset data-level="medium">
+      <legend>நடுத்தரம் (Medium)</legend>
+      <input type="text" name="word" class="transliterate" placeholder="Word">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 1">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 2">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 3">
+    </fieldset>
+    <fieldset data-level="hard">
+      <legend>கடினம் (Hard)</legend>
+      <input type="text" name="word" class="transliterate" placeholder="Word">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 1">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 2">
+      <input type="text" name="hint" class="transliterate" placeholder="Hint 3">
+    </fieldset>
+    <button type="button" id="createWordleeBtn" onclick="createWordlee()">Create Wordlee</button>
+    <p id="wordleeStatus" class="wordlee-note" aria-live="polite"></p>
+  </form>
+</div>
+
 
 <div id="tracker"></div>
 <script src="{{ site.baseurl }}/scripts/assignment.js"></script>

@@ -1,17 +1,9 @@
 // ---------- Word source ----------
-// Words are read from CHALLENGES below for now (see fetchChallenge()).
-// const WORDS = [
-//     { word: "மலர்கள்", hints: ["தோட்டத்தில் மலர்வன", "வாசனை உடையவை", "பூக்கள் என்றும் அழைக்கப்படும்"] },
-//     { word: "கதிரவன்", hints: ["காலையில் கிழக்கில் தோன்றும்", "ஒளியும் வெப்பமும் தருவது", "சூரியன் என்றும் அழைக்கப்படும்"] },
-//     { word: "நிழல்கள்", hints: ["மரத்தின் கீழ் காணலாம்", "ஒளி தடைபடுவதால் உருவாகும்", "ஒளிக்கு எதிர்ப்பக்கம் விழும்"] },
-//     { word: "புத்தகம்", hints: ["படிக்க உதவும்", "பக்கங்கள் உடையது", "நூலகத்தில் நிறைய இருக்கும்"] },
-//     { word: "ஆசிரியர்", hints: ["பள்ளியில் பாடம் நடத்துபவர்", "மாணவர்களுக்குக் கற்றுத் தருபவர்", "வகுப்பறையில் இருப்பவர்"] },
-//     { word: "மாணவர்", hints: ["பள்ளிக்குச் செல்பவர்", "பாடம் கற்பவர்", "ஆசிரியரிடம் கற்றுக்கொள்பவர்"] },
-//     { word: "குழந்தை", hints: ["சிறு வயதுடையவர்", "தாலாட்டு கேட்டுத் தூங்குவார்", "அம்மா அப்பாவின் செல்லம்"] },
-//     { word: "வானவில்", hints: ["மழைக்குப் பின் தோன்றும்", "ஏழு நிறங்கள் உடையது", "வானில் வளைவாகத் தெரியும்"] },
-//     { word: "நூலகம்", hints: ["புத்தகங்கள் நிறைந்த இடம்", "அமைதியாக இருக்க வேண்டிய இடம்", "இரவல் வாங்கிப் படிக்கலாம்"] },
-//     { word: "தமிழ்", hints: ["நம் தாய்மொழி", "திருக்குறள் எழுதப்பட்ட மொழி", "நாம் கற்கும் மொழி"] }
-// ];
+// Words come from the back end (GET /wordlee/config, stored in MongoDB).
+// The local CHALLENGES below are only a fallback if the back end has no word
+// for a level or cannot be reached.
+const API_BASE_URL = 'https://infinite-sands-52519-06605f47cb30.herokuapp.com';
+const LOGIN_URL = 'https://ita-hscp.github.io/ita/Login';
 // Weekly challenge pools. Each week has one easy, one medium and one hard word,
 // picked by ISO week number so every learner gets the same words that week.
 const LEVELS = ['easy', 'medium', 'hard'];
@@ -37,11 +29,34 @@ function getWeek(date = new Date()) {
     return { id: `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`, number };
 }
 
-// To read from the back end later, replace the body of fetchChallenge() with a
-// fetch() call that returns { word: "...", hints: ["...", "...", "..."] }.
-async function fetchChallenge(weekNumber, level) {
+// Reads the week's config from the back end once; returns {} on any failure so
+// the local fallback is used.
+let remoteConfig = null;
+async function loadRemoteConfig(weekId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/wordlee/config?week=${encodeURIComponent(weekId)}`, {
+            headers: { Authorization: sessionStorage.getItem('sessionToken') || '' }
+        });
+        if (response.status === 401) {
+            window.location.href = LOGIN_URL;
+            return {};
+        }
+        if (!response.ok) return {};
+        const data = await response.json();
+        return data.challenges || {};
+    } catch (e) {
+        console.error('Unable to read wordlee config', e);
+        return {};
+    }
+}
+
+// Returns { word: "...", hints: ["...", "...", "..."] } for the given week and level.
+async function fetchChallenge(week, level) {
+    if (!remoteConfig) remoteConfig = await loadRemoteConfig(week.id);
+    const remote = remoteConfig[level];
+    if (remote && remote.word) return remote;
     const pool = CHALLENGES[level];
-    return pool[weekNumber % pool.length];
+    return pool[week.number % pool.length];
 }
 
 // ---------- Progress storage ----------
@@ -164,7 +179,7 @@ async function startLevel(level) {
     if (progress[level] || animating) return;
     locked = true;
     currentLevel = level;
-    const entry = await fetchChallenge(week.number, level);
+    const entry = await fetchChallenge(week, level);
     answer = graphemes(entry.word);
     N = answer.length;
     row = 0;

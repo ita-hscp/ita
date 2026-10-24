@@ -300,6 +300,87 @@ async function saveCustomExercise() {
     return responseData;
 }
 
+// ---------- Wordlee creation ----------
+const WORDLEE_LEVELS = ['easy', 'medium', 'hard'];
+const WORDLEE_WEEK_PATTERN = /^\d{4}-W\d{2}$/;
+const TAMIL_WORD = /^[\u0B80-\u0BFF]+$/;
+
+// Current ISO week as "YYYY-Www"
+function currentIsoWeek() {
+    const now = new Date();
+    const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const number = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+    return `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`;
+}
+
+function setWordleeStatus(text, isError) {
+    const status = document.getElementById('wordleeStatus');
+    status.textContent = text;
+    status.style.color = isError ? '#c0392b' : '#27ae60';
+}
+
+// Reads the three fieldsets; returns { weekId, challenges } or { error }.
+function readWordleeForm() {
+    const weekId = document.getElementById('wordleeWeek').value.trim();
+    if (!WORDLEE_WEEK_PATTERN.test(weekId)) {
+        return { error: 'Week must look like 2026-W43.' };
+    }
+    const challenges = [];
+    for (const level of WORDLEE_LEVELS) {
+        const fieldset = document.querySelector(`#wordleeForm fieldset[data-level="${level}"]`);
+        const word = fieldset.querySelector('input[name="word"]').value.trim().normalize('NFC');
+        const hints = Array.from(fieldset.querySelectorAll('input[name="hint"]'))
+            .map(input => input.value.trim().normalize('NFC'));
+        if (!word) return { error: `Enter the ${level} word.` };
+        if (!TAMIL_WORD.test(word)) return { error: `The ${level} word must be in Tamil (type and press Enter to convert).` };
+        if (hints.some(h => !h)) return { error: `Enter all 3 hints for the ${level} word.` };
+        challenges.push({ level, word, hints });
+    }
+    return { weekId, challenges };
+}
+
+async function createWordlee() {
+    const data = readWordleeForm();
+    if (data.error) {
+        setWordleeStatus(data.error, true);
+        return;
+    }
+    const button = document.getElementById('createWordleeBtn');
+    button.disabled = true;
+    setWordleeStatus('Saving...', false);
+    try {
+        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/wordlee/challenges/bulk', {
+            method: 'POST',
+            headers: {
+                'Authorization': sessionStorage.getItem('sessionToken'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (response.status === 401) {
+            window.location.href = "https://ita-hscp.github.io/ita/Login";
+            return;
+        }
+        if (!response.ok) {
+            let message = 'Failed to create Wordlee.';
+            try { message = (await response.json()).error || message; } catch (e) { /* keep default */ }
+            setWordleeStatus(message, true);
+            return;
+        }
+        setWordleeStatus(`Wordlee created for ${data.weekId}.`, false);
+        document.querySelectorAll('#wordleeForm fieldset input').forEach(input => { input.value = ''; });
+    } catch (e) {
+        console.error('Error creating wordlee', e);
+        setWordleeStatus('Network error. Please try again.', true);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+document.getElementById('wordleeWeek').value = currentIsoWeek();
+
 Array.from(document.getElementsByClassName('transliterate')).forEach(element => {
     element.addEventListener('keydown', function(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
