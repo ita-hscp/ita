@@ -1,26 +1,75 @@
 // ---------- Word source ----------
-// Words are read from this list for now. To read from the back end later,
-// replace the body of fetchWord() with a fetch() call that returns
-// an object shaped like { word: "...", hints: ["...", "...", "..."] }.
-const WORDS = [
-    { word: "மலர்கள்", hints: ["தோட்டத்தில் மலர்வன", "வாசனை உடையவை", "பூக்கள் என்றும் அழைக்கப்படும்"] },
-    { word: "கதிரவன்", hints: ["காலையில் கிழக்கில் தோன்றும்", "ஒளியும் வெப்பமும் தருவது", "சூரியன் என்றும் அழைக்கப்படும்"] },
-    { word: "நிழல்கள்", hints: ["மரத்தின் கீழ் காணலாம்", "ஒளி தடைபடுவதால் உருவாகும்", "ஒளிக்கு எதிர்ப்பக்கம் விழும்"] },
-    { word: "புத்தகம்", hints: ["படிக்க உதவும்", "பக்கங்கள் உடையது", "நூலகத்தில் நிறைய இருக்கும்"] },
-    { word: "ஆசிரியர்", hints: ["பள்ளியில் பாடம் நடத்துபவர்", "மாணவர்களுக்குக் கற்றுத் தருபவர்", "வகுப்பறையில் இருப்பவர்"] },
-    { word: "மாணவர்", hints: ["பள்ளிக்குச் செல்பவர்", "பாடம் கற்பவர்", "ஆசிரியரிடம் கற்றுக்கொள்பவர்"] },
-    { word: "குழந்தை", hints: ["சிறு வயதுடையவர்", "தாலாட்டு கேட்டுத் தூங்குவார்", "அம்மா அப்பாவின் செல்லம்"] },
-    { word: "வானவில்", hints: ["மழைக்குப் பின் தோன்றும்", "ஏழு நிறங்கள் உடையது", "வானில் வளைவாகத் தெரியும்"] },
-    { word: "நூலகம்", hints: ["புத்தகங்கள் நிறைந்த இடம்", "அமைதியாக இருக்க வேண்டிய இடம்", "இரவல் வாங்கிப் படிக்கலாம்"] },
-    { word: "தமிழ்", hints: ["நம் தாய்மொழி", "திருக்குறள் எழுதப்பட்ட மொழி", "நாம் கற்கும் மொழி"] }
-];
+// Words are read from CHALLENGES below for now (see fetchChallenge()).
+// const WORDS = [
+//     { word: "மலர்கள்", hints: ["தோட்டத்தில் மலர்வன", "வாசனை உடையவை", "பூக்கள் என்றும் அழைக்கப்படும்"] },
+//     { word: "கதிரவன்", hints: ["காலையில் கிழக்கில் தோன்றும்", "ஒளியும் வெப்பமும் தருவது", "சூரியன் என்றும் அழைக்கப்படும்"] },
+//     { word: "நிழல்கள்", hints: ["மரத்தின் கீழ் காணலாம்", "ஒளி தடைபடுவதால் உருவாகும்", "ஒளிக்கு எதிர்ப்பக்கம் விழும்"] },
+//     { word: "புத்தகம்", hints: ["படிக்க உதவும்", "பக்கங்கள் உடையது", "நூலகத்தில் நிறைய இருக்கும்"] },
+//     { word: "ஆசிரியர்", hints: ["பள்ளியில் பாடம் நடத்துபவர்", "மாணவர்களுக்குக் கற்றுத் தருபவர்", "வகுப்பறையில் இருப்பவர்"] },
+//     { word: "மாணவர்", hints: ["பள்ளிக்குச் செல்பவர்", "பாடம் கற்பவர்", "ஆசிரியரிடம் கற்றுக்கொள்பவர்"] },
+//     { word: "குழந்தை", hints: ["சிறு வயதுடையவர்", "தாலாட்டு கேட்டுத் தூங்குவார்", "அம்மா அப்பாவின் செல்லம்"] },
+//     { word: "வானவில்", hints: ["மழைக்குப் பின் தோன்றும்", "ஏழு நிறங்கள் உடையது", "வானில் வளைவாகத் தெரியும்"] },
+//     { word: "நூலகம்", hints: ["புத்தகங்கள் நிறைந்த இடம்", "அமைதியாக இருக்க வேண்டிய இடம்", "இரவல் வாங்கிப் படிக்கலாம்"] },
+//     { word: "தமிழ்", hints: ["நம் தாய்மொழி", "திருக்குறள் எழுதப்பட்ட மொழி", "நாம் கற்கும் மொழி"] }
+// ];
+// Weekly challenge pools. Each week has one easy, one medium and one hard word,
+// picked by ISO week number so every learner gets the same words that week.
+const LEVELS = ['easy', 'medium', 'hard'];
+const LEVEL_LABELS = { easy: 'எளிது', medium: 'நடுத்தரம்', hard: 'கடினம்' };
+const CHALLENGES = {
+    easy: [
+        { word: "தமிழ்", hints: ["நம் தாய்மொழி", "திருக்குறள் எழுதப்பட்ட மொழி", "நாம் கற்கும் மொழி"] }
+    ],
+    medium: [
+        { word: "நூலகம்", hints: ["புத்தகங்கள் நிறைந்த இடம்", "அமைதியாக இருக்க வேண்டிய இடம்", "இரவல் வாங்கிப் படிக்கலாம்"] }
+    ],
+    hard: [
+        { word: "கதிரவன்", hints: ["காலையில் கிழக்கில் தோன்றும்", "ஒளியும் வெப்பமும் தருவது", "சூரியன் என்றும் அழைக்கப்படும்"] }
+    ]
+};
 
-let lastWord = "";
-async function fetchWord() {
-    const pool = WORDS.length > 1 ? WORDS.filter(w => w.word !== lastWord) : WORDS;
-    const entry = pool[Math.floor(Math.random() * pool.length)];
-    lastWord = entry.word;
-    return entry;
+// ISO week, e.g. { id: "2026-W43", number: 43 }
+function getWeek(date = new Date()) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const number = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+    return { id: `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`, number };
+}
+
+// To read from the back end later, replace the body of fetchChallenge() with a
+// fetch() call that returns { word: "...", hints: ["...", "...", "..."] }.
+async function fetchChallenge(weekNumber, level) {
+    const pool = CHALLENGES[level];
+    return pool[weekNumber % pool.length];
+}
+
+// ---------- Progress storage ----------
+// Stored in the browser for now: { [weekId]: { [level]: { won, tries, word, completedAt } } }.
+// To move to the back end later, replace the bodies of loadProgress() and saveResult().
+// A leaderboard can then be built from the same result records.
+const STORE_KEY = 'wordlee.progress.v1';
+
+function readStore() {
+    try {
+        return JSON.parse(localStorage.getItem(STORE_KEY)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+async function loadProgress(weekId) {
+    return readStore()[weekId] || {};
+}
+
+async function saveResult(weekId, level, result) {
+    const store = readStore();
+    store[weekId] = { ...(store[weekId] || {}), [level]: result };
+    try {
+        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    } catch (e) {
+        console.error('Unable to save progress', e);
+    }
 }
 
 // ---------- Utilities ----------
@@ -38,8 +87,13 @@ let answer = [];
 let N = 0;
 let row = 0;
 let locked = true;
+let animating = false;
+let currentLevel = null;
+const week = getWeek();
+let progress = {};
 
 const boardEl = document.getElementById('board');
+const levelsEl = document.getElementById('levels');
 const messageEl = document.getElementById('message');
 const toastEl = document.getElementById('toast');
 const hintsEl = document.getElementById('hints');
@@ -86,16 +140,54 @@ function setTile(r, c, text, cls) {
 }
 
 // ---------- Game flow ----------
-async function newGame() {
+function renderLevels() {
+    levelsEl.innerHTML = "";
+    LEVELS.forEach(level => {
+        const done = progress[level];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn level-btn' + (level === currentLevel ? ' active' : '') + (done ? ' done' : '');
+        btn.textContent = LEVEL_LABELS[level] + (done ? (done.won ? ' \u2713' : ' \u2717') : '');
+        btn.disabled = !!done || animating;
+        btn.addEventListener('click', () => startLevel(level));
+        levelsEl.appendChild(btn);
+    });
+}
+
+function showAllDone() {
     locked = true;
-    const entry = await fetchWord();
+    micBtn.disabled = true;
+    setMsg('இந்த வாரச் சவால்கள் அனைத்தும் முடிந்தன. அடுத்த வாரம் மீண்டும் வாருங்கள்!');
+}
+
+async function startLevel(level) {
+    if (progress[level] || animating) return;
+    locked = true;
+    currentLevel = level;
+    const entry = await fetchChallenge(week.number, level);
     answer = graphemes(entry.word);
     N = answer.length;
     row = 0;
     buildBoard();
     renderHints(entry.hints);
-    setMsg(`சொல்லில் ${N} எழுத்துக்கள் உள்ளன். முயற்சிகள்: ${MAX_TRIES}. மைக்கை அழுத்திச் சொல்லைப் பேசுங்கள்.`);
+    renderLevels();
+    setMsg(`${LEVEL_LABELS[level]}: சொல்லில் ${N} எழுத்துக்கள் உள்ளன. முயற்சிகள்: ${MAX_TRIES}. மைக்கை அழுத்திச் சொல்லைப் பேசுங்கள்.`);
     locked = false;
+}
+
+async function finishLevel(won, tries) {
+    const level = currentLevel;
+    progress[level] = { won, tries, word: answer.join(''), completedAt: new Date().toISOString() };
+    await saveResult(week.id, level, progress[level]);
+    renderLevels();
+    if (won) {
+        setMsg(`சரி! நீங்கள் கண்டுபிடித்தீர்கள்: "${answer.join('')}"`);
+        toast("அற்புதம்!", 1800);
+    } else {
+        setMsg(`முடிந்தது. சரியான சொல்: "${answer.join('')}"`);
+        toast("அடுத்த முறை நிச்சயம்!", 1800);
+    }
+    if (LEVELS.every(l => progress[l])) showAllDone();
 }
 
 function evaluate(guess) {
@@ -123,27 +215,26 @@ function submit(text) {
     const guess = graphemes(text);
 
     locked = true;
+    animating = true;
+    renderLevels();
     const result = evaluate(guess);
     const currentRow = row;
     guess.forEach((ch, i) => {
         setTimeout(() => setTile(currentRow, i, ch, result[i]), i * 180);
     });
 
-    setTimeout(() => {
-        if (result.every(r => r === 'good')) {
-            setMsg(`சரி! நீங்கள் கண்டுபிடித்தீர்கள்: "${answer.join('')}"`);
-            toast("அற்புதம்!", 1800);
-        } else if (currentRow === MAX_TRIES - 1) {
-            setMsg(`முடிந்தது. சரியான சொல்: "${answer.join('')}"`);
-            toast("அடுத்த முறை நிச்சயம்!", 1800);
+    setTimeout(async () => {
+        animating = false;
+        const won = result.every(r => r === 'good');
+        if (won || currentRow === MAX_TRIES - 1) {
+            await finishLevel(won, currentRow + 1);
         } else {
             row++;
             locked = false;
+            renderLevels();
         }
     }, N * 180 + 50);
 }
-
-document.getElementById('newBtn').addEventListener('click', async () => { await newGame(); toast("புதிய சொல்!"); });
 
 // ---------- Speech recognition ----------
 const micBtn = document.getElementById('micBtn');
@@ -182,5 +273,14 @@ micBtn.addEventListener('click', () => {
 });
 
 // ---------- Init ----------
-setupSpeech();
-newGame();
+(async function init() {
+    setupSpeech();
+    progress = await loadProgress(week.id);
+    renderLevels();
+    const next = LEVELS.find(l => !progress[l]);
+    if (next) {
+        await startLevel(next);
+    } else {
+        showAllDone();
+    }
+})();

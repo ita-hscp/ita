@@ -7,6 +7,12 @@
 
   .msg { font-size: 14px; color: var(--muted); }
 
+  .levels { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .level-btn {
+    &.active { outline: 2px solid var(--good); }
+    &.done { opacity: .7; }
+  }
+
   .play-area {
     display: flex;
     gap: 24px;
