@@ -3,23 +3,32 @@ category: Teacher
 order: 2
 title: "தமிழ் சொல்லாற்றல்"
 ---
-
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
-<script src="{{ site.baseurl }}/scripts/wordlee.js"></script>
-
-<h2>தமிழ் சொல்லாற்றல்</h2>
-<div class="mic">
-    <button id="micBtn" class="btn">🎤 சொல் பேசுங்கள்</button>
+<div class="wordlee">
+  <h2>தமிழ் சொல்லாற்றல்</h2>
+  <p id="message" class="msg"></p>
+  <div class="play-area">
+    <main id="board" class="grid" style="--cols:5" aria-live="polite"></main>
+    <aside class="hints-panel">
+      <h3>குறிப்புகள்</h3>
+      <ol id="hints"></ol>
+    </aside>
+  </div>
+  <div class="actions">
+    <button id="micBtn" class="btn" type="button">சொல் பேசுங்கள்</button>
     <span id="micDot" class="dot" aria-live="polite"></span>
+    <button id="newBtn" class="btn" type="button">புதிய சொல்</button>
+  </div>
+  <details>
+    <summary>எப்படி விளையாடுவது?</summary>
+    <ul>
+      <li>மறைந்துள்ள சொல்லை 6 முயற்சிகளில் கண்டுபிடிக்கவும்.</li>
+      <li>தட்டச்சு செய்ய முடியாது; மைக்கை அழுத்திச் சொல்லைப் பேசவும்.</li>
+      <li>பச்சை: சரியான எழுத்து, சரியான இடம்.</li>
+      <li>மஞ்சள்: சரியான எழுத்து, தவறான இடம்.</li>
+      <li>சாம்பல்: அந்த எழுத்து சொல்லில் இல்லை.</li>
+    </ul>
+  </details>
+  <div id="toast" class="toast" style="display:none"></div>
 </div>
-<input id="guessInput" type="text" inputmode="text" placeholder="உங்கள் கணிப்பு (5 எழுத்துக்கள்)..." />
-<button id="enterBtn" class="btn">⏎ இடு</button>
-<div id="message" class="msg">குறிப்பு: மொத்தம் 6 முயற்சிகள். தமிழ் எழுத்துக்கள் சரியாக எண்ண <span class="pill">grapheme-aware</span>.</div>
-<main id="board" class="grid" style="--cols:5" aria-live="polite"></main>
-<section id="keyboard" class="kbd" aria-hidden="false"></section>
-<details>
-    <summary>📚 உங்கள் சொல் பட்டியலை (ஐந்து எழுத்து) இங்கே ஒட்டவும்</summary>
-    <p class="msg">ஒவ்வொரு வரியிலும் ஒரு சொல். 5 grapheme (எழுத்து இணை) கொண்ட சொற்கள் மட்டும் பயன்படுத்தப்படும்.</p>
-    <textarea id="wordListArea" placeholder="உதாரணம்"></textarea>
-</details>
-<div id="toast" class="toast" style="display:none"></div>
+<script src="{{ site.baseurl }}/scripts/wordlee.js"></script>
