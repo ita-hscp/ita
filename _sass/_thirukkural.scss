@@ -1,0 +1,29 @@
+.thirukkural-container {
+  .kural-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 10px 0;
+
+    &.playing {
+      background-color: #fff9e9;
+      border-color: #e0b84c;
+    }
+  }
+
+  .kural-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .kural-tamil {
+    font-size: 1.1em;
+    margin: 6px 0;
+  }
+
+  .kural-english {
+    color: #555;
+    margin: 0;
+  }
+}
