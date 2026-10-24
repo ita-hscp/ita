@@ -48,31 +48,25 @@ async function fetchChallenge(week, level) {
     // return pool[week.number % pool.length];
 }
 
-// ---------- Progress storage ----------
-// Stored in the browser for now: { [weekId]: { [level]: { won, tries, word, completedAt } } }.
-// To move to the back end later, replace the bodies of loadProgress() and saveResult().
-// A leaderboard can then be built from the same result records.
-const STORE_KEY = 'wordlee.progress.v1';
-
-function readStore() {
-    try {
-        return JSON.parse(localStorage.getItem(STORE_KEY)) || {};
-    } catch (e) {
-        return {};
-    }
-}
-
+// ---------- Progress ----------
+// Completion is kept only on the back end (one stored result per student, week and level).
+// GET /wordlee/results returns { results: { easy: { won, tries, seconds, score, ... }, ... } }.
+// Returns null when it cannot be read, so the page never offers a level that may be done.
 async function loadProgress(weekId) {
-    return readStore()[weekId] || {};
-}
-
-async function saveResult(weekId, level, result) {
-    const store = readStore();
-    store[weekId] = { ...(store[weekId] || {}), [level]: result };
     try {
-        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+        const response = await fetch(`${API_BASE_URL}/wordlee/results?week=${encodeURIComponent(weekId)}`, {
+            headers: { Authorization: sessionStorage.getItem('sessionToken') || '' }
+        });
+        if (response.status === 401) {
+            window.location.href = LOGIN_URL;
+            return null;
+        }
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.results || {};
     } catch (e) {
-        console.error('Unable to save progress', e);
+        console.error('Unable to read wordlee progress', e);
+        return null;
     }
 }
 
@@ -86,9 +80,10 @@ function formatTime(seconds) {
     return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
-// Sends a finished level to the back end; returns the score breakdown or null.
-async function submitResult(level) {
-    const result = progress[level];
+// Sends a finished level to the back end; returns the stored result with its score
+// breakdown, or null if it could not be saved. The back end keeps the first result
+// for a level, so the returned values replace what was sent.
+async function submitResult(level, result) {
     try {
         const response = await fetch(`${API_BASE_URL}/wordlee/results`, {
             method: 'POST',
@@ -103,10 +98,7 @@ async function submitResult(level) {
             return null;
         }
         if (!response.ok) return null;
-        const saved = await response.json();
-        progress[level] = { ...result, score: saved.score, submitted: true };
-        await saveResult(week.id, level, progress[level]);
-        return saved;
+        return await response.json();
     } catch (e) {
         console.error('Unable to submit wordlee result', e);
         return null;
@@ -255,8 +247,7 @@ async function startLevel(level) {
 async function finishLevel(won, tries) {
     const level = currentLevel;
     const seconds = Math.max(0, Math.round((Date.now() - levelStartedAt) / 1000));
-    progress[level] = { won, tries, seconds, word: answer.join(''), completedAt: new Date().toISOString(), submitted: false };
-    await saveResult(week.id, level, progress[level]);
+    progress[level] = { won, tries, seconds };
     renderLevels();
     let summary;
     if (won) {
@@ -268,10 +259,13 @@ async function finishLevel(won, tries) {
     }
     setMsg(summary);
 
-    const saved = await submitResult(level);
+    const saved = await submitResult(level, progress[level]);
     if (saved) {
-        summary += ` மதிப்பெண்: ${saved.score} (முயற்சிகள் ${saved.attemptPoints} + நேரம் ${saved.timePoints}, ${formatTime(seconds)})`;
+        progress[level] = { won: saved.won, tries: saved.tries, seconds: saved.seconds, score: saved.score };
+        summary += ` மதிப்பெண்: ${saved.score} (முயற்சிகள் ${saved.attemptPoints} + நேரம் ${saved.timePoints}, ${formatTime(saved.seconds)})`;
         loadLeaderboard();
+    } else {
+        summary += ' முடிவைச் சேமிக்க முடியவில்லை; தரவரிசையில் சேராது.';
     }
     if (LEVELS.every(l => progress[l])) {
         showAllDone(summary);
@@ -365,19 +359,21 @@ micBtn.addEventListener('click', () => {
 // ---------- Init ----------
 (async function init() {
     setupSpeech();
-    progress = await loadProgress(week.id);
+    const saved = await loadProgress(week.id);
+    if (!saved) {
+        locked = true;
+        micBtn.disabled = true;
+        setMsg('உங்கள் முன்னேற்றத்தை ஏற்ற முடியவில்லை. பக்கத்தை மீண்டும் ஏற்றுங்கள்.');
+        loadLeaderboard();
+        return;
+    }
+    progress = saved;
     renderLevels();
     const next = LEVELS.find(l => !progress[l]);
     if (next) {
         await startLevel(next);
     } else {
         showAllDone();
-    }
-    // Send results that could not be submitted earlier (e.g. no network), then show the ranking.
-    for (const level of LEVELS) {
-        if (progress[level] && progress[level].submitted === false) {
-            await submitResult(level);
-        }
     }
     loadLeaderboard();
 })();
