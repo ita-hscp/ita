@@ -13,7 +13,10 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
   <div class="play-area">
     <main id="board" class="grid" style="--cols:5" aria-live="polite"></main>
     <aside class="hints-panel">
-      <h3>குறிப்புகள்</h3>
+      <div class="hints-header">
+        <h3>குறிப்புகள்(hints)</h3>
+        <button id="hintsPlayBtn" class="btn" type="button" disabled>கேளுங்கள் (play)</button>
+      </div>
       <ol id="hints"></ol>
     </aside>
   </div>
@@ -36,10 +39,10 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
   </details>
   </div>
   <aside class="leaderboard-panel">
-    <h3>தரவரிசை</h3>
+    <h3>தரவரிசை(Leaderboard)</h3>
     <table>
       <thead>
-        <tr><th>#</th><th>பெயர்</th><th>முடிந்தவை</th><th>மதிப்பெண்</th><th>நேரம்</th></tr>
+        <tr><th>#</th><th>பெயர்(name)</th><th>முடிந்தவை(completed)</th><th>மதிப்பெண்(score)</th><th>நேரம்(time)</th></tr>
       </thead>
       <tbody id="leaderboardBody"></tbody>
     </table>

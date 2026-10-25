@@ -165,6 +165,13 @@ const levelsEl = document.getElementById('levels');
 const messageEl = document.getElementById('message');
 const toastEl = document.getElementById('toast');
 const hintsEl = document.getElementById('hints');
+const hintsPlayBtn = document.getElementById('hintsPlayBtn');
+const HINTS_PLAY_LABEL = 'கேளுங்கள் (play)';
+const HINTS_STOP_LABEL = 'நிறுத்து (stop)';
+let currentHints = [];
+let hintsAudioId = 0;
+let hintsAudio = null;
+let hintsPlaying = false;
 
 function setMsg(text) { messageEl.textContent = text; }
 
@@ -191,13 +198,79 @@ function buildBoard() {
 }
 
 function renderHints(hints) {
+    stopHintsAudio();
+    currentHints = (hints || []).slice(0, 3);
+    hintsPlayBtn.disabled = currentHints.length === 0;
     hintsEl.innerHTML = "";
-    (hints || []).slice(0, 3).forEach(text => {
+    currentHints.forEach(text => {
         const li = document.createElement('li');
         li.textContent = text;
         hintsEl.appendChild(li);
     });
 }
+
+// ---------- Hint audio (text-to-speech API) ----------
+async function fetchHintAudio(text) {
+    const response = await fetch(`${API_BASE_URL}/text_to_speech_new?text=${encodeURIComponent(text)}`, {
+        headers: { Authorization: sessionStorage.getItem('sessionToken') || '' }
+    });
+    if (response.status === 401) {
+        window.location.href = LOGIN_URL;
+        return null;
+    }
+    if (!response.ok) throw new Error(`Text to speech error: ${response.status}`);
+    return response.blob();
+}
+
+// Resolves when the clip ends or is stopped (pausing it counts as stopped).
+function playHintBlob(blob) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        hintsAudio = audio;
+        const done = () => { URL.revokeObjectURL(url); resolve(); };
+        audio.addEventListener('ended', done);
+        audio.addEventListener('pause', done);
+        audio.addEventListener('error', () => { URL.revokeObjectURL(url); reject(new Error('Audio playback failed')); });
+        audio.play().catch(reject);
+    });
+}
+
+function stopHintsAudio() {
+    hintsAudioId++;
+    hintsPlaying = false;
+    if (hintsAudio) {
+        hintsAudio.pause();
+        hintsAudio = null;
+    }
+    hintsPlayBtn.textContent = HINTS_PLAY_LABEL;
+}
+
+async function playHints() {
+    if (hintsPlaying) {
+        stopHintsAudio();
+        return;
+    }
+    if (currentHints.length === 0) return;
+    if (listening) recog.stop(); // keep the microphone from hearing the hints
+    const id = ++hintsAudioId;
+    hintsPlaying = true;
+    hintsPlayBtn.textContent = HINTS_STOP_LABEL;
+    try {
+        const blobs = await Promise.all(currentHints.map(fetchHintAudio));
+        for (const blob of blobs) {
+            if (id !== hintsAudioId || !blob) return;
+            await playHintBlob(blob);
+        }
+    } catch (e) {
+        console.error('Unable to play hints', e);
+        if (id === hintsAudioId) toast('ஒலியை இயக்க முடியவில்லை. மீண்டும் முயலுங்கள்.', 2400);
+    } finally {
+        if (id === hintsAudioId) stopHintsAudio();
+    }
+}
+
+hintsPlayBtn.addEventListener('click', playHints);
 
 function setTile(r, c, text, cls) {
     const tile = document.getElementById(`t-${r}-${c}`);
@@ -330,7 +403,7 @@ function setupSpeech() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
         micBtn.disabled = true;
-        setMsg("இந்த உலாவியில் Speech Recognition இல்லை. Chrome அல்லது Edge பயன்படுத்தவும்.");
+        setMsg("இந்த browser-ல் Speech Recognition இல்லை. Chrome அல்லது Edge பயன்படுத்தவும்.");
         return;
     }
     recog = new SR();
@@ -353,7 +426,7 @@ function setupSpeech() {
 
 micBtn.addEventListener('click', () => {
     if (locked || !recog) return;
-    if (listening) recog.stop(); else recog.start();
+    if (listening) recog.stop(); else { stopHintsAudio(); recog.start(); }
 });
 
 // ---------- Init ----------
@@ -363,7 +436,7 @@ micBtn.addEventListener('click', () => {
     if (!saved) {
         locked = true;
         micBtn.disabled = true;
-        setMsg('உங்கள் முன்னேற்றத்தை ஏற்ற முடியவில்லை. பக்கத்தை மீண்டும் ஏற்றுங்கள்.');
+        setMsg("Can't read your progress. Please log in and try again.");
         loadLeaderboard();
         return;
     }
