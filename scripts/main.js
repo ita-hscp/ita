@@ -95,8 +95,18 @@ function fetchAssignments(callback) {
                     ul_main_page.appendChild(li);
                 });
                 // For any queries/discussion, please use chat in <a href="https://ita-hscp.github.io/ita/tamil_discussion_2/">this link</a> in Tamil.
+                // Discussion week comes from the assignments (e.g. "வாரம் 10" -> 10)
+                let discussionWeek = null;
+                detailedAssignments.forEach(a => {
+                    if (discussionWeek) return;
+                    const m = (a.liElement || "").match(/வாரம்\s*(\d+)/);
+                    if (m) discussionWeek = m[1];
+                    else if (a.week) discussionWeek = String(a.week);
+                });
+                const discussionUrl = "https://ita-hscp.github.io/ita/tamil_discussion_2/" +
+                    (discussionWeek ? `?exerciseNumber=${encodeURIComponent(discussionWeek)}` : "");
                 const queryInfo = document.createElement("li");
-                queryInfo.innerHTML = `ஏதேனும் சந்தேகம்/விவாதங்களுக்கு, தயவுசெய்து இந்த <a style="color: #1209ee;" href="https://ita-hscp.github.io/ita/tamil_discussion_2/">இணைப்பை பயன்படுத்தவும்.</a>`;
+                queryInfo.innerHTML = `ஏதேனும் சந்தேகம்/விவாதங்களுக்கு, தயவுசெய்து இந்த <a style="color: #1209ee;" href="${discussionUrl}">இணைப்பை பயன்படுத்தவும்.</a>`;
                 ul_main_page.appendChild(queryInfo);
             }else {
                 ul_main_page.innerHTML = data.assignments || "<li>No assignments available.</li>";
