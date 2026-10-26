@@ -38,9 +38,9 @@ saveButton.addEventListener("click",async function(event) {
             return response.json();  // Parse the JSON response
     })
     .then(data => {
-            alert('Work saved successfully!  ' + (data.id ? "id :" + data.id : ""));
+            showSaveStatus(saveButton, true, "Upload completed" + (data && data.id ? ". Reference ID: " + data.id : "."));
         })
     .catch(error => {
-            alert('Failed to save work.'+ JSON.stringify(error));
+            showSaveStatus(saveButton, false, "Upload failed. " + ((error && error.message) || ""));
     });
 });

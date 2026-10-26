@@ -32,3 +32,20 @@ function tracker(){
       // Send the request
       xhr.send();
 }
+
+
+// Shows the upload result inline (below the save button) instead of an alert popup.
+function showSaveStatus(anchor, ok, text) {
+    let box = document.getElementById('saveStatus');
+    if (!box) {
+        box = document.createElement('div');
+        box.id = 'saveStatus';
+        box.setAttribute('role', 'status');
+        box.style.cssText = 'margin-top:10px;padding:8px 12px;border-radius:4px;font-size:14px;display:inline-block;';
+        (anchor && anchor.parentNode ? anchor.parentNode : document.body)
+            .insertBefore(box, anchor && anchor.nextSibling ? anchor.nextSibling : null);
+    }
+    box.style.background = ok ? '#e6f4ea' : '#fdecea';
+    box.style.color = ok ? '#1e6b34' : '#a12622';
+    box.textContent = text;
+}
