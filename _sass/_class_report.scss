@@ -39,3 +39,14 @@ th {
         text-align: right;
     }
 }
+
+
+#loadReport,
+#saveReport,
+#classReport button,
+#feedbackModal button {
+    padding: 3px 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    border-radius: 3px;
+}
