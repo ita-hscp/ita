@@ -16,3 +16,11 @@ async function getAllPendingTasks(type) {
     }
     return response.json();
 }
+
+// Pre-selects the exercise given by ?exerciseNumber=... (set by the main page links).
+function preselectExercise(dropdown) {
+    const requested = new URLSearchParams(window.location.search).get("exerciseNumber");
+    if (!requested || !dropdown) return;
+    const match = Array.from(dropdown.options).find(o => o.text.trim() === requested.trim());
+    if (match) match.selected = true;
+}

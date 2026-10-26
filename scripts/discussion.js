@@ -90,6 +90,7 @@ window.addEventListener("load", async (event) => {
                 dropdown.appendChild(option);
                 weekWorkSheet[textContent] = task.content;
             });
+            preselectExercise(dropdown);
             // Enable the exercise button
             const exerciseStartBtn = document.getElementById("conversation-start-btn");
             exerciseStartBtn.disabled = false;

@@ -27,6 +27,7 @@ window.addEventListener("load", async (event) => {
                 dropdown.appendChild(option);
                 weekWorkSheet[textContent] = task.content;
             });
+            preselectExercise(dropdown);
         }
     }
 });
