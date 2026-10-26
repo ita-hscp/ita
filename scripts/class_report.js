@@ -200,6 +200,7 @@ async function saveReport() {
 
 // Show Modal
 function showModal(index) {
+    stopAudio();
     selectedIndex = index
     const item = sampleData[index];
     chatContainer = document.getElementById('reportChatContainer');
@@ -219,6 +220,7 @@ function showModal(index) {
 
 // Close Modal
 function closeModal() {
+    stopAudio();
     modal.style.display = "none";
     modalScore.value = "";
     modalComments.value = "";
@@ -261,110 +263,233 @@ function validateJsonFormat(data) {
 
     return true;
 }
-function playButtonListener() {
-    if (!audioData) return;
-    if (isPlaying){ isPlaying = false;
-        playButton = document.getElementById('playBtn-modal'); 
-        playButton.textContent = '▶ Play';
-        return;
-    }
+// ---- Audio player: play / pause / stop / seek over the whole conversation ----
+// All segments (bot, then user, per turn) are decoded once and treated as one
+// continuous timeline so the seek bar can jump to any point.
+const player = {
+    data: null,        // audioData the buffers were decoded from
+    buffers: [],       // AudioBuffer per segment
+    offsets: [],       // start time (s) of each segment on the timeline
+    total: 0,          // total duration (s)
+    source: null,      // currently playing AudioBufferSourceNode
+    segIndex: 0,       // segment currently playing
+    segStartCtx: 0,    // audioContext.currentTime when current segment started
+    segOffset: 0,      // offset (s) inside the current segment where it started
+    pausedPos: 0,      // timeline position (s) when not playing
+    token: 0,          // bumps on every stop/seek so stale onended calls are ignored
+    loading: false,
+    dragging: false,
+    timer: null
+};
 
-    if (!audioContext) {
-        // Create audio context on first play (to handle autoplay restrictions)
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    prepareAndPlayAudio();
+function setAudioStatus(text) {
+    const el = document.getElementById('status');
+    if (el) el.textContent = text;
 }
 
-// Prepare audio data and start playback
-function prepareAndPlayAudio() {
-    const playButton = document.getElementById('playBtn-modal');
-    const statusElement = document.getElementById('stopBtn-modal');
-    if (!audioData || audioData.length === 0) {
-        statusElement.textContent = 'No audio data to play.';
-        return;
-    }
-
-    statusElement.textContent = 'Preparing audio...';
-    isPlaying = true;
-    // Reset audio queue
-    audioQueue = [];
-
-    // Process all segments and create an audio queue
-    audioData.forEach(segment => {
-        // Add user audio if exists
-
-        // Add bot audio if exists
-        if (segment.botBlob) {
-            audioQueue.push({
-                blob: segment.botBlob,
-                type: 'bot'
-            });
-        }
-        if (segment.userBlob || segment.blob) {
-            audioQueue.push({
-                blob: segment.userBlob || segment.blob,
-                type: 'user'
-            });
-        }
-    });
-    playButton.textContent = '⏸ Playing...';
-    // Start playing the queue
-    playNextInQueue();
+function formatTime(seconds) {
+    const s = Math.max(0, Math.floor(seconds || 0));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-// Play the next audio in the queue
-function playNextInQueue() {
-    const playButton = document.getElementById('playBtn-modal');
-    const statusElement = document.getElementById('stopBtn-modal');
-    if (audioQueue.length === 0 || !isPlaying) {
-        // Queue is empty, playback complete
-        statusElement.textContent = 'Playback complete.';
-        playButton.textContent = '▶ Play';
-        isPlaying = false;
-        return;
-    }
-
-    const audioItem = audioQueue.shift();
-    statusElement.textContent = `Playing ${audioItem.type} audio...`;
-
-    // Convert base64 to audio buffer
-    const base64Data = audioItem.blob;
-
-    // Remove data URL prefix if present
-    let base64String = base64Data;
-    if (base64String.includes(',')) {
-        base64String = base64String.split(',')[1];
-    }
-
-    // Decode base64
+function base64ToArrayBuffer(base64Data) {
+    const base64String = base64Data.includes(',') ? base64Data.split(',')[1] : base64Data;
     const binaryString = atob(base64String);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
     }
-
-    // Decode audio data
-    audioContext.decodeAudioData(
-        bytes.buffer,
-        function (buffer) {
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-            source.connect(audioContext.destination);
-
-            // Play this audio and when done, play the next one
-            source.onended = playNextInQueue;
-            source.start(0);
-        },
-        function (error) {
-            console.error('Error decoding audio data:', error);
-            // statusElement.textContent = `Error playing ${audioItem.type} audio. Skipping to next...`;
-            // Try to play the next one even if this one failed
-            playNextInQueue();
-        }
-    );
+    return bytes.buffer;
 }
+
+function decodeBuffer(arrayBuffer) {
+    return new Promise((resolve, reject) => {
+        const result = audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+        if (result && typeof result.then === 'function') {
+            result.then(resolve, reject);
+        }
+    });
+}
+
+function currentPosition() {
+    if (!player.source) return player.pausedPos;
+    const pos = player.offsets[player.segIndex] + player.segOffset +
+        (audioContext.currentTime - player.segStartCtx);
+    return Math.min(pos, player.total);
+}
+
+function updateAudioUI() {
+    const playBtn = document.getElementById('playBtn-modal');
+    const seek = document.getElementById('audioSeek');
+    const time = document.getElementById('audioTime');
+    const pos = player.dragging && seek ? parseFloat(seek.value) : currentPosition();
+    if (playBtn) playBtn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+    if (seek) {
+        seek.max = player.total || 0;
+        seek.disabled = !player.total;
+        if (!player.dragging) seek.value = pos;
+    }
+    if (time) time.textContent = `${formatTime(pos)} / ${formatTime(player.total)}`;
+}
+
+function startUITimer() {
+    stopUITimer();
+    player.timer = setInterval(updateAudioUI, 200);
+}
+
+function stopUITimer() {
+    if (player.timer) {
+        clearInterval(player.timer);
+        player.timer = null;
+    }
+}
+
+function haltSource() {
+    player.token++;
+    if (player.source) {
+        player.source.onended = null;
+        try { player.source.stop(); } catch (e) { /* already stopped */ }
+        try { player.source.disconnect(); } catch (e) { /* ignore */ }
+        player.source = null;
+    }
+}
+
+async function loadAudioBuffers() {
+    if (player.data === audioData && player.buffers.length) return true;
+    stopAudio();
+    if (!audioData || audioData.length === 0) {
+        setAudioStatus('No audio data to play.');
+        return false;
+    }
+    if (player.loading) return false;
+    player.loading = true;
+    setAudioStatus('Preparing audio...');
+    try {
+        const items = [];
+        audioData.forEach(segment => {
+            if (segment.botBlob) items.push(segment.botBlob);
+            if (segment.userBlob || segment.blob) items.push(segment.userBlob || segment.blob);
+        });
+        const buffers = [];
+        for (const item of items) {
+            try {
+                buffers.push(await decodeBuffer(base64ToArrayBuffer(item)));
+            } catch (error) {
+                console.error('Error decoding audio data:', error);
+            }
+        }
+        if (buffers.length === 0) {
+            setAudioStatus('Could not decode audio.');
+            return false;
+        }
+        let total = 0;
+        player.offsets = buffers.map(b => { const start = total; total += b.duration; return start; });
+        player.buffers = buffers;
+        player.total = total;
+        player.data = audioData;
+        player.pausedPos = 0;
+        setAudioStatus('');
+        return true;
+    } finally {
+        player.loading = false;
+    }
+}
+
+// Play from a timeline position (seconds)
+function playFrom(pos) {
+    haltSource();
+    pos = Math.min(Math.max(pos, 0), player.total);
+    let index = player.offsets.length - 1;
+    for (let i = 0; i < player.offsets.length; i++) {
+        if (pos < player.offsets[i] + player.buffers[i].duration) { index = i; break; }
+    }
+    playSegment(index, pos - player.offsets[index]);
+}
+
+function playSegment(index, offset) {
+    if (index >= player.buffers.length) {
+        finishPlayback();
+        return;
+    }
+    const token = player.token;
+    const source = audioContext.createBufferSource();
+    source.buffer = player.buffers[index];
+    source.connect(audioContext.destination);
+    source.onended = () => {
+        if (token !== player.token) return;
+        player.source = null;
+        playSegment(index + 1, 0);
+    };
+    player.source = source;
+    player.segIndex = index;
+    player.segOffset = offset;
+    player.segStartCtx = audioContext.currentTime;
+    isPlaying = true;
+    source.start(0, offset);
+    setAudioStatus('Playing...');
+    updateAudioUI();
+    startUITimer();
+}
+
+function finishPlayback() {
+    haltSource();
+    isPlaying = false;
+    player.pausedPos = 0;
+    stopUITimer();
+    setAudioStatus('Playback complete.');
+    updateAudioUI();
+}
+
+// Play / Pause toggle
+async function playButtonListener() {
+    if (!audioData) return;
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext.state === 'suspended') await audioContext.resume();
+
+    if (isPlaying) {
+        player.pausedPos = currentPosition();
+        haltSource();
+        isPlaying = false;
+        stopUITimer();
+        setAudioStatus('Paused.');
+        updateAudioUI();
+        return;
+    }
+    if (!(await loadAudioBuffers())) return;
+    playFrom(player.pausedPos >= player.total ? 0 : player.pausedPos);
+}
+
+// Stop: halt playback and rewind to the start
+function stopAudio() {
+    haltSource();
+    isPlaying = false;
+    player.pausedPos = 0;
+    stopUITimer();
+    if (player.buffers.length) setAudioStatus('Stopped.');
+    updateAudioUI();
+}
+
+// Seek bar: update label while dragging, jump on release
+(function initSeekBar() {
+    const seek = document.getElementById('audioSeek');
+    if (!seek) return;
+    seek.addEventListener('input', () => {
+        player.dragging = true;
+        updateAudioUI();
+    });
+    seek.addEventListener('change', () => {
+        const pos = parseFloat(seek.value) || 0;
+        player.dragging = false;
+        if (isPlaying) {
+            playFrom(pos);
+        } else {
+            player.pausedPos = pos;
+            updateAudioUI();
+        }
+    });
+})();
 
 
 

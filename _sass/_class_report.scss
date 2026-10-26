@@ -21,3 +21,21 @@ th {
     display: flex;
     flex-direction: column;
   }
+
+.audio-seek {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+
+    input[type="range"] {
+        flex: 1;
+        cursor: pointer;
+    }
+
+    span {
+        font-size: 0.85em;
+        min-width: 80px;
+        text-align: right;
+    }
+}

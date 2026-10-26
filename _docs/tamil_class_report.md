@@ -52,6 +52,10 @@ title: Class Report
         <button id="playBtn-modal" class="bg-green-500 text-white px-4 py-2 rounded" onclick="playButtonListener()">Play</button>
         <button id="stopBtn-modal" class="bg-red-500 text-white px-4 py-2 rounded" onclick="stopAudio()">Stop</button>
         </div>
+        <div class="audio-seek">
+            <input type="range" id="audioSeek" min="0" max="0" value="0" step="0.1" disabled>
+            <span id="audioTime">0:00 / 0:00</span>
+        </div>
         <div class="status" id="status"></div>
         <div class="reportchat-container border rounded p-3 max-h-60 overflow-y-auto bg-gray-100" id="reportChatContainer">
         <div class="chat-box" id="chatBox">
