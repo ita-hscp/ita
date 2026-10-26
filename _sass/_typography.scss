@@ -10,8 +10,8 @@ body {
   max-height: 100%;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: 0.01rem;
-  font-size: 1.5em;
-  line-height: 1.75em;
+  font-size: 1.4em;
+  line-height: 1.7em;
   color: #0a0a0a;
   font-weight: 400;
   -webkit-font-feature-settings: 'kern' 1;
@@ -55,30 +55,30 @@ h2 {
 }
 
 h1 {
-  font-size: 5rem;
-  letter-spacing: -2px;
+  font-size: 3.6rem;
+  letter-spacing: -1px;
   text-indent: -3px;
 }
 
 h2 {
-  font-size: 3.6rem;
-  letter-spacing: -1px;
+  font-size: 2.8rem;
+  letter-spacing: -0.5px;
 }
 
 h3 {
-  font-size: 2rem;
-}
-
-h4 {
   font-size: 1.8rem;
 }
 
+h4 {
+  font-size: 1.6rem;
+}
+
 h5 {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 
 h6 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 a {
@@ -181,28 +181,28 @@ kbd {
   }
 
   h1 {
-    font-size: 4.5rem;
+    font-size: 3.2rem;
     text-indent: -2px;
   }
 
   h2 {
-    font-size: 3.6rem;
+    font-size: 2.6rem;
   }
 
   h3 {
-    font-size: 3.1rem;
-  }
-
-  h4 {
-    font-size: 2.5rem;
-  }
-
-  h5 {
     font-size: 2.2rem;
   }
 
+  h4 {
+    font-size: 1.9rem;
+  }
+
+  h5 {
+    font-size: 1.7rem;
+  }
+
   h6 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -229,12 +229,12 @@ kbd {
   }
 
   h1 {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     letter-spacing: -1px;
   }
 
   h2 {
-    font-size: 2.4rem;
+    font-size: 2rem;
     letter-spacing: 0;
   }
 

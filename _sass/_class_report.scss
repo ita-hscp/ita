@@ -46,7 +46,25 @@ th {
 #classReport button,
 #feedbackModal button {
     padding: 3px 8px;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.4;
     border-radius: 3px;
+}
+
+// Smaller fonts for everything on the class report page
+#classReport,
+#classReport table,
+#classReport th,
+#classReport td,
+#weekFilter,
+#assignmentTypeFilter,
+label[for="weekFilter"],
+label[for="assignmentTypeFilter"],
+#feedbackModal,
+#feedbackModal label,
+#feedbackModal input,
+#feedbackModal textarea,
+#feedbackModal .status,
+#feedbackModal #reportChatContainer div {
+    font-size: 13px;
 }
