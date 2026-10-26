@@ -18,9 +18,18 @@ async function getAllPendingTasks(type) {
 }
 
 // Pre-selects the exercise given by ?exerciseNumber=... (set by the main page links).
+// Matches by option text, then option value, then by the number inside the text (e.g. "Week 10").
+// Returns true when an option was selected.
 function preselectExercise(dropdown) {
-    const requested = new URLSearchParams(window.location.search).get("exerciseNumber");
-    if (!requested || !dropdown) return;
-    const match = Array.from(dropdown.options).find(o => o.text.trim() === requested.trim());
-    if (match) match.selected = true;
+    const requested = (new URLSearchParams(window.location.search).get("exerciseNumber") || "").trim();
+    if (!requested || !dropdown) return false;
+    const options = Array.from(dropdown.options);
+    const numberIn = s => { const m = String(s).match(/\d+/); return m ? m[0] : null; };
+    const match = options.find(o => o.text.trim() === requested)
+        || options.find(o => o.value === requested)
+        || (numberIn(requested) && options.find(o => numberIn(o.text) === numberIn(requested)));
+    if (!match) return false;
+    dropdown.value = match.value;
+    match.selected = true;
+    return true;
 }
