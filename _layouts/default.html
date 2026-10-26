@@ -40,9 +40,8 @@
 
     <nav {% if site.show_full_navigation %}class="full-navigation" {% endif %}>
         <ul>
-            <li class="nav-item top-level {% if page.url == '/' %}current{% endif %}">
-                {% assign home = site.html_pages | where: 'url', '/' | first %}
-                <a href="{{ site.baseurl }}/">{{ home.title }}</a>
+            <li class="nav-item top-level home-item {% if page.url == '/' %}current{% endif %}">
+                <a href="{{ site.baseurl }}/">Main Page</a>
             </li>
         </ul>
 
@@ -108,7 +107,7 @@
     // Iterate through each top-level item
     navItems.forEach(function (item) {
         const link = item.querySelector("a");
-        if (link && allowedRoles.includes(link.textContent.trim()) || link.textContent.trim() === "Login") {
+        if (item.classList.contains("home-item") || (link && allowedRoles.includes(link.textContent.trim())) || (link && link.textContent.trim() === "Login")) {
             // Show this item
             item.style.display = "block";
         } else {
