@@ -199,6 +199,12 @@ window.addEventListener("load", async (event) => {
                 dropdown.appendChild(option);
                 weekWorkSheet[textContent] = task.content;
             });
+            // Pre-select the exercise chosen on the main page (?exerciseNumber=...)
+            const requested = new URLSearchParams(window.location.search).get("exerciseNumber");
+            if (requested) {
+                const match = Array.from(dropdown.options).find(o => o.text.trim() === requested.trim());
+                if (match) match.selected = true;
+            }
         }
     }
 });
