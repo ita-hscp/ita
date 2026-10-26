@@ -183,22 +183,46 @@ function isStudent() {
     return !!userName && !userName.toUpperCase().startsWith("T_");
 }
 
-const COMPLETED_STATUSES = ["completed", "submitted", "graded", "done"];
+const COMPLETED_STATUSES = ["completed", "complete", "submitted", "graded", "done"];
+
+function isBlank(value) {
+    return value == null || ["", "none", "null", "undefined", "n/a", "-"].includes(String(value).trim().toLowerCase());
+}
+
+// Accepts ISO dates and dd-mm-yyyy / dd/mm/yyyy; returns null when unparsable.
+function parseDueDate(value) {
+    if (isBlank(value)) return null;
+    const text = String(value).trim();
+    const dmy = text.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);
+    const date = dmy ? new Date(Number(dmy[3]), Number(dmy[2]) - 1, Number(dmy[1])) : new Date(text);
+    return isNaN(date) ? null : date;
+}
 
 function isPendingFromPast(item) {
-    const status = String(item.status || "").toLowerCase();
-    if (item.completionDate || COMPLETED_STATUSES.includes(status)) return false;
-    if (!item.dueDate) return false;
-    const due = new Date(item.dueDate);
+    const status = String(item.status || "").trim().toLowerCase();
+    if (!isBlank(item.completionDate) || COMPLETED_STATUSES.includes(status)) return false;
+    const due = parseDueDate(item.dueDate);
+    if (!due) return false;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return !isNaN(due) && due < today;
+    return due < today;
+}
+
+function showPendingMessage(container, text) {
+    container.innerHTML = `<p style="font-size:13px;color:#666;">${escapeHtml(text)}</p>`;
 }
 
 function setupPendingWork() {
     const container = document.getElementById("pendingWork");
-    if (!container || !isStudent()) return;
-    container.innerHTML = '<p style="font-size:13px;color:#666;">Checking pending work...</p>';
+    if (!container) return;
+    if (!sessionStorage.getItem("userName")) {
+        // Sessions created before this feature have no stored user id
+        console.log("Pending work skipped: no userName in session. Log in again.");
+        showPendingMessage(container, "Please log out and log in again to see your pending work.");
+        return;
+    }
+    if (!isStudent()) return;
+    showPendingMessage(container, "Checking pending work...");
     // Lazy load: fetch only when the section scrolls into view
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
@@ -229,12 +253,14 @@ async function loadPendingWork(container) {
         }
         if (!response.ok) throw new Error("HTTP " + response.status);
         const data = await response.json();
-        const pending = (data.report || []).filter(isPendingFromPast);
+        const report = Array.isArray(data) ? data : (data.report || []);
+        console.log("Pending work: report items", report.length, report);
+        const pending = report.filter(isPendingFromPast);
         if (pending.length === 0) {
-            container.innerHTML = "";
+            showPendingMessage(container, "No pending work from the past.");
             return;
         }
-        pending.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        pending.sort((a, b) => parseDueDate(a.dueDate) - parseDueDate(b.dueDate));
         const rows = pending.map(item => `
             <tr>
                 <td>${escapeHtml(item.week)}</td>
@@ -250,6 +276,6 @@ async function loadPendingWork(container) {
             </table>`;
     } catch (error) {
         console.error("Error loading pending work:", error);
-        container.innerHTML = "";
+        showPendingMessage(container, "Could not load pending work. Please try again later.");
     }
 }
