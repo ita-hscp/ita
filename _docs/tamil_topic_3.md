@@ -30,6 +30,7 @@ title: "தலைப்பு பயிற்சி"
         <button id="topic-start-btn" disabled>record</button>
         <button id="topic-pause-btn" disabled>pause</button>
         <button id="topic-clear-btn" >clear</button>
+        <p id="speechStatus" role="status" style="display:none;margin-top:10px;padding:8px 12px;border-radius:4px;font-size:14px;"></p>
     </div>
     <div id="topic-keywords-container">
     <!-- Key words will be dynamically inserted here. Show in a text box -->
@@ -49,4 +50,4 @@ title: "தலைப்பு பயிற்சி"
 tracker();
 </script>
 <div id="tracker"></div>
-<script src="{{ site.baseurl }}/scripts/topic_practice.js"></script>
+<script src="{{ site.baseurl }}/scripts/topic_practice_3.js"></script>
