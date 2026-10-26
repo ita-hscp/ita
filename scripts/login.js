@@ -95,6 +95,7 @@ form.addEventListener('submit', function(event) {
             .then(data => {
                 console.log('Response:', data); // Handle the server response (success)
                 sessionStorage.setItem('sessionToken', data.sessionToken);
+                sessionStorage.setItem('userName', (data.userName || data.userId || username || '').trim());
                 if(data.isFirstLogin){
                     showModal();
                 }else {

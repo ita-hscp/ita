@@ -164,6 +164,92 @@ window.addEventListener("load", async (event) => {
             mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>`;
             get_main_page_content_template();
         }
+        setupPendingWork();
         return;
     }
 });
+
+// ---- Pending work from the past (students only, lazy loaded) ----
+
+function escapeHtml(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
+// Teacher ids start with T_; anything else is treated as a student.
+function isStudent() {
+    const userName = sessionStorage.getItem("userName");
+    return !!userName && !userName.toUpperCase().startsWith("T_");
+}
+
+const COMPLETED_STATUSES = ["completed", "submitted", "graded", "done"];
+
+function isPendingFromPast(item) {
+    const status = String(item.status || "").toLowerCase();
+    if (item.completionDate || COMPLETED_STATUSES.includes(status)) return false;
+    if (!item.dueDate) return false;
+    const due = new Date(item.dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return !isNaN(due) && due < today;
+}
+
+function setupPendingWork() {
+    const container = document.getElementById("pendingWork");
+    if (!container || !isStudent()) return;
+    container.innerHTML = '<p style="font-size:13px;color:#666;">Checking pending work...</p>';
+    // Lazy load: fetch only when the section scrolls into view
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries.some(e => e.isIntersecting)) {
+                observer.disconnect();
+                loadPendingWork(container);
+            }
+        }, { rootMargin: "100px" });
+        observer.observe(container);
+    } else {
+        loadPendingWork(container);
+    }
+}
+
+async function loadPendingWork(container) {
+    try {
+        const response = await fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/assignment/student', {
+            method: 'POST',
+            headers: {
+                'Authorization': sessionStorage.getItem('sessionToken'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        });
+        if (response.status === 401) {
+            window.location.href = "https://ita-hscp.github.io/ita/Login";
+            return;
+        }
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        const pending = (data.report || []).filter(isPendingFromPast);
+        if (pending.length === 0) {
+            container.innerHTML = "";
+            return;
+        }
+        pending.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        const rows = pending.map(item => `
+            <tr>
+                <td>${escapeHtml(item.week)}</td>
+                <td>${escapeHtml(item.assignmentType)}</td>
+                <td>${escapeHtml(item.dueDate)}</td>
+                <td>${escapeHtml(item.status)}</td>
+            </tr>`).join("");
+        container.innerHTML = `
+            <h3 style="font-size:16px;">நிலுவையில் உள்ள பணிகள் (Pending work)</h3>
+            <table style="font-size:13px;">
+                <thead><tr><th>Week</th><th>Type</th><th>Due</th><th>Status</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>`;
+    } catch (error) {
+        console.error("Error loading pending work:", error);
+        container.innerHTML = "";
+    }
+}
