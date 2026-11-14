@@ -11,11 +11,13 @@ const LEVEL_LABELS = { easy: 'எளிது', medium: 'நடுத்தர�
 
 // ISO week, e.g. { id: "2026-W43", number: 43 }
 function getWeek(date = new Date()) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const number = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
-    return { id: `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`, number };
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const weekday = (d.getDay() + 6) % 7;
+    d.setDate(d.getDate() - weekday + 3);
+    const yearStart = new Date(d.getFullYear(), 0, 1);
+    const daysSinceYearStart = Math.round((d - yearStart) / 86400000);
+    const number = Math.ceil((daysSinceYearStart + 1) / 7);
+    return { id: `${d.getFullYear()}-W${String(number).padStart(2, '0')}`, number };
 }
 
 // Reads the week's config from the back end once; returns {} on any failure so
