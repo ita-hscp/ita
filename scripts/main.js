@@ -118,6 +118,20 @@ function fetchAssignments(callback) {
         });
 }
 
+function renderWordleeLink(container) {
+    if (!container) return;
+
+    const wordleeLink = document.createElement("p");
+    wordleeLink.className = "main-page-wordlee";
+    wordleeLink.innerHTML = `
+        <a href="https://ita-hscp.github.io/ita/wordlee" class="main-page-wordlee-link">
+            தமிழ் சொல்லாற்றல்
+            <span class="new-badge" aria-label="new">new</span>
+        </a>
+    `;
+    container.appendChild(wordleeLink);
+}
+
 // Fetch main page content template for teachers
 function get_main_page_content_template() {
     const response = fetch('https://infinite-sands-52519-06605f47cb30.herokuapp.com/main_page_content_template', {
@@ -141,6 +155,7 @@ function get_main_page_content_template() {
                 if (mainPage) {
                     mainPage.innerHTML = `<p> <h2>${content.title}</h2> </br>
                 <p>${content.content}</p>`
+                    renderWordleeLink(mainPage);
                     fetchAssignments();
                 }
             })
@@ -151,6 +166,7 @@ function get_main_page_content_template() {
             if (mainPage) {
                 mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>
                 <p>இப்போது உள்ளடக்கம் கிடைக்கவில்லை.</p>`
+                renderWordleeLink(mainPage);
             }
         });
     return response;
@@ -162,6 +178,7 @@ window.addEventListener("load", async (event) => {
         const mainPage = document.getElementById("mainPage");
         if (mainPage) {
             mainPage.innerHTML = `<p> <h2>உலக தமிழ் கல்விக்கழகம் - தமிழ் மொழி பயிற்சிகள்</h2> </br>`;
+            renderWordleeLink(mainPage);
             get_main_page_content_template();
         }
         setupPendingWork();

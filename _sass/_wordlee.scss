@@ -107,3 +107,37 @@
     background: #222; color: #fff; padding: 10px 14px; border-radius: 8px; font-weight: 600;
   }
 }
+
+.main-page-wordlee {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.main-page-wordlee-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1b5fbd;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+.new-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: blink-new 1s ease-in-out infinite;
+}
+
+@keyframes blink-new {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.96); }
+}
