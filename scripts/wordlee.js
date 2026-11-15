@@ -10,14 +10,42 @@ const LEVELS = ['easy', 'medium', 'hard'];
 const LEVEL_LABELS = { easy: 'எளிது', medium: 'நடுத்தரம்', hard: 'கடினம்' };
 
 // ISO week, e.g. { id: "2026-W43", number: 43 }
+function getDateInTimeZone(timeZone, date = new Date()) {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    const parts = formatter.formatToParts(date);
+    const values = {};
+    parts.forEach(part => {
+        if (part.type !== 'literal' && part.type !== 'timeZoneName') {
+            values[part.type] = part.value;
+        }
+    });
+    return new Date(Date.UTC(
+        Number(values.year),
+        Number(values.month) - 1,
+        Number(values.day),
+        Number(values.hour),
+        Number(values.minute),
+        Number(values.second)
+    ));
+}
+
 function getWeek(date = new Date()) {
-    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    const weekday = (d.getDay() + 6) % 7;
-    d.setDate(d.getDate() - weekday + 3);
-    const yearStart = new Date(d.getFullYear(), 0, 1);
+    const d = getDateInTimeZone('America/Los_Angeles', date);
+    const weekday = (d.getUTCDay() + 6) % 7;
+    d.setUTCDate(d.getUTCDate() - weekday + 3);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     const daysSinceYearStart = Math.round((d - yearStart) / 86400000);
     const number = Math.ceil((daysSinceYearStart + 1) / 7);
-    return { id: `${d.getFullYear()}-W${String(number).padStart(2, '0')}`, number };
+    return { id: `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`, number };
 }
 
 // Reads the week's config from the back end once; returns {} on any failure so

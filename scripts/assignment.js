@@ -305,16 +305,44 @@ const WORDLEE_LEVELS = ['easy', 'medium', 'hard'];
 const WORDLEE_WEEK_PATTERN = /^\d{4}-W\d{2}$/;
 const TAMIL_WORD = /^[\u0B80-\u0BFF]+$/;
 
+function getDateInTimeZone(timeZone, date = new Date()) {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    const parts = formatter.formatToParts(date);
+    const values = {};
+    parts.forEach(part => {
+        if (part.type !== 'literal' && part.type !== 'timeZoneName') {
+            values[part.type] = part.value;
+        }
+    });
+    return new Date(Date.UTC(
+        Number(values.year),
+        Number(values.month) - 1,
+        Number(values.day),
+        Number(values.hour),
+        Number(values.minute),
+        Number(values.second)
+    ));
+}
+
 // Current ISO week as "YYYY-Www"
 function currentIsoWeek() {
-    const now = new Date();
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const weekday = (d.getDay() + 6) % 7; // Monday = 0 ... Sunday = 6
-    d.setDate(d.getDate() - weekday + 3); // Move to Thursday of the ISO week
-    const yearStart = new Date(d.getFullYear(), 0, 1);
+    const now = getDateInTimeZone('America/Los_Angeles');
+    const d = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const weekday = (d.getUTCDay() + 6) % 7;
+    d.setUTCDate(d.getUTCDate() - weekday + 3);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     const daysSinceYearStart = Math.round((d - yearStart) / 86400000);
     const number = Math.ceil((daysSinceYearStart + 1) / 7);
-    return `${d.getFullYear()}-W${String(number).padStart(2, '0')}`;
+    return `${d.getUTCFullYear()}-W${String(number).padStart(2, '0')}`;
 }
 
 function setWordleeStatus(text, isError) {

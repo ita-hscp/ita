@@ -22,7 +22,7 @@ social:
 # -----
 # Build
 
-timezone: Etc/UTC
+timezone: America/Los_Angeles
 
 permalink: pretty
 
