@@ -24,13 +24,13 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
         <aside class="hints-panel">
           <div class="hints-header">
             <h3>குறிப்புகள்(hints)</h3>
-            <button id="hintsPlayBtn" class="btn" type="button" disabled>கேளுங்கள் (play)</button>
+            <!-- <button id="hintsPlayBtn" class="btn" type="button" disabled>கேளுங்கள் (play)</button> -->
           </div>
           <ol id="hints"></ol>
         </aside>
       </div>
       <div class="actions">
-        <button id="micBtn" class="btn" type="button">சொல் பேசுங்கள் (speak)</button>
+        <button id="micBtn" class="btn" type="button">சொல்லை பேசுங்கள் (speak)</button>
         <span id="micDot" class="dot" aria-live="polite"></span>
       </div>
       <details>
