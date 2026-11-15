@@ -75,7 +75,7 @@ function buildWeekOptions() {
     const iso = getIsoWeek(sample);
     if (seen.has(iso.id)) continue;
     seen.add(iso.id);
-    options.push({ id: iso.id, label: `Week ${iso.weekNo} • ${getWeekRangeLabel(iso.id)}` });
+    options.push({ id: iso.id, label: iso.id });
   }
 
   weekSelect.innerHTML = '';
@@ -92,7 +92,7 @@ function buildWeekOptions() {
 
 function setSelectedWeekDisplay(weekId) {
   if (selectedWeekLabel) {
-    selectedWeekLabel.textContent = `Week: ${weekId} (${getWeekRangeLabel(weekId)})`;
+    selectedWeekLabel.textContent = getWeekRangeLabel(weekId);
   }
 }
 
