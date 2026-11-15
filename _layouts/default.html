@@ -107,7 +107,13 @@
     // Iterate through each top-level item
     navItems.forEach(function (item) {
         const link = item.querySelector("a");
-        if (item.classList.contains("home-item") || (link && allowedRoles.includes(link.textContent.trim())) || (link && link.textContent.trim() === "Login")) {
+        const href = link ? link.getAttribute("href") : "";
+        if (
+            item.classList.contains("home-item") ||
+            (link && allowedRoles.includes(link.textContent.trim())) ||
+            (link && link.textContent.trim() === "Login") ||
+            (href && href.includes("wordlee_public"))
+        ) {
             // Show this item
             item.style.display = "block";
         } else {
