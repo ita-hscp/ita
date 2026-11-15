@@ -11,12 +11,18 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
       <input id="playerName" type="text" placeholder="Enter name or leave blank for Anonymous" style="min-width:220px; padding: 8px 10px; border: 1px solid #c7d3dd; border-radius: 6px;">
       <button id="publicPlayBtn" class="btn" type="button">Play as Anonymous</button>
     </div>
-    <p id="publicNameNote" style="margin: 8px 0 0; color:#4a5568; font-size: 14px;">Enter a name or play anonymously.</p>
+    <p id="publicNameNote" style="margin: 8px 0 0; color:#4a5568; font-size: 14px;">Enter a name for leaderboard</p>
   </div>
 
   <h2>தமிழ் சொல்லாற்றல்</h2>
   <div class="wordlee-layout">
     <div class="wordlee-main">
+      <div class="wordlee-week-picker" style="margin-bottom: 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <label for="weekSelect" style="font-weight:700;">Week</label>
+        <select id="weekSelect" style="min-width:170px; padding:8px 10px; border:1px solid #c7d3dd; border-radius:6px; background:#fff;">
+        </select>
+        <span id="selectedWeekLabel" class="msg" style="font-weight:600;">Week: --</span>
+      </div>
       <div id="levels" class="levels"></div>
       <p id="message" class="msg"></p>
       <div class="play-area">
@@ -30,7 +36,7 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
         </aside>
       </div>
       <div class="actions">
-        <button id="micBtn" class="btn" type="button">சொல்லை பேசுங்கள் (speak)</button>
+        <button id="micBtn" class="btn" type="button">சொல்லைப் பேசுங்கள் (speak)</button>
         <span id="micDot" class="dot" aria-live="polite"></span>
       </div>
       <details>
