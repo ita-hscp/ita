@@ -86,6 +86,14 @@
     });
 </script>
 <script src="{{ site.baseurl }}/scripts/copyCode.js"></script>
+<script src="{{ site.baseurl }}/scripts/track.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof tracker === 'function') {
+            tracker();
+        }
+    });
+</script>
 
 <!-- Prism.js CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
