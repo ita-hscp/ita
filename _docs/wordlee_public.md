@@ -1,7 +1,7 @@
 ---
 category : திறன்மேம்பாடு
 order: 3
-title: "தமிழ் சொல்லாற்றல் (Wordlee)"
+title: "தமிழ் சொல்லாற்றல் (Wordle)"
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <div class="wordlee">

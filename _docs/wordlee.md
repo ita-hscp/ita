@@ -1,7 +1,7 @@
 ---
 category: HSCP 3
 order: 2
-title: "தமிழ் சொல்லாற்றல் (Wordlee)"
+title: "தமிழ் சொல்லாற்றல் (Wordle)"
 ---
 <script src="{{ site.baseurl }}/scripts/track.js"></script>
 <div class="wordlee">
