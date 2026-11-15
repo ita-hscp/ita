@@ -22,11 +22,43 @@
     border: 1px solid #d3d6da;
     border-radius: 8px;
     background: #f7f9fb;
+    overflow-x: auto;
 
     h3 { margin: 4px 0 8px; font-size: 16px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: 13px; }
     th, td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #e3e5e8; }
     tr.me { background: #fff9e9; font-weight: 700; }
+  }
+
+  .leaderboard-details {
+    flex: 1 1 260px;
+    max-width: 360px;
+    border: 1px solid #d3d6da;
+    border-radius: 8px;
+    background: #f7f9fb;
+    overflow: hidden;
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 16px;
+      user-select: none;
+
+      &::-webkit-details-marker { display: none; }
+      &:hover { background: #eef4fa; }
+    }
+
+    .leaderboard-panel {
+      padding: 0 14px 12px;
+      border: 0;
+      background: transparent;
+      max-width: none;
+      overflow-x: auto;
+
+      table { margin-top: 4px; }
+    }
   }
 
   .levels { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }

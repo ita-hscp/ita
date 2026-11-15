@@ -48,16 +48,18 @@ title: "தமிழ் சொல்லாற்றல் (Wordlee)"
       </details>
     </div>
 
-    <aside class="leaderboard-panel">
-      <h3>தரவரிசை(Leaderboard)</h3>
-      <table>
-        <thead>
-          <tr><th>#</th><th>பெயர்(name)</th><th>முடிந்தவை(completed)</th><th>மதிப்பெண்(score)</th><th>நேரம்(time)</th></tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
-      <p id="leaderboardNote" class="msg"></p>
-    </aside>
+    <details class="leaderboard-details">
+      <summary>தரவரிசை(Leaderboard)</summary>
+      <div class="leaderboard-panel">
+        <table>
+          <thead>
+            <tr><th>#</th><th>பெயர்(name)</th><th>முடிந்தவை(completed)</th><th>மதிப்பெண்(score)</th><th>நேரம்(time)</th></tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+        <p id="leaderboardNote" class="msg"></p>
+      </div>
+    </details>
   </div>
   <div id="toast" class="toast" style="display:none"></div>
 </div>
